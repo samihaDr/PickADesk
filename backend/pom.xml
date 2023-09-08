@@ -58,12 +58,7 @@
 			<version>3.1.0</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<version>6.1.0</version>
-		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
@@ -104,15 +99,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!--			<plugin>-->
-			<!--				<groupId>org.apache.maven.plugins</groupId>-->
-			<!--				<artifactId>maven-compiler-plugin</artifactId>-->
-			<!--				<version>3.6.3</version> &lt;!&ndash; Utilisez une version qui prend en charge Java 17 &ndash;&gt;-->
-			<!--				<configuration>-->
-			<!--					<source>17</source>-->
-			<!--					<target>17</target>-->
-			<!--				</configuration>-->
-			<!--			</plugin>-->
 		</plugins>
 	</build>
 
