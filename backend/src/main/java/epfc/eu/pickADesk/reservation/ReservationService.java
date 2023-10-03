@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -56,5 +57,18 @@ public class ReservationService {
         }
     }
 
+    public void deleteReservation(Long reservationId) {
 
+        if (reservationId == null) {
+            throw new IllegalArgumentException("L'ID de réservation doit être spécifié lors de la suppression.");
+        }
+
+        Optional<Reservation> reservationToDelete = reservationRepository.findById(reservationId);
+
+        if (reservationToDelete.isEmpty()) {
+            throw new IllegalArgumentException("Aucune réservation ne correspond à cet id");
+        }
+
+        reservationRepository.delete(reservationToDelete.get());
+    }
 }
