@@ -1,5 +1,6 @@
 package epfc.eu.pickADesk.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import epfc.eu.pickADesk.reservation.Reservation;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,20 +25,22 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private String firstname;
     private String lastname;
     private String email;
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+   // @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonManagedReference
     private List<Reservation> reservationList = new ArrayList<>() ;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Boolean locked = true ;
-    private Boolean enabled = true;
+    private Boolean locked ;
+    private Boolean enabled ;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

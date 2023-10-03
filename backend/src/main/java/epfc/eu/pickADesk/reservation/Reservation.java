@@ -1,6 +1,6 @@
 package epfc.eu.pickADesk.reservation;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.*;
 import epfc.eu.pickADesk.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,9 @@ public class Reservation {
     private Integer workStationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "userId") // Cette colonne stocke la clé étrangère pour l'utilisateur associé à cette réservation.
+    @JoinColumn(name = "user_id") // Cette colonne stocke la clé étrangère pour l'utilisateur associé à cette réservation.
+    //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonBackReference
     private User user;
     private Integer reservationTypeId;
 }
