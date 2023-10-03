@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -36,8 +37,10 @@ public class ReservationService {
     public Reservation addReservation(Reservation reservation) {
         // verifier si la date de réservation est valide
         validateReservationDate(reservation);
-        reservation.setUser(userRepository.findByEmail("sam@test.com").get());
-
+        reservation.setUser(
+                userRepository.findByEmail("sam@test.com")
+                        .orElseThrow(() -> new NoSuchElementException("Aucun utilisateur trouvé avec l'email sam@test.com"))
+        );
         return reservationRepository.save(reservation);
     }
 
