@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 @AllArgsConstructor
@@ -21,8 +22,8 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
+                .firstname(StringUtils.capitalize(request.getFirstname()))
+                .lastname(StringUtils.capitalize(request.getLastname()))
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
