@@ -38,7 +38,7 @@ public class ReservationService {
         // verifier si la date de réservation est valide
         validateReservationDate(reservation);
         reservation.setUser(
-                userRepository.findByEmail("sam@test.com")
+                userRepository.findOneByEmail("sam@test.com")
                         .orElseThrow(() -> new NoSuchElementException("Aucun utilisateur trouvé avec l'email sam@test.com"))
         );
         return reservationRepository.save(reservation);
