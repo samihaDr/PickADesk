@@ -1,6 +1,7 @@
 package epfc.eu.pickADesk.reservation;
 
 import epfc.eu.pickADesk.user.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/api/reservations")
 public class ReservationController {
 
