@@ -55,14 +55,14 @@ public class ReservationService {
         LocalDate today = LocalDate.now();
         LocalDate onMonthLater = today.plusMonths(1);
 
-        if (reservation.getDate() == null) {
+        if (reservation.getReservationDate() == null) {
             throw new IllegalArgumentException("La date de réservation est requise.");
         }
 
-        if (reservation.getDate().isBefore(today)) {
+        if (reservation.getReservationDate().isBefore(today)) {
             throw new IllegalArgumentException("La date de réservation ne peut être antérieure .");
         }
-        if (reservation.getDate().isAfter(onMonthLater)) {
+        if (reservation.getReservationDate().isAfter(onMonthLater)) {
             throw new IllegalArgumentException("La date de réservation ne peut être ultérieure à un mois ");
         }
     }

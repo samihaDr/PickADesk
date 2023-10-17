@@ -21,7 +21,7 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC")
-    private LocalDate date;
+    private LocalDate reservationDate;
     private Integer nbTimeSlot;
     private Integer workStationId;
 
