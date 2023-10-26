@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React from "react";
+import LoginPage from "./components/loginPage/LoginPage.js";
+import { Route, Routes } from "react-router-dom";
+import AddReservation from "./components/reservation/AddReservation";
+import RegisterPage from "./components/registerPage/RegisterPage";
+import Home from "./components/home/Home";
+import "bootstrap/dist/css/bootstrap-grid.min.css";
+import Navbar from "./components/navbar/Navbar";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p style={{color:"pink"}}>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div>
+        <Navbar />
+      </div>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="addReservation" element={<AddReservation />} />
+        <Route path="registerPage" element={<RegisterPage />} />
+        <Route path="loginPage" element={<LoginPage />} />
+      </Routes>
     </div>
   );
 }
