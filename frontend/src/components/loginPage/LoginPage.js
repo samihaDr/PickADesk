@@ -3,30 +3,31 @@ import "./LoginPage.scss";
 import { Link } from "react-router-dom";
 
 export default function LoginPage() {
-  let [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailInput, setEmailInput] = useState(""); // État intermédiaire sinon mon champs est toujours invalide
 
+  const handleEmailChange = (event) => {
+    const newEmail = event.target.value;
+    setEmailInput(newEmail); // Mettre à jour l'état intermédiaire
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Email: ", email);
-    console.log("Password: ", password);
-  };
+    if (validateEmailFormat(emailInput)) {
+      setEmail(emailInput); // Mettre à jour l'e-mail si valide
 
-  const validateEmail = (newEmail) => {
-    if (validateEmailFormat(newEmail)) {
-      setEmail(newEmail);
-      console.log("Email updated successfully for user with id:");
+      console.log("Email: ", emailInput);
+      console.log("Password: ", password);
+      setEmailInput(""); // Réinitialisez le champ emailInput
+      setPassword(""); // Réinitialisez le champ password
     } else {
       console.log("Invalid email format");
     }
   };
 
-  function validateEmailFormat(email) {
-    // expression régulière pour valider l'adresse e-mail
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    // vérification de la validité de l'adresse e-mail
-    return emailRegex.test(email);
+  function validateEmailFormat(input) {
+    let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(input);
   }
 
   return (
@@ -45,8 +46,8 @@ export default function LoginPage() {
                     type="email"
                     className="form-control"
                     id="InputEmail"
-                    value={email}
-                    onChange={(event) => validateEmail(event.target.value)}
+                    value={emailInput}
+                    onChange={handleEmailChange}
                     aria-describedby="emailHelp"
                   />
                   <div id="emailHelp" className="form-text">
