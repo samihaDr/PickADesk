@@ -6,13 +6,15 @@ export default function Home() {
   return (
     <div>
       <card className="card">
-        <h2>Welcome</h2>
+        <h2 style={{ color: "#1f4e5f" }}> Welcome</h2>
         <div className="home-container">
           <div className="card-body">
             <div className="card-img">
               <img src={logo} alt="Logo" width="300" height="250" />
             </div>
-            <p className="card-text">Book easily. Work efficiently</p>
+            <h3 className="card-text" style={{ color: "#1f4e5f" }}>
+              Book easily. Work efficiently
+            </h3>
             <div className="card-links">
               <a href="/LoginPage" className="card-link">
                 Login

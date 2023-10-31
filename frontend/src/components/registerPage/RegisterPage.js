@@ -6,7 +6,7 @@ export default function RegisterPage() {
   return (
     <div>
       <card className="card">
-        <h2>Register</h2>
+        <h2 style={{ color: "#1f4e5f" }}>Register</h2>
         <div className="register-container">
           <div>
             <div className="form-container">
@@ -37,7 +37,7 @@ export default function RegisterPage() {
                   </div>
                   <div className="mb-3">
                     <label htmlFor="InputFirstname" className="form-label">
-                      LastName
+                      FirstName
                     </label>
                     <input
                       type="text"
@@ -64,6 +64,16 @@ export default function RegisterPage() {
                       and a special character.
                     </div>
                   </div>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="ConfirmPassword" className="form-label">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="ConfirmPassword"
+                  />
                 </div>
                 <button type="submit" className="btn btn-primary">
                   Register

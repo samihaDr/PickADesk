@@ -1,28 +1,27 @@
 .card {
   width: 30%;
   padding: 50px;
-  margin-left: 650px;
-  margin-bottom: 150px;
-  margin-top: 150px;
+  margin: 100px auto auto;
 
 }
-
+h2 {
+  color: #1f4e5f;
+}
 .card-body {
-  width: 100%;
+  //width: 100%;
   justify-content: center;
   margin-top: 50px;
 }
 
 .card-img {
+  width: auto;
   display: flex;
   justify-content: center;
-  //margin-left: 5px;
-
 }
 
 .card-text {
-  font-weight: bolder;
-  font-size: larger;
+  font-style: oblique;
+  font-family: "Arial Nova Cond Light", cursive;
   display: flex;
   justify-content: center;
   padding-top: 20px;
