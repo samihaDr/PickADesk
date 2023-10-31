@@ -34,22 +34,18 @@ public class ReservationService {
         if (listReservations.isEmpty()) {
             throw new IllegalArgumentException("Vous n'avez pas de reservations ");
         }
-
         return listReservations;
     }
 
     public Reservation addReservation(Reservation reservation, Principal principal) {
-        // reccuperer l'Id de l'utilisateur connecté
         Long userConnectedId = this.userService.getUserConnected(principal);
-        System.out.println("USER CONNECTED ID ========= " + userConnectedId);
-        // Réccuper l'utilisateur
-        User userConnected = this.userRepository.findOneById(userConnectedId);
-        System.out.println("MON USER OBJET ========  " + userConnected.getFirstname() + " : " + userConnected.getLastname());
-        // verifier si la date de réservation est valid
+        User userConnected = this.userRepository.findOneById(userConnectedId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userConnectedId));
         validateReservationDate(reservation);
         reservation.setUser(userConnected);
         return reservationRepository.save(reservation);
     }
+
 
     public void validateReservationDate(Reservation reservation) {
         LocalDate today = LocalDate.now();
