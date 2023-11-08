@@ -40,7 +40,6 @@ public class UserService {
         if (users.isEmpty()) {
             throw new IllegalArgumentException("Aucun utilisateur dans la liste ");
         }
-
         return users;
     }
 
