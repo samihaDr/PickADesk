@@ -1,5 +1,6 @@
 package epfc.eu.pickADesk.auth;
 
+import epfc.eu.pickADesk.auth.utils.PasswordValidator;
 import epfc.eu.pickADesk.config.JwtService;
 import epfc.eu.pickADesk.user.Role;
 import epfc.eu.pickADesk.user.User;
@@ -25,6 +26,13 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        var password = request.getPassword();
+        if (!PasswordValidator.isValidPassword(password)) {
+            throw new IllegalArgumentException("Invalid password");
+//            return AuthenticationResponse.builder()
+//                    .token(null)
+//                    .build();
+        }
         var user = User.builder()
                 .firstname(StringUtils.capitalize(request.getFirstname()))
                 .lastname(StringUtils.capitalize(request.getLastname()))
