@@ -1,34 +1,46 @@
 import React, { useState } from "react";
 import "./LoginPage.scss";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { AUTH_TOKEN_KEY } from "../../App";
+import { EmailValidator } from "../../services/EmailValidator";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailInput, setEmailInput] = useState(""); // État intermédiaire sinon mon champs est toujours invalide
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
-  const handleEmailChange = (event) => {
-    const newEmail = event.target.value;
-    setEmailInput(newEmail); // Mettre à jour l'état intermédiaire
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (validateEmailFormat(emailInput)) {
-      setEmail(emailInput); // Mettre à jour l'e-mail si valide
-
-      console.log("Email: ", emailInput);
-      console.log("Password: ", password);
-      setEmailInput(""); // Réinitialisez le champ emailInput
-      setPassword(""); // Réinitialisez le champ password
-    } else {
-      console.log("Invalid email format");
+    if (EmailValidator(formData.email)) {
+      axios
+        .post("/api/auth/authenticate", formData)
+        .then((response) => {
+          const bearerToken = response?.headers?.authorization;
+          if (bearerToken && bearerToken.slice(0, 7) === "Bearer ") {
+            const jwt = bearerToken.slice(7, bearerToken.length);
+            sessionStorage.setItem(AUTH_TOKEN_KEY, jwt);
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            // La requête a reçu une réponse du serveur, vous pouvez accéder au statut HTTP ici
+            console.error("Erreur HTTP :", error.response.status);
+          } else if (error.request) {
+            // La requête a été faite, mais aucune réponse n'a été reçue (peut être dû à un problème de connexion)
+            console.error(
+              "La requête a été faite mais aucune réponse n'a été reçue.",
+            );
+          } else {
+            // Une erreur inattendue s'est produite
+            console.error("Erreur inattendue :", error.message);
+          }
+        });
     }
+    setFormData({ email: "", password: "" });
   };
-
-  function validateEmailFormat(input) {
-    let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return regex.test(input);
-  }
 
   return (
     <div>
@@ -46,8 +58,9 @@ export default function LoginPage() {
                     type="email"
                     className="form-control"
                     id="InputEmail"
-                    value={emailInput}
-                    onChange={handleEmailChange}
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     aria-describedby="emailHelp"
                   />
                   <div id="emailHelp" className="form-text">
@@ -62,8 +75,9 @@ export default function LoginPage() {
                     type="password"
                     className="form-control"
                     id="Password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="mb-3 form-check">
