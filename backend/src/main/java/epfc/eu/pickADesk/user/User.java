@@ -3,6 +3,9 @@ package epfc.eu.pickADesk.user;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import epfc.eu.pickADesk.reservation.Reservation;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,9 +29,20 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String firstname;
-    private String lastname;
+    @NotNull(message = "Email is required")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email format")
     private String email;
+
+    @NotNull(message = "Lastname is required")
+    @Size(min = 3,max = 25, message = "Lastname between 3 and 25 characters)")
+    private String lastname;
+
+    @NotNull(message = "Firstname is required")
+    @Size(min = 3,max = 25, message = "Firstname between 3 and 25 characters)")
+    private String firstname;
+
+    @NotNull(message= "Password is required")
+    @Size(min = 8, message ="Password containing at least 8 letters, a number, and a special character.")
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
