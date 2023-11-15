@@ -6,8 +6,8 @@ import { AUTH_TOKEN_KEY } from "../../App";
 import { EmailValidator } from "../../services/EmailValidator";
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-
+  const [formData, setFormData] = useState({ email: "" });
+  const [error, setError] = useState("");
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
@@ -18,28 +18,26 @@ export default function LoginPage() {
       axios
         .post("/api/auth/authenticate", formData)
         .then((response) => {
-          const bearerToken = response?.headers?.authorization;
-          if (bearerToken && bearerToken.slice(0, 7) === "Bearer ") {
-            const jwt = bearerToken.slice(7, bearerToken.length);
-            sessionStorage.setItem(AUTH_TOKEN_KEY, jwt);
-          }
+          const jwt = response.data.token;
+          sessionStorage.setItem(AUTH_TOKEN_KEY, jwt);
+          // Vider les champs du formulaire après une soumission réussie
+          setFormData({ email: "", password: "" });
+          setError("");
         })
         .catch((error) => {
           if (error.response) {
-            // La requête a reçu une réponse du serveur, vous pouvez accéder au statut HTTP ici
-            console.error("Erreur HTTP :", error.response.status);
+            setError(`Erreur du serveur: ${error.response.status}`);
           } else if (error.request) {
-            // La requête a été faite, mais aucune réponse n'a été reçue (peut être dû à un problème de connexion)
-            console.error(
-              "La requête a été faite mais aucune réponse n'a été reçue.",
-            );
+            setError("Problème de connexion, veuillez réessayer.");
           } else {
-            // Une erreur inattendue s'est produite
-            console.error("Erreur inattendue :", error.message);
+            setError(
+              "Une erreur inattendue s'est produite, veuillez réessayer.",
+            );
           }
         });
+    } else {
+      setError("Veuillez donner une adresse mail valide.");
     }
-    setFormData({ email: "", password: "" });
   };
 
   return (
@@ -99,6 +97,8 @@ export default function LoginPage() {
               <span>Don't have an account? </span>
               <Link to="/registerPage">Register</Link>
             </div>
+            {/* Afficher le message d'erreur */}
+            {error && <div style={{ color: "red" }}>{error}</div>}
           </div>
         </div>
       </card>

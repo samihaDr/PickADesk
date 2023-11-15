@@ -14,6 +14,7 @@ export default function RegisterPage() {
     password: "",
   });
 
+  const [error, setError] = useState("");
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
@@ -30,22 +31,23 @@ export default function RegisterPage() {
         .then((response) => {
           const jwt = response.data.token;
           sessionStorage.setItem(AUTH_TOKEN_KEY, jwt);
+          // Vider les champs du formulaire après une soumission réussie
+          setFormData({ email: "", lastname: "", firstname: "", password: "" });
+          setError("");
         })
         .catch((error) => {
           if (error.response) {
-            // La requête a reçu une réponse du serveur, vous pouvez accéder au statut HTTP ici
-            console.error("Erreur HTTP :", error.response.status);
+            setError(`Erreur du serveur: ${error.response.status}`);
           } else if (error.request) {
-            // La requête a été faite, mais aucune réponse n'a été reçue (peut être dû à un problème de connexion)
-            console.error(
-              "La requête a été faite mais aucune réponse n'a été reçue.",
-            );
+            setError("Problème de connexion, veuillez réessayer.");
           } else {
-            // Une erreur inattendue s'est produite
-            console.error("Erreur inattendue :", error.message);
+            setError(
+              "Une erreur inattendue s'est produite, veuillez réessayer.",
+            );
           }
         });
-      setFormData({ email: "", lastname: "", firstname: "", password: "" });
+    } else {
+      setError("Veuillez remplir tous les champs correctement.");
     }
   };
   return (
@@ -142,6 +144,8 @@ export default function RegisterPage() {
               <span>Already have an account? </span>
               <Link to="/loginPage">Log in</Link>
             </div>
+            {/* Afficher le message d'erreur */}
+            {error && <div style={{ color: "red" }}>{error}</div>}
           </div>
         </div>
       </card>
