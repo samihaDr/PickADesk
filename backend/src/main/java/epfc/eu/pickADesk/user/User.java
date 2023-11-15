@@ -34,15 +34,15 @@ public class User implements UserDetails {
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "Lastname is required")
+    @NotBlank
     @Size(min = 3,max = 25, message = "Lastname between 3 and 25 characters)")
     private String lastname;
 
-    @NotBlank(message = "Firstname is required")
-    @Size(min = 3,max = 25, message = "Firstname between 3 and 25 characters)")
+    @NotBlank
+    @Size(min = 3, max = 25, message = "Firstname between 3 and 25 characters)")
     private String firstname;
 
-    @NotNull(message= "Password is required")
+    @NotNull
     @Size(min = 8, message ="Password containing at least 8 letters, a number, and a special character.")
     private String password;
 
