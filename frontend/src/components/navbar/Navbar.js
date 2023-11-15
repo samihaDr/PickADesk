@@ -1,6 +1,7 @@
 import logo from "../../assets/images/logo.png";
 import React from "react";
 import "./Navbar.scss";
+import Logout from "../logout/Logout";
 
 export default function Navbar() {
   return (
@@ -27,8 +28,8 @@ export default function Navbar() {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">
-              Log out
+            <a className="nav-link" href="/">
+              <Logout /> Logout
             </a>
           </li>
           <li className="nav-item">
