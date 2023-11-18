@@ -1,6 +1,7 @@
 package epfc.eu.pickADesk.reservation;
 
 import epfc.eu.pickADesk.user.User;
+import epfc.eu.pickADesk.user.UserDTO;
 import epfc.eu.pickADesk.user.UserRepository;
 import epfc.eu.pickADesk.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,10 @@ public class ReservationService {
 
 
     public List<Reservation> getReservations(Principal principal) {
-        Long userConnectedId = this.userService.getUserConnected(principal);
-        System.out.println("USER CONNECTED SERVICE ========== " + userConnectedId);
+        UserDTO userConnected = this.userService.getUserConnected(principal);
+        System.out.println("USER CONNECTED SERVICE ========== " + userConnected.getEmail());
         //retourne la liste des reservations de cet utilisateur
-        List<Reservation> listReservations = reservationRepository.findByUserId(userConnectedId);
+        List<Reservation> listReservations = reservationRepository.findByUserId(userConnected.getId());
         System.out.println("LA TAILLE DE MA LISTE EST " + listReservations.size());
         if (listReservations.isEmpty()) {
             throw new IllegalArgumentException("Vous n'avez pas de reservations ");
@@ -38,11 +39,11 @@ public class ReservationService {
     }
 
     public Reservation addReservation(Reservation reservation, Principal principal) {
-        Long userConnectedId = this.userService.getUserConnected(principal);
-        User userConnected = this.userRepository.findOneById(userConnectedId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userConnectedId));
+        UserDTO userConnected = this.userService.getUserConnected(principal);
+        User userConnectedId = this.userRepository.findOneById(userConnected.getId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userConnected.getEmail()));
         validateReservationDate(reservation);
-        reservation.setUser(userConnected);
+        reservation.setUser(userConnectedId);
         return reservationRepository.save(reservation);
     }
 
