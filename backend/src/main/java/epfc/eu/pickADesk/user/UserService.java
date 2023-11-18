@@ -17,20 +17,20 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Long getUserConnected(Principal principal) {
+    public UserDTO getUserConnected(Principal principal) {
         if (!(principal instanceof UsernamePasswordAuthenticationToken userPrincipal)) {
             throw new RuntimeException("User not found");
         }
-        Optional<User> userConnected = userRepository.findOneByEmail(userPrincipal.getName());
-        return userConnected.map(User::getId).orElse(null);
+        Optional<User> userConnected = userRepository.findByEmail(userPrincipal.getName());
+        return userConnected.map(UserDTO::new).orElse(null);
     }
 
-    public Boolean getUserConnectedRole(Principal principal) {
+    public Boolean isAdmin(Principal principal) {
         if (!(principal instanceof UsernamePasswordAuthenticationToken userPrincipal)) {
             throw new RuntimeException("User not found");
         }
 
-        return userRepository.findOneByEmail(userPrincipal.getName())
+        return userRepository.findByEmail(userPrincipal.getName())
                 .map(User::getRole)
                 .orElse(Role.USER) == Role.ADMIN;
     }

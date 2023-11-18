@@ -32,10 +32,20 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getUsers(Principal principal) {
-        if (!this.userService.getUserConnectedRole(principal)) {
+        if (!this.userService.isAdmin(principal)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/userConnected")
+    public UserDTO getUserConnected(Principal principal) {
+        return userService.getUserConnected(principal);
+    }
+
+    @GetMapping("/userRole")
+    public Boolean isAdmin(Principal principal) {
+        return userService.isAdmin(principal);
     }
 
     @PostMapping("/logout")
