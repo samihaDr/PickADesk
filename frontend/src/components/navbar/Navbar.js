@@ -1,9 +1,9 @@
 import logo from "../../assets/images/logo.png";
 import React, { useEffect } from "react";
 import "./Navbar.scss";
-import Logout from "../logout/Logout";
+import LogoutButton from "../logout/Logout";
 
-export default function Navbar({ userConnected }) {
+export default function Navbar({ userConnected, setUserConnected }) {
   useEffect(() => {
     console.log("Navbar is mounted");
     console.log("USER CONNECTED in Navbar: ", userConnected);
@@ -39,10 +39,7 @@ export default function Navbar({ userConnected }) {
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="/">
-              <Logout /> Logout
-            </a>
-            {/*<button variant="secondary">Logout</button>*/}
+            <LogoutButton setUserConnected={setUserConnected} />
           </li>
         </ul>
         {/*<form className="d-flex" role="search">*/}

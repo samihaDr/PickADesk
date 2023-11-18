@@ -1121,8 +1121,8 @@
     </schema>
     <schema id="329" parent="1" name="pick_a_desk_db">
       <Current>1</Current>
-      <IntrospectionTimestamp>2023-10-19.16:11:35</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-10-19.12:11:35</LocalIntrospectionTimestamp>
+      <IntrospectionTimestamp>2023-11-15.23:45:56</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2023-11-15.21:45:56</LocalIntrospectionTimestamp>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </schema>
     <schema id="330" parent="1" name="prwb_2122_g01">
@@ -1153,90 +1153,153 @@
       <Engine>MyISAM</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <table id="339" parent="329" name="user">
+    <table id="339" parent="329" name="token">
       <Engine>MyISAM</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <column id="340" parent="338" name="id">
-      <AutoIncrement>5</AutoIncrement>
+    <table id="340" parent="329" name="token_seq">
+      <Engine>MyISAM</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="341" parent="329" name="user">
+      <Engine>MyISAM</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <column id="342" parent="338" name="id">
+      <AutoIncrement>6</AutoIncrement>
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="341" parent="338" name="nb_time_slot">
+    <column id="343" parent="338" name="nb_time_slot">
       <DasType>int(11)|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="342" parent="338" name="reservation_date">
+    <column id="344" parent="338" name="reservation_date">
       <DasType>date|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="343" parent="338" name="reservation_type_id">
+    <column id="345" parent="338" name="reservation_type_id">
       <DasType>int(11)|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="344" parent="338" name="work_station_id">
+    <column id="346" parent="338" name="work_station_id">
       <DasType>int(11)|0s</DasType>
       <Position>5</Position>
     </column>
-    <column id="345" parent="338" name="user_id">
+    <column id="347" parent="338" name="user_id">
       <DasType>bigint(20)|0s</DasType>
       <Position>6</Position>
     </column>
-    <index id="346" parent="338" name="PRIMARY">
+    <index id="348" parent="338" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="347" parent="338" name="FKm4oimk0l1757o9pwavorj6ljg">
+    <index id="349" parent="338" name="FKm4oimk0l1757o9pwavorj6ljg">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="348" parent="338" name="PRIMARY">
+    <key id="350" parent="338" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="349" parent="339" name="id">
-      <AutoIncrement>4</AutoIncrement>
-      <DasType>bigint(20)|0s</DasType>
+    <column id="351" parent="339" name="id">
+      <DasType>int(11)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="350" parent="339" name="email">
-      <DasType>varchar(255)|0s</DasType>
+    <column id="352" parent="339" name="expired">
+      <DasType>bit(1)|0s</DasType>
+      <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="351" parent="339" name="enabled">
+    <column id="353" parent="339" name="revoked">
       <DasType>bit(1)|0s</DasType>
+      <NotNull>1</NotNull>
       <Position>3</Position>
     </column>
-    <column id="352" parent="339" name="firstname">
+    <column id="354" parent="339" name="token">
       <DasType>varchar(255)|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="353" parent="339" name="lastname">
+    <column id="355" parent="339" name="token_type">
       <DasType>varchar(255)|0s</DasType>
       <Position>5</Position>
     </column>
-    <column id="354" parent="339" name="locked">
-      <DasType>bit(1)|0s</DasType>
+    <column id="356" parent="339" name="user_id">
+      <DasType>bigint(20)|0s</DasType>
       <Position>6</Position>
-    </column>
-    <column id="355" parent="339" name="password">
-      <DasType>varchar(255)|0s</DasType>
-      <Position>7</Position>
-    </column>
-    <column id="356" parent="339" name="role">
-      <DasType>varchar(255)|0s</DasType>
-      <Position>8</Position>
     </column>
     <index id="357" parent="339" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="358" parent="339" name="PRIMARY">
+    <index id="358" parent="339" name="UK_pddrhgwxnms2aceeku9s2ewy5">
+      <ColNames>token</ColNames>
+      <Type>hash</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="359" parent="339" name="FKe32ek7ixanakfqsdaokm4q9y2">
+      <ColNames>user_id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="360" parent="339" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <key id="361" parent="339" name="UK_pddrhgwxnms2aceeku9s2ewy5">
+      <UnderlyingIndexName>UK_pddrhgwxnms2aceeku9s2ewy5</UnderlyingIndexName>
+    </key>
+    <column id="362" parent="340" name="next_val">
+      <DasType>bigint(20)|0s</DasType>
+      <Position>1</Position>
+    </column>
+    <column id="363" parent="341" name="id">
+      <AutoIncrement>5</AutoIncrement>
+      <DasType>bigint(20)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="364" parent="341" name="email">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="365" parent="341" name="enabled">
+      <DasType>bit(1)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="366" parent="341" name="firstname">
+      <DasType>varchar(25)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="367" parent="341" name="lastname">
+      <DasType>varchar(25)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="368" parent="341" name="locked">
+      <DasType>bit(1)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="369" parent="341" name="password">
+      <DasType>varchar(255)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+    </column>
+    <column id="370" parent="341" name="role">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <index id="371" parent="341" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="372" parent="341" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>

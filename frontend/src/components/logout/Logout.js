@@ -1,10 +1,9 @@
-import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 
-const Logout = ({ setUserConnected }) => {
+const LogoutButton = ({ setUserConnected }) => {
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -26,10 +25,14 @@ const Logout = ({ setUserConnected }) => {
     }
   };
 
-  useEffect(() => {
-    logout();
-  }, []);
+  // useEffect(() => {
+  //   logout();
+  // }, []);
 
-  return null;
+  return (
+    <button className="nav-link" onClick={logout}>
+      Logout
+    </button>
+  );
 };
-export default Logout;
+export default LogoutButton;
