@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import "./LoginPage.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AUTH_TOKEN_KEY } from "../../App";
 import { EmailValidator } from "../../services/EmailValidator";
 
-export default function LoginPage() {
+export default function LoginPage({ setUserConnected }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "" });
   const [error, setError] = useState("");
   const handleChange = (event) => {
@@ -20,9 +21,26 @@ export default function LoginPage() {
         .then((response) => {
           const jwt = response.data.token;
           sessionStorage.setItem(AUTH_TOKEN_KEY, jwt);
-          // Vider les champs du formulaire après une soumission réussie
-          setFormData({ email: "", password: "" });
-          setError("");
+          axios
+            .get("/api/users/userConnected", {
+              headers: {
+                Authorization: `Bearer ${jwt}`,
+              },
+            })
+            .then((userInfoResponse) => {
+              const userData = userInfoResponse.data;
+              console.log("User Info:", userData);
+
+              // Vider les champs du formulaire après une soumission réussie
+              setFormData({ email: "", password: "" });
+              setUserConnected(`${userData.firstname} ${userData.lastname}`);
+              setError("");
+              navigate("/dashboard");
+            })
+            .catch((userInfoError) => {
+              // Gérer les erreurs liées à la récupération des informations utilisateur
+              console.error("Error fetching user info:", userInfoError);
+            });
         })
         .catch((error) => {
           if (error.response) {
@@ -39,7 +57,6 @@ export default function LoginPage() {
       setError("Veuillez donner une adresse mail valide.");
     }
   };
-
   return (
     <div>
       <card className="card">

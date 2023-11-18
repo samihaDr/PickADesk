@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import "./RegisterPage.scss";
 import { AUTH_TOKEN_KEY } from "../../App";
@@ -6,8 +6,9 @@ import axios from "axios";
 import { EmailValidator } from "../../services/EmailValidator";
 import { PasswordValidator } from "../../services/PasswordValidator";
 
-export default function RegisterPage() {
-  const [formData, setFormData] = useState({
+export default function RegisterPage({ setUserConnected }) {
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState({
     email: "",
     lastname: "",
     firstname: "",
@@ -17,23 +18,40 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    setUserData({ ...userData, [name]: value });
   };
 
   const onSubmit = (event) => {
     event.preventDefault();
     if (
-      EmailValidator(formData.email) &&
-      PasswordValidator(formData.password)
+      EmailValidator(userData.email) &&
+      PasswordValidator(userData.password)
     ) {
       axios
-        .post("/api/auth/register", formData)
+        .post("/api/auth/register", userData)
         .then((response) => {
           const jwt = response.data.token;
           sessionStorage.setItem(AUTH_TOKEN_KEY, jwt);
-          // Vider les champs du formulaire après une soumission réussie
-          setFormData({ email: "", lastname: "", firstname: "", password: "" });
-          setError("");
+          axios
+            .get("/api/users/userConnected", {
+              headers: {
+                Authorization: `Bearer ${jwt}`,
+              },
+            })
+            .then((userInfoResponse) => {
+              const userData = userInfoResponse.data;
+              console.log("User Info:", userData);
+
+              // Vider les champs du formulaire après une soumission réussie
+              //setFormData({ email: "", password: "" });
+              setUserConnected(`${userData.firstname} ${userData.lastname}`);
+              setError("");
+              navigate("/dashboard");
+            })
+            .catch((userInfoError) => {
+              // Gérer les erreurs liées à la récupération des informations utilisateur
+              console.error("Error fetching user info:", userInfoError);
+            });
         })
         .catch((error) => {
           if (error.response) {
@@ -67,7 +85,7 @@ export default function RegisterPage() {
                     className="form-control"
                     id="Email"
                     name="email"
-                    value={formData.email}
+                    value={userData.email}
                     onChange={handleChange}
                   />
 
@@ -80,7 +98,7 @@ export default function RegisterPage() {
                       className="form-control"
                       id="Lastname"
                       name="lastname"
-                      value={formData.lastname}
+                      value={userData.lastname}
                       onChange={handleChange}
                       aria-describedby="lastnameHelp"
                     />
@@ -97,7 +115,7 @@ export default function RegisterPage() {
                       className="form-control"
                       id="Firstname"
                       name="firstname"
-                      value={formData.firstname}
+                      value={userData.firstname}
                       onChange={handleChange}
                       aria-describedby="firstnameHelp"
                     />
@@ -114,7 +132,7 @@ export default function RegisterPage() {
                       className="form-control"
                       id="Password"
                       name="password"
-                      value={formData.password}
+                      value={userData.password}
                       onChange={handleChange}
                       aria-describedby="passwordHelp"
                     />
