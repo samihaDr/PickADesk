@@ -1,9 +1,15 @@
 import logo from "../../assets/images/logo.png";
-import React from "react";
+import React, { useEffect } from "react";
 import "./Navbar.scss";
 import Logout from "../logout/Logout";
 
-export default function Navbar() {
+export default function Navbar({ userConnected }) {
+  useEffect(() => {
+    console.log("Navbar is mounted");
+    console.log("USER CONNECTED in Navbar: ", userConnected);
+  }, [userConnected]);
+
+  console.log("Navbar is rendered");
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -11,11 +17,16 @@ export default function Navbar() {
           <img
             src={logo}
             alt="Logo"
-            width="70"
-            height="55"
+            width="80"
+            height="60"
             className="d-inline-block align-text-top"
           />
         </a>
+        <span className="nav-item">
+          <div style={{ fontWeight: "bold", color: "#1f4e5f" }}>
+            Welcome, {userConnected}
+          </div>
+        </span>
         <ul className="nav justify-content-end">
           <li className="nav-item">
             <a className="nav-link active" aria-current="page" href="/">
@@ -31,11 +42,7 @@ export default function Navbar() {
             <a className="nav-link" href="/">
               <Logout /> Logout
             </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link disabled" aria-disabled="true">
-              Disabled
-            </a>
+            {/*<button variant="secondary">Logout</button>*/}
           </li>
         </ul>
         {/*<form className="d-flex" role="search">*/}
