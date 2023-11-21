@@ -25,6 +25,13 @@ public class ReservationService {
         this.userRepository = userRepository;
     }
 
+    public Optional<Reservation> hasReservationToday(Principal principal) {
+        UserDTO userConnected = this.userService.getUserConnected(principal);
+        LocalDate localDate = LocalDate.now();
+
+        return this.reservationRepository.findReservationsByUserIdAndReservationDate(userConnected.getId(), localDate);
+    }
+
 
     public List<Reservation> getReservations(Principal principal) {
         UserDTO userConnected = this.userService.getUserConnected(principal);
