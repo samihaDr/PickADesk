@@ -15,4 +15,7 @@ public class RegisterRequest {
     private String lastname;
     private String firstname;
     private String password;
+    private Integer teamId;
+
+
 }

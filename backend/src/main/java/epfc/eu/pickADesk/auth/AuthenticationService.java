@@ -43,10 +43,12 @@ public class AuthenticationService {
                 .lastname(StringUtils.capitalize(request.getLastname()))
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .teamId(request.getTeamId())
                 .role(Role.USER)
                 .locked(false)
                 .enabled(true)
                 .build();
+
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         saveUserToken(savedUser, jwtToken);
