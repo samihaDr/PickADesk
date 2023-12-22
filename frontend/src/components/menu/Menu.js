@@ -1,31 +1,45 @@
 import "./Menu.scss";
-import { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import { GlobalContext } from "../../services/GlobalState";
+import { Link } from "react-router-dom";
 
-export default function Menu({ userConnected }) {
+export default function Menu() {
+  const { userConnected } = useContext(GlobalContext);
+  console.log("User Connected:", userConnected);
   useEffect(() => {
     console.log("Menu is mounted");
     console.log("USER CONNECTED in Menu: ", userConnected);
   }, [userConnected]);
+  if (!userConnected) {
+    return null; // Ne rien rendre si l'utilisateur n'est pas connecté
+  }
+
   return (
     <div className="fixed-menu">
       <nav className="nav flex-column">
-        <div>HELLOOOOO {userConnected}!!!!!!!</div>
-        <a className="nav-link active" aria-current="page" href="#">
+        <div>{userConnected}'s space</div>
+        <br />
+
+        <Link to="/dashboard" className="nav-link active" aria-current="page">
           Dashboard
-        </a>
-        <a className="nav-link" href="#">
+        </Link>
+        <Link
+          to="/currentReservation"
+          className="nav-link active"
+          aria-current="page"
+        >
           Current reservations
-        </a>
-        <a
-          className="nav-link"
-          href="/addReservation"
-          userConnected={userConnected}
+        </Link>
+        <Link
+          to="/addReservation"
+          className="nav-link active"
+          aria-current="page"
         >
           New reservation
-        </a>
-        <a className="nav-link" href="#">
-          Find a colleague
-        </a>
+        </Link>
+        <Link to="/" className="nav-link active" aria-current="page">
+          Find Colleague
+        </Link>
       </nav>
     </div>
   );
