@@ -17,17 +17,12 @@ const LogoutButton = ({ setUserConnected }) => {
 
         sessionStorage.removeItem(AUTH_TOKEN_KEY);
         setUserConnected(null);
-        navigate("/");
+        navigate("/login");
       }
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
-      // Gérer les erreurs de déconnexion
     }
   };
-
-  // useEffect(() => {
-  //   logout();
-  // }, []);
 
   return (
     <button className="nav-link" onClick={logout}>
