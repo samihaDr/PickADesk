@@ -1,43 +1,64 @@
 import logo from "../../assets/images/logo.png";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import "./Navbar.scss";
 import LogoutButton from "../logout/Logout";
+import { Link } from "react-router-dom";
+import { GlobalContext } from "../../services/GlobalState";
 
-export default function Navbar({ userConnected, setUserConnected }) {
+export default function Navbar() {
+  const { userConnected, weeklyQuota, setUserConnected } =
+    useContext(GlobalContext);
+
   useEffect(() => {
-    console.log("Navbar is mounted");
     console.log("USER CONNECTED in Navbar: ", userConnected);
-  }, [userConnected]);
+    console.log("Weekly quota :", weeklyQuota);
+  }, [userConnected, weeklyQuota]);
+  if (!userConnected) {
+    return null; // Ne rien rendre si l'utilisateur n'est pas connecté
+  }
 
-  console.log("Navbar is rendered");
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">
-          <img
-            src={logo}
-            alt="Logo"
-            width="80"
-            height="60"
-            className="d-inline-block align-text-top"
-          />
-        </a>
-        <span className="nav-item">
-          <div style={{ fontWeight: "bold", color: "#1f4e5f" }}>
-            Welcome, {userConnected}
-          </div>
-        </span>
+        <div className="welcome">
+          <a className="navbar-brand" href="/">
+            <img
+              src={logo}
+              alt="Logo"
+              width="80"
+              height="60"
+              className="d-inline-block align-text-top"
+            />
+          </a>
+          <span className="userInfo">
+            {userConnected && (
+              <div style={{ fontWeight: "bold", color: "#1f4e5f" }}>
+                <p>Welcome, {userConnected}</p>
+              </div>
+            )}
+          </span>
+        </div>
+
+        <div className="quotaInfo">
+          <span className="weeklyQuota">
+            {<div> Quota : {weeklyQuota}</div>}
+          </span>
+          <span className="remaining">
+            {<div> Remaining : {weeklyQuota}</div>}
+          </span>
+        </div>
+
         <ul className="nav justify-content-end">
           <li className="nav-item">
-            <a className="nav-link active" aria-current="page" href="/">
+            <Link
+              to="/dashboard"
+              className="nav-link active"
+              aria-current="page"
+            >
               Home
-            </a>
+            </Link>
           </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-              Profile
-            </a>
-          </li>
+
           <li className="nav-item">
             <LogoutButton setUserConnected={setUserConnected} />
           </li>

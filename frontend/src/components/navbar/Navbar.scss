@@ -1,0 +1,19 @@
+.welcome {
+  display: flex;
+  align-items: flex-start;
+}
+.userInfo {
+  align-self: center;
+}
+
+.quotaInfo {
+  display: flex;
+  align-items: flex-end;
+}
+.weeklyQuota {
+  align-self: center;
+  margin-right: 15px;
+}
+.remaining {
+  align-self: center;
+}

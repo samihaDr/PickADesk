@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AUTH_TOKEN_KEY } from "../../App";
+import { GlobalContext } from "../../services/GlobalState";
 
 export default function Dashboard() {
+  const { userConnected } = useContext(GlobalContext);
+  console.log("User Connected in Dashboard: " + userConnected);
   const today = new Date();
   const options = {
     weekday: "long",
@@ -27,11 +30,9 @@ export default function Dashboard() {
       })
       .then((response) => {
         const { success, message, data } = response.data;
-        //const reservationDataFromServer = response.data;
         if (success) {
           setReservationData(data);
         } else {
-          // Gérez les erreurs ou les messages d'échec ici
           console.error("Erreur de récupération de la réservation :", message);
         }
       })
@@ -39,13 +40,20 @@ export default function Dashboard() {
         console.error("Erreur lors de la requête :", error);
       });
   }, []);
+  if (!userConnected) {
+    return null;
+  }
 
   return (
-    <div className="card">
+    <div className="main">
       <h2 style={{ color: "#1f4e5f" }}>My status</h2>
+      <br />
       <div className="dashboard-container">
         <div className="date">
           <p>{dateFormatted}</p>
+        </div>
+        <div className="hello">
+          <p> Hello {userConnected}</p>
         </div>
         {reservationData.id ? (
           <div className="content">
@@ -56,12 +64,15 @@ export default function Dashboard() {
                 {" "}
                 {reservationData.workStationId}{" "}
               </strong>{" "}
-              is reserved for you
+              is reserved for you.
             </p>
             <p>
-              You still have{" "}
+              you have reserved a{" "}
               <strong color={"#1f4e5f"}>{reservationData.nbTimeSlot} </strong>{" "}
               slots
+            </p>
+            <p>
+              You still have <strong color={"#1f4e5f"}>{} </strong> slots
             </p>
           </div>
         ) : (

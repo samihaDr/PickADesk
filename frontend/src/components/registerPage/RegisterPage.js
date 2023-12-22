@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./RegisterPage.scss";
 import { AUTH_TOKEN_KEY } from "../../App";
 import { EmailValidator } from "../../services/EmailValidator";
 import { PasswordValidator } from "../../services/PasswordValidator";
+import { GlobalContext } from "../../services/GlobalState";
 
-export default function RegisterPage({ setUserConnected }) {
+export default function RegisterPage() {
+  const { setUserConnected, setWeeklyQuota } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [departmentData, setDepartmentData] = useState([]);
   const [teamData, setTeamData] = useState([]);
@@ -42,6 +44,7 @@ export default function RegisterPage({ setUserConnected }) {
             `/api/teams/allTeamsByDepartment/${userData.departmentId}`,
           );
           setTeamData(response.data);
+          console.log("Teams ========= : ", response.data);
         } catch (error) {
           console.error("Error fetching teams:", error);
         }
@@ -75,7 +78,14 @@ export default function RegisterPage({ setUserConnected }) {
         });
 
         const userInfoData = userInfoResponse.data;
+        console.log("UserInfoData :::::::: " + userInfoData);
         setUserConnected(`${userInfoData.firstname} ${userInfoData.lastname}`);
+        const teamInfoResponse = await axios.get(
+          `/api/teams/getTeamById/${userData.teamId}`,
+        );
+        const teamInfoData = teamInfoResponse.data;
+        console.log("TEamInfoData :   ", teamInfoData);
+        setWeeklyQuota(`${teamInfoData.memberQuota}`);
         setError("");
         navigate("/dashboard");
       } catch (error) {
