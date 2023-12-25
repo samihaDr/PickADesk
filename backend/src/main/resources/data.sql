@@ -22,3 +22,33 @@ INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_
 INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_Min) VALUES ('DevTeam',3, 2.5, 2.5, 1);
 INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_Min) VALUES ('DevOpsTeam', 3, 2.5, 2.5, 1);
 INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_Min) VALUES ('TestTeam', 3, 2.5, 2.5, 1);
+
+-- Insert into reservation_type table
+INSERT INTO reservation_type (name) VALUES ('Individual space');
+INSERT INTO reservation_type (name) VALUES ('Collaborative space');
+INSERT INTO reservation_type (name) VALUES ('Team day');
+
+--Insert into work_area table
+INSERT INTO work_area (name) VALUES ('Quiet space');
+INSERT INTO work_area (name) VALUES ('Working space');
+INSERT INTO work_area (name) VALUES ('Meeting space');
+
+--Insert into equipment
+INSERT INTO equipment (name) VALUES ('Hp Thunderbolt docking');
+INSERT INTO equipment (name) VALUES ('Hp Ultra slim docking');
+INSERT INTO equipment (name) VALUES ('Keyboard');
+INSERT INTO equipment (name) VALUES ('Mouse');
+--
+--Insert into screen
+INSERT INTO screen (name) VALUES ('No screen');
+INSERT INTO screen (name) VALUES ('Standard screen');
+INSERT INTO screen (name) VALUES ('Large screen');
+INSERT INTO screen (name) VALUES ('Double standard screen');
+INSERT INTO screen (name) VALUES ('Double large screen');
+
+--Insert into furniture
+INSERT INTO furniture (name) VALUES ('Normal desk');
+INSERT INTO furniture (name) VALUES ('Adjustable desk');
+INSERT INTO furniture (name) VALUES ('Normal chair');
+INSERT INTO furniture (name) VALUES ('Adjustable chair');
+
