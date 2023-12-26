@@ -10,6 +10,7 @@ import axios from "axios";
 import Dashboard from "./components/dashboard/Dashboard";
 import Layout from "./Layout";
 import ProfilePage from "./components/profilePage/ProfilePage";
+import ChangePassword from "./components/changePassword/ChangePassword";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="addReservation" element={<AddReservation />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="changePassword" element={<ChangePassword />} />
         <Route path="registerPage" element={<RegisterPage />} />
         <Route path="profilePage" element={<ProfilePage />} />
         <Route path="loginPage" element={<LoginPage />} />
