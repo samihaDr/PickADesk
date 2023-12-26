@@ -15,4 +15,8 @@ public class DepartmentService {
     public List<Department> getAllDepartments() {
         return departmentRepository.findAll();
     }
+
+    public Department getDepartment(Integer teamId) {
+        return departmentRepository.findDepartmentByTeamId(teamId);
+    }
 }
