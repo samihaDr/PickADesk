@@ -87,7 +87,7 @@ export default function RegisterPage() {
         console.log("TEamInfoData :   ", teamInfoData);
         setWeeklyQuota(`${teamInfoData.memberQuota}`);
         setError("");
-        navigate("/dashboard");
+        navigate("/profilePage");
       } catch (error) {
         if (error.response) {
           setError(`Erreur du serveur: ${error.response.status}`);
