@@ -60,6 +60,16 @@ export default function Navbar() {
           </li>
 
           <li className="nav-item">
+            <Link
+              to="/profilePage"
+              className="nav-link active"
+              aria-current="page"
+            >
+              Profile
+            </Link>
+          </li>
+
+          <li className="nav-item">
             <LogoutButton setUserConnected={setUserConnected} />
           </li>
         </ul>
