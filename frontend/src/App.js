@@ -1,16 +1,20 @@
 import React, { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
+
 import { GlobalProvider } from "./services/GlobalState";
 import LoginPage from "./components/loginPage/LoginPage.js";
-import { Route, Routes } from "react-router-dom";
 import AddReservation from "./components/reservation/AddReservation";
 import RegisterPage from "./components/registerPage/RegisterPage";
 import Home from "./components/home/Home";
-import "bootstrap/dist/css/bootstrap-grid.min.css";
-import axios from "axios";
 import Dashboard from "./components/dashboard/Dashboard";
 import Layout from "./Layout";
 import ProfilePage from "./components/profilePage/ProfilePage";
 import ChangePassword from "./components/changePassword/ChangePassword";
+
+import "bootstrap/dist/css/bootstrap-grid.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import axios from "axios";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 export default function App() {
