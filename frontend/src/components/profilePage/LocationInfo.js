@@ -25,84 +25,73 @@ const LocationInfo = ({ formData, handleChange }) => {
           <div className="formLocationInfo-container">
             <form>
               <div className="mb-3">
-                <label htmlFor="InputLastname" className="form-label">
-                  Country
-                </label>
-                <input
-                  disabled={true}
-                  type="text"
-                  className="form-control"
-                  id="Lastname"
-                  name="lastname"
-                  value={formData.lastname}
+                <label>Country</label>
+                <select
+                  name="countryId"
                   onChange={handleChange}
-                />
+                  className="form-select"
+                  value={formData.countryId}
+                >
+                  <option value="">Select a Country</option>
+                  {formData.countries &&
+                    formData.countries.map((country) => (
+                      <option key={country.id} value={country.id}>
+                        {country.name}
+                      </option>
+                    ))}
+                </select>
               </div>
               <div className="mb-3">
-                <label htmlFor="InputFirstname" className="form-label">
-                  City
-                </label>
-                <input
-                  disabled={true}
-                  type="text"
-                  className="form-control"
-                  id="Firstname"
-                  name="firstname"
-                  value={formData.firstname}
+                <label>City</label>
+                <select
+                  name="cityId"
                   onChange={handleChange}
-                />
+                  className="form-select"
+                  value={formData.cityId}
+                >
+                  <option value="">Select a City</option>
+                  {formData.cities &&
+                    formData.cities.map((city) => (
+                      <option key={city.id} value={city.id}>
+                        {city.name}
+                      </option>
+                    ))}
+                </select>
               </div>
               <div className="mb-3">
-                <label htmlFor="InputDepartment" className="form-label">
-                  Office
-                </label>
-                <input
-                  disabled={true}
-                  type="text"
-                  className="form-control"
-                  id="Department"
-                  name="department"
-                  value={formData.department}
+                <label>Office</label>
+                <select
+                  name="officeId"
                   onChange={handleChange}
-                />
+                  className="form-select"
+                  value={formData.officeId}
+                >
+                  <option value="">Select a Office</option>
+                  {formData.offices &&
+                    formData.offices.map((office) => (
+                      <option key={office.id} value={office.id}>
+                        {office.name}
+                      </option>
+                    ))}
+                </select>
               </div>
               <div className="mb-3">
-                <label htmlFor="InputTeam" className="form-label">
-                  Address
-                </label>
-                <input
-                  disabled={true}
-                  type="text"
-                  className="form-control"
-                  id="Team"
-                  name="team"
-                  value={formData.team}
+                <label>Zone</label>
+                <select
+                  name="zoneId"
                   onChange={handleChange}
-                />
+                  className="form-select"
+                  value={formData.zoneId}
+                >
+                  <option value="">Select a Zone</option>
+                  {formData.zones &&
+                    formData.zones.map((zone) => (
+                      <option key={zone.id} value={zone.id}>
+                        {zone.name}
+                      </option>
+                    ))}
+                </select>
               </div>
-              <div className="mb-3">
-                <label htmlFor="InputTeam" className="form-label">
-                  Floor
-                </label>
-                <input
-                  disabled={true}
-                  type="text"
-                  className="form-control"
-                  id="Team"
-                  name="team"
-                  value={formData.team}
-                  onChange={handleChange}
-                />
-              </div>
-              {/*<div className="mb-3">*/}
-              {/*  <button*/}
-              {/*    type="button"*/}
-              {/*    className="btn btn-secondary"*/}
-              {/*    onClick={handleChangePasswordClick}*/}
-              {/*  >*/}
-              {/*    Change Password*/}
-              {/*  </button>*/}
-              {/*</div>*/}
             </form>
           </div>
         </div>
