@@ -11,6 +11,52 @@ INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_i
 INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-11-22', 1, 100, 1, 2);
 INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-11-26', 1, 10, 1, 20);
 
+--Insert into country table
+INSERT INTO country (name) VALUES ('Belgium');
+INSERT INTO country (name) VALUES ('France');
+INSERT INTO country (name) VALUES ('Morocco');
+INSERT INTO country (name) VALUES ('Germany');
+
+--Insert into city table
+INSERT INTO city (name, country_id) VALUES ('Brussels', 1);
+INSERT INTO city (name, country_id) VALUES ('Antwerp', 1);
+INSERT INTO city (name, country_id) VALUES ('Paris', 2);
+INSERT INTO city (name, country_id) VALUES ('Bordeaux', 2);
+INSERT INTO city (name, country_id) VALUES ('Lyon', 2);
+INSERT INTO city (name, country_id) VALUES ('Rabat', 3);
+INSERT INTO city (name, country_id) VALUES ('Agadir', 3);
+INSERT INTO city (name, country_id) VALUES ('Berlin', 4);
+INSERT INTO city (name, country_id) VALUES ('Dusseldorf', 4);
+
+-- Insert into office table
+INSERT INTO office (name, city_id) VALUES ('Bd Adolph Max n° 130 1000 Bruxelles', 1);
+INSERT INTO office (name, city_id) VALUES ('Rue Blabla n° 50 1080 Molenbeek', 1);
+INSERT INTO office (name, city_id) VALUES ('Amerikalei n° 13 2000 antwerp', 2);
+INSERT INTO office (name, city_id) VALUES ('Bd de la defence n°152 92400 Courbevoie', 3);
+INSERT INTO office (name, city_id) VALUES ('Bd de la Jeunesse n°15', 4);
+INSERT INTO office (name, city_id) VALUES ('Rue Haute n°109', 5);
+INSERT INTO office (name, city_id) VALUES ('Rue de Bruxelles n°40 Ocean ', 6);
+INSERT INTO office (name, city_id) VALUES ('Rue Ankara n°67 ', 7);
+INSERT INTO office (name, city_id) VALUES ('Office 1 ', 8);
+INSERT INTO office (name, city_id) VALUES ('Office 2 ', 8);
+INSERT INTO office (name, city_id) VALUES ('Office 1 ', 9);
+
+-- Insert into zone table
+INSERT INTO zone (name, office_id) VALUES ('Zone A', 1);
+INSERT INTO zone (name, office_id) VALUES ('Zone B', 1);
+INSERT INTO zone (name, office_id) VALUES ('Zone C', 1);
+INSERT INTO zone (name, office_id) VALUES ('Floor 1', 2);
+INSERT INTO zone (name, office_id) VALUES ('Floor 2', 2);
+INSERT INTO zone (name, office_id) VALUES ('Zone A', 3);
+INSERT INTO zone (name, office_id) VALUES ('Zone B', 3);
+INSERT INTO zone (name, office_id) VALUES ('Zone A', 4);
+INSERT INTO zone (name, office_id) VALUES ('Zone B', 4);
+INSERT INTO zone (name, office_id) VALUES ('Zone C', 4);
+INSERT INTO zone (name, office_id) VALUES ('Floor 1', 5);
+INSERT INTO zone (name, office_id) VALUES ('Floor 2', 5);
+INSERT INTO zone (name, office_id) VALUES ('Floor 3', 5);
+
+
 -- Insert into department table
 INSERT INTO department (name) VALUES ('COM');
 INSERT INTO department (name) VALUES ('HR');
