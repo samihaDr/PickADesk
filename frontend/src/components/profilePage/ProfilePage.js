@@ -21,6 +21,16 @@ const initialState = {
     cityId: "",
     officeId: "",
     zoneId: "",
+    reservationTypes: [],
+    workAreas: [],
+    equipments: [],
+    screens: [],
+    furnitures: [],
+    reservationTypeId: "",
+    workAreaId: "",
+    equipmentIds: [],
+    screenId: "",
+    furnitureIds: [],
   },
   error: "",
   isLoading: false,
@@ -45,6 +55,14 @@ function reducer(state, action) {
       };
     case "UPDATE_LOCATIONS":
       return { ...state, formData: { ...state.formData, ...action.payload } };
+    case "UPDATE_PREFERENCE":
+      return {
+        ...state,
+        formData: {
+          ...state.formData,
+          [action.field]: action.value,
+        },
+      };
     default:
       return state;
   }
@@ -53,7 +71,6 @@ function reducer(state, action) {
 const fetchApi = async (url, dispatch) => {
   try {
     const response = await axios.get(url);
-    console.log(`9999999  Data from ${url}:`, response.data); // Ajout pour le débogage
     return response.data;
   } catch (error) {
     dispatch({
@@ -77,7 +94,6 @@ const EditProfile = () => {
       console.log("User Data:", userData);
       if (userData) {
         dispatch({ type: "FETCH_SUCCESS", payload: userData });
-
         const departmentData = await fetchApi(
           `/api/departments/getDepartment/${userData.teamId}`,
           dispatch,
@@ -87,7 +103,6 @@ const EditProfile = () => {
           dispatch,
         );
         formData.team = teamData;
-        console.log("FormDATA //// Team", formData.team);
         const countriesData = await fetchApi("/api/countries", dispatch);
         dispatch({
           type: "FETCH_SUCCESS",
@@ -97,9 +112,6 @@ const EditProfile = () => {
             countries: countriesData,
           },
         });
-        formData.department = departmentData;
-
-        formData.countries = countriesData;
       } else {
         dispatch({
           type: "FETCH_FAILURE",
@@ -109,7 +121,7 @@ const EditProfile = () => {
     };
 
     fetchUserData();
-  }, [userConnected.id]); // Ajout de userConnected.id comme dépendance
+  }, [userConnected.id]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -121,7 +133,7 @@ const EditProfile = () => {
   };
 
   async function updateLocationInfoForm(name, value) {
-    if (!value) return; // Ajout d'une vérification pour s'assurer que la valeur n'est pas vide
+    if (!value) return;
 
     let updatedData = {};
     if (name === "countryId") {
@@ -152,8 +164,35 @@ const EditProfile = () => {
     dispatch({ type: "UPDATE_LOCATIONS", payload: updatedData });
   }
 
-  const updatePreference = (value) => {
-    // ... La logique pour mettre à jour les préférences ...
+  useEffect(() => {
+    const fetchBookingPreferencesData = async () => {
+      dispatch({ type: "START_FETCH" });
+
+      const reservationTypeData = await fetchApi(
+        "/api/reservationTypes",
+        dispatch,
+      );
+      const workAreaData = await fetchApi("/api/workAreas", dispatch);
+      const equipmentData = await fetchApi("/api/equipments", dispatch);
+      const screenData = await fetchApi("/api/screens", dispatch);
+      const furnitureData = await fetchApi("/api/furnitures", dispatch);
+
+      dispatch({
+        type: "FETCH_SUCCESS",
+        payload: {
+          reservationTypes: reservationTypeData || [],
+          workAreas: workAreaData || [],
+          equipments: equipmentData || [],
+          screens: screenData || [],
+          furnitures: furnitureData || [],
+        },
+      });
+    };
+
+    fetchBookingPreferencesData();
+  }, []);
+  const updatePreference = (name, value) => {
+    dispatch({ type: "UPDATE_PREFERENCE", field: name, value: value });
   };
 
   const onSubmit = async (event) => {
@@ -185,20 +224,22 @@ const EditProfile = () => {
       <h2>Edit profile</h2>
       {isLoading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
-      <div className="accordion" id="accordionExample">
-        <PersonalInfo formData={formData} handleChange={handleChange} />
-        <LocationInfo formData={formData} handleChange={handleChange} />
-        <BookingPreferences
-          formData={formData}
-          updatePreference={updatePreference}
-        />
-      </div>
-      <br />
-      <div>
-        <button type="submit" className="btn btn-primary">
-          Save preferences
-        </button>
-      </div>
+      <form onSubmit={onSubmit}>
+        <div className="accordion" id="accordionExample">
+          <PersonalInfo formData={formData} handleChange={handleChange} />
+          <LocationInfo formData={formData} handleChange={handleChange} />
+          <BookingPreferences
+            formData={state.formData}
+            updatePreference={updatePreference}
+          />
+        </div>
+        <br />
+        <div>
+          <button type="submit" className="btn btn-primary">
+            Save preferences
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
