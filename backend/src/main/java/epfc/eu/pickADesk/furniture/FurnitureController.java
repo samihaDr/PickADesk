@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @SecurityRequirement(name = "bearerAuth")
-@RequestMapping("/api/furniture")
+@RequestMapping("/api/furnitures")
 public class FurnitureController {
     private final FurnitureService furnitureService;
 

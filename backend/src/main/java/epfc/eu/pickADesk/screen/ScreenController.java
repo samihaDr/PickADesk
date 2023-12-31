@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @SecurityRequirement(name = "bearerAuth")
-@RequestMapping("/api/screen")
+@RequestMapping("/api/screens")
 public class ScreenController {
     private final ScreenService screenService;
 

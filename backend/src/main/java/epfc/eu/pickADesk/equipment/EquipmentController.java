@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @SecurityRequirement(name = "bearerAuth")
-@RequestMapping("/api/equipment")
+@RequestMapping("/api/equipments")
 public class EquipmentController {
     private final EquipmentService equipmentService;
 

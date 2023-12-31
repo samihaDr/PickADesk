@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @SecurityRequirement(name = "bearerAuth")
-@RequestMapping("/api/workArea")
+@RequestMapping("/api/workAreas")
 public class WorkAreaController {
 
     private final WorkAreaService workAreaService;
@@ -17,7 +17,7 @@ public class WorkAreaController {
     public WorkAreaController(WorkAreaService workAreaService) {
         this.workAreaService = workAreaService;
     }
-    @GetMapping("/workArea")
+    @GetMapping()
     public ResponseEntity<?> getWorkArea() {
         return new ResponseEntity<>(workAreaService.getWorkArea(), HttpStatus.OK);
     }

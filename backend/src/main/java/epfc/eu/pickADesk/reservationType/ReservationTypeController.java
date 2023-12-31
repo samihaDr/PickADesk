@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @SecurityRequirement(name = "bearerAuth")
-@RequestMapping("/api/reservationType")
+@RequestMapping("/api/reservationTypes")
 public class ReservationTypeController {
     private final ReservationTypeService reservationTypeService;
 
