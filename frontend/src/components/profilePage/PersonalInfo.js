@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
 const PersonalInfo = ({ formData, handleChange }) => {
+  console.log("PersonalInfo : ", formData);
+  const navigate = useNavigate();
   const handleChangePasswordClick = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const navigate = useNavigate();
-    navigate("/changePassword"); // Redirige vers la page de changement de mot de passe
+    navigate("/changePassword");
   };
   return (
     <div className="accordion-item">
@@ -28,73 +28,71 @@ const PersonalInfo = ({ formData, handleChange }) => {
       >
         <div className="accordion-body">
           <div className="form-container">
-            <form>
-              <div className="mb-3">
-                <label htmlFor="InputLastname" className="form-label">
-                  LastName
-                </label>
-                <input
-                  disabled={true}
-                  type="text"
-                  className="form-control"
-                  id="Lastname"
-                  name="lastname"
-                  value={formData.lastname}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="InputFirstname" className="form-label">
-                  FirstName
-                </label>
-                <input
-                  disabled={true}
-                  type="text"
-                  className="form-control"
-                  id="Firstname"
-                  name="firstname"
-                  value={formData.firstname}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="InputDepartment" className="form-label">
-                  Department
-                </label>
-                <input
-                  disabled={true}
-                  type="text"
-                  className="form-control"
-                  id="Department"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="InputTeam" className="form-label">
-                  Team
-                </label>
-                <input
-                  disabled={true}
-                  type="text"
-                  className="form-control"
-                  id="Team"
-                  name="team"
-                  value={formData.team}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-3">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={handleChangePasswordClick}
-                >
-                  Change Password
-                </button>
-              </div>
-            </form>
+            <div className="mb-3">
+              <label htmlFor="InputLastname" className="form-label">
+                LastName
+              </label>
+              <input
+                disabled={true}
+                type="text"
+                className="form-control"
+                id="Lastname"
+                name="lastname"
+                value={formData.lastname}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="InputFirstname" className="form-label">
+                FirstName
+              </label>
+              <input
+                disabled={true}
+                type="text"
+                className="form-control"
+                id="Firstname"
+                name="firstname"
+                value={formData.firstname}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="InputDepartment" className="form-label">
+                Department
+              </label>
+              <input
+                disabled={true}
+                type="text"
+                className="form-control"
+                id="Department"
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="InputTeam" className="form-label">
+                Team
+              </label>
+              <input
+                disabled={true}
+                type="text"
+                className="form-control"
+                id="Team"
+                name="team"
+                value={formData.team}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleChangePasswordClick}
+              >
+                Change Password
+              </button>
+            </div>
           </div>
         </div>
       </div>
