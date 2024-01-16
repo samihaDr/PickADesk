@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer } from "react";
 import axios from "axios";
 import { GlobalContext } from "../../services/GlobalState";
-import { getUserConnected } from "../../services/getUserConnected";
+import { getUserConnected } from "../../services/GetUserConnected";
 import "./ProfilePage.scss";
 import PersonalInfo from "./PersonalInfo";
 import LocationInfo from "./LocationInfo";
@@ -32,6 +32,7 @@ const initialState = {
     screenId: "",
     furnitureIds: [],
   },
+
   error: "",
   isLoading: false,
 };
@@ -55,7 +56,7 @@ function reducer(state, action) {
       };
     case "UPDATE_LOCATIONS":
       return { ...state, formData: { ...state.formData, ...action.payload } };
-    case "UPDATE_PREFERENCE":
+    case "UPDATE_BOOKING_PREFERENCES":
       return {
         ...state,
         formData: {
@@ -63,6 +64,7 @@ function reducer(state, action) {
           [action.field]: action.value,
         },
       };
+
     default:
       return state;
   }
@@ -83,16 +85,17 @@ const fetchApi = async (url, dispatch) => {
 };
 
 const EditProfile = () => {
-  const { userConnected, setUserConnected } = useContext(GlobalContext);
+  const { userConnected, userPreferences, setUserPreferences } =
+    useContext(GlobalContext);
+
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { formData, error, isLoading } = state;
+  let { formData, error, isLoading } = state;
 
   useEffect(() => {
     const fetchUserData = async () => {
       dispatch({ type: "START_FETCH" });
       const userData = await getUserConnected();
-      console.log("User Data:", userData);
-      if (userData) {
+      if (userData.id) {
         dispatch({ type: "FETCH_SUCCESS", payload: userData });
         const departmentData = await fetchApi(
           `/api/departments/getDepartment/${userData.teamId}`,
@@ -102,16 +105,42 @@ const EditProfile = () => {
           `/api/teams/getTeamById/${userData.teamId}`,
           dispatch,
         );
+
         formData.team = teamData;
         const countriesData = await fetchApi("/api/countries", dispatch);
         dispatch({
           type: "FETCH_SUCCESS",
           payload: {
+            userId: userData.id,
             department: departmentData.name,
             team: teamData.name,
             countries: countriesData,
           },
         });
+
+        // // Récupérer les préférences utilisateur
+        // const userPreferences = await fetchApi(
+        //   `/api/userPreferences/${userData.id}`,
+        //   dispatch,
+        // );
+        // if (userPreferences) {
+        //   console.log("USER PREFERENCES In ProfilePage ;;;; ", userPreferences);
+        //   dispatch({
+        //     type: "UPDATE_USER_PREFERENCES",
+        //     payload: {
+        //       countryId: userPreferences.countryId,
+        //       cityId: userPreferences.cityId,
+        //       officeId: userPreferences.officeId,
+        //       zoneId: userPreferences.zoneId,
+        //       reservationTypeId: userPreferences.reservationTypeId,
+        //       workAreaId: userPreferences.workAreaId,
+        //       equipmentIds: userPreferences.equipmentIds,
+        //       screenId: userPreferences.screenId,
+        //       furnitureIds: userPreferences.furnitureIds,
+        //     },
+        //   });
+        // }
+        // setUserPreferences(userPreferences);
       } else {
         dispatch({
           type: "FETCH_FAILURE",
@@ -121,7 +150,7 @@ const EditProfile = () => {
     };
 
     fetchUserData();
-  }, [userConnected.id]);
+  }, [userConnected, setUserPreferences]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -164,6 +193,8 @@ const EditProfile = () => {
     dispatch({ type: "UPDATE_LOCATIONS", payload: updatedData });
   }
 
+  // Récupérer les préférences utilisateur
+
   useEffect(() => {
     const fetchBookingPreferencesData = async () => {
       dispatch({ type: "START_FETCH" });
@@ -191,20 +222,33 @@ const EditProfile = () => {
 
     fetchBookingPreferencesData();
   }, []);
-  const updatePreference = (name, value) => {
-    dispatch({ type: "UPDATE_PREFERENCE", field: name, value: value });
+  const updateBookingPreferences = (name, value) => {
+    dispatch({ type: "UPDATE_BOOKING_PREFERENCES", field: name, value: value });
   };
 
+  // Fonction pour sélectionner les données nécessaires
+  const getPreferencesData = (formData) => {
+    return {
+      userId: formData.userId,
+      countryId: formData.countryId,
+      cityId: formData.cityId,
+      officeId: formData.officeId,
+      zoneId: formData.zoneId,
+      reservationTypeId: formData.reservationTypeId,
+      workAreaId: formData.workAreaId,
+      equipmentIds: formData.equipmentIds,
+      screenId: formData.screenId,
+      furnitureIds: formData.furnitureIds,
+    };
+  };
   const onSubmit = async (event) => {
     event.preventDefault();
     dispatch({ type: "START_FETCH" });
-
+    const preferencesData = getPreferencesData(formData);
     try {
-      const response = await axios.put(
-        `/api/users/editProfile/${userConnected.id}`,
-        formData,
-      );
-      setUserConnected(response.data);
+      await axios.post(`/api/userPreferences/addPreferences`, preferencesData);
+      //setUserConnected(response.data);
+      setUserPreferences(preferencesData);
       dispatch({ type: "FETCH_SUCCESS" });
     } catch (error) {
       console.error("Erreur lors de la mise à jour du profil :", error);
@@ -227,10 +271,15 @@ const EditProfile = () => {
       <form onSubmit={onSubmit}>
         <div className="accordion" id="accordionExample">
           <PersonalInfo formData={formData} handleChange={handleChange} />
-          <LocationInfo formData={formData} handleChange={handleChange} />
+          <LocationInfo
+            formData={formData}
+            userPreferences={userPreferences}
+            handleChange={handleChange}
+          />
           <BookingPreferences
             formData={state.formData}
-            updatePreference={updatePreference}
+            userPreferences={userPreferences}
+            updateBookingPreferences={updateBookingPreferences}
           />
         </div>
         <br />
@@ -238,6 +287,19 @@ const EditProfile = () => {
           <button type="submit" className="btn btn-primary">
             Save preferences
           </button>
+
+          <span className="link-space">
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;
+          </span>
+
+          {/*<button*/}
+          {/*  type="submit"*/}
+          {/*  className="btn btn-primary"*/}
+          {/*  onClick={() => setUserPreferences([])}*/}
+          {/*>*/}
+          {/*  Edit preferences*/}
+          {/*</button>*/}
         </div>
       </form>
     </div>
