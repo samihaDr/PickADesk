@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 
-const LogoutButton = ({ setUserConnected }) => {
+const LogoutButton = ({ setUserConnected, setUserPreferences }) => {
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -16,6 +16,8 @@ const LogoutButton = ({ setUserConnected }) => {
         await axios.post("/api/users/logout", null, { headers });
 
         sessionStorage.removeItem(AUTH_TOKEN_KEY);
+
+        setUserPreferences([]);
         setUserConnected(null);
         navigate("/login");
       }
