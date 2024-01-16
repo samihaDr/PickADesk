@@ -24,4 +24,9 @@ public class OfficeController {
     public ResponseEntity<List<Office>> getOfficesByCityId(@PathVariable Integer cityId) {
         return new ResponseEntity<>(officeService.getOfficesByCityId(cityId), HttpStatus.OK);
     }
+
+    @GetMapping("/getOffices")
+    public ResponseEntity<List<Office>> getOffices() {
+        return new ResponseEntity<>(officeService.getOffices(), HttpStatus.OK);
+    }
 }

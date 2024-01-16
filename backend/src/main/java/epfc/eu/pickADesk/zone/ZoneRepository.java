@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ZoneRepository extends JpaRepository<Zone, Integer> {
     List<Zone> findZonesByOfficeId(Integer officeId);
+
+    List<Zone> findAll();
 }

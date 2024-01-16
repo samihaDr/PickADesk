@@ -12,6 +12,10 @@ public class CityService {
         this.cityRepository = cityRepository;
     }
 
+    public List<City> getCities() {
+        return cityRepository.findAll();
+    }
+
     public List<City> getCitiesByCountry(Integer countryId) {
         return cityRepository.findCitiesByCountryId(countryId);
     }

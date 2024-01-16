@@ -12,6 +12,10 @@ public class OfficeService {
         this.officeRepository = officeRepository;
     }
 
+    public List<Office> getOffices() {
+        return this.officeRepository.findAll();
+    }
+
     public List<Office> getOfficesByCityId(Integer cityId) {
         return officeRepository.findOfficesByCityId(cityId);
     }

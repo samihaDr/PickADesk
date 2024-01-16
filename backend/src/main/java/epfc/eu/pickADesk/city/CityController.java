@@ -20,6 +20,11 @@ public class CityController {
         this.cityService = cityService;
     }
 
+    @GetMapping("/getCities")
+    public ResponseEntity<List<City>> getCities() {
+        return new ResponseEntity<>(cityService.getCities(), HttpStatus.OK);
+    }
+
     @GetMapping("/getCities/{countryId}")
     public ResponseEntity<List<City>> getCitiesByCountry(@PathVariable Integer countryId) {
         return new ResponseEntity<>(cityService.getCitiesByCountry(countryId), HttpStatus.OK);

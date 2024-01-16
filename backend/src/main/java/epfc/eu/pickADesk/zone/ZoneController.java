@@ -24,4 +24,9 @@ public class ZoneController {
     public ResponseEntity<List<Zone>> getZonesByOfficeId(@PathVariable Integer officeId) {
         return new ResponseEntity<>(zoneService.getZonesByOfficeId(officeId), HttpStatus.OK);
     }
+
+    @GetMapping("/getZones")
+    public ResponseEntity<List<Zone>> getZones() {
+        return new ResponseEntity<>(zoneService.getZones(), HttpStatus.OK);
+    }
 }

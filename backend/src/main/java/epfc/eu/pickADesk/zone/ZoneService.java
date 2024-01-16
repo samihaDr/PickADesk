@@ -16,4 +16,8 @@ public class ZoneService {
     public List<Zone> getZonesByOfficeId(Integer officeId) {
         return zoneRepository.findZonesByOfficeId(officeId);
     }
+
+    public List<Zone> getZones() {
+        return zoneRepository.findAll();
+    }
 }
