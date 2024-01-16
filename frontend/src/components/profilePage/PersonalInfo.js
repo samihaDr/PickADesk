@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
 const PersonalInfo = ({ formData, handleChange }) => {
-  console.log("PersonalInfo : ", formData);
   const navigate = useNavigate();
   const handleChangePasswordClick = () => {
     navigate("/changePassword");

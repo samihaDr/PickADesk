@@ -3,6 +3,7 @@ import React, { createContext, useReducer } from "react";
 // Initialiser l'état global
 const initialState = {
   userConnected: null,
+  userPreferences: null,
   weeklyQuota: null,
 };
 
@@ -16,6 +17,11 @@ const globalReducer = (state, action) => {
       return {
         ...state,
         userConnected: action.payload,
+      };
+    case "SET_USER_PREFERENCES":
+      return {
+        ...state,
+        userPreferences: action.payload,
       };
     case "SET_QUOTA":
       return {
@@ -35,14 +41,19 @@ export const GlobalProvider = ({ children }) => {
   const setUserConnected = (user) => {
     dispatch({ type: "SET_USER", payload: user });
   };
-
+  const setUserPreferences = (userPreferences) => {
+    dispatch({
+      type: "SET_USER_PREFERENCES",
+      payload: userPreferences,
+    });
+  };
   const setWeeklyQuota = (quota) => {
     dispatch({ type: "SET_QUOTA", payload: quota });
   };
 
   return (
     <GlobalContext.Provider
-      value={{ ...state, setUserConnected, setWeeklyQuota }}
+      value={{ ...state, setUserConnected, setWeeklyQuota, setUserPreferences }}
     >
       {children}
     </GlobalContext.Provider>
