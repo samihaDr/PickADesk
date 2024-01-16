@@ -5,7 +5,6 @@ import { GlobalContext } from "../../services/GlobalState";
 
 export default function Dashboard() {
   const { userConnected } = useContext(GlobalContext);
-  console.log("User Connected in Dashboard: " + userConnected);
   const today = new Date();
   const options = {
     weekday: "long",

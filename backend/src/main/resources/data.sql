@@ -98,3 +98,21 @@ INSERT INTO furniture (name) VALUES ('Adjustable desk');
 INSERT INTO furniture (name) VALUES ('Normal chair');
 INSERT INTO furniture (name) VALUES ('Adjustable chair');
 
+-- Insert into userPreference table
+INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 1, 7, 8, 1, 1, 1,5);
+INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (2, 3, 2, 2, 1, 1, 3,3);
+-- INSERT INTO team (user_id, counytry_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 1, 2, 2, 1, 1, 4);
+-- INSERT INTO team (user_id, counytry_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 1, 2, 2, 1, 1, 4);
+
+--Insert into userPreferenceEquipmentIds
+INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_ids) VALUES (1, 2);
+INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_ids) VALUES (1, 4);
+INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_ids) VALUES (2, 1);
+INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_ids) VALUES (1, 3);
+
+--Insert into userPreferenceFurnitureIds
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (1, 1);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (1, 2);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (1, 4);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (2, 2);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (2, 3);
