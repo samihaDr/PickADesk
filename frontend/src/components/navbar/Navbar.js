@@ -6,12 +6,17 @@ import { Link } from "react-router-dom";
 import { GlobalContext } from "../../services/GlobalState";
 
 export default function Navbar() {
-  const { userConnected, weeklyQuota, setUserConnected } =
-    useContext(GlobalContext);
+  const {
+    userConnected,
+    weeklyQuota,
+    userPreferences,
+    setUserConnected,
+    setUserPreferences,
+  } = useContext(GlobalContext);
 
   useEffect(() => {
     console.log("USER CONNECTED in Navbar: ", userConnected);
-    console.log("Weekly quota :", weeklyQuota);
+    console.log("Weekly quota in Navbar :", weeklyQuota);
   }, [userConnected, weeklyQuota]);
   if (!userConnected) {
     return null; // Ne rien rendre si l'utilisateur n'est pas connecté
@@ -64,13 +69,18 @@ export default function Navbar() {
               to="/profilePage"
               className="nav-link active"
               aria-current="page"
+              userPreferences={userPreferences}
+              setUserPreferences={setUserPreferences}
             >
               Profile
             </Link>
           </li>
 
           <li className="nav-item">
-            <LogoutButton setUserConnected={setUserConnected} />
+            <LogoutButton
+              setUserConnected={setUserConnected}
+              setUserPreferences={setUserPreferences}
+            />
           </li>
         </ul>
         {/*<form className="d-flex" role="search">*/}
