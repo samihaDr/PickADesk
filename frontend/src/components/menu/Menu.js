@@ -1,15 +1,11 @@
 import "./Menu.scss";
-import React, { useContext, useEffect } from "react";
+import React, { useContext} from "react";
 import { GlobalContext } from "../../services/GlobalState";
 import { Link } from "react-router-dom";
 
 export default function Menu() {
   const { userConnected } = useContext(GlobalContext);
-  console.log("User Connected:", userConnected);
-  useEffect(() => {
-    console.log("Menu is mounted");
-    console.log("USER CONNECTED in Menu: ", userConnected);
-  }, [userConnected]);
+
   if (!userConnected) {
     return null; // Ne rien rendre si l'utilisateur n'est pas connecté
   }
