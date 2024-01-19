@@ -117,30 +117,6 @@ const EditProfile = () => {
             countries: countriesData,
           },
         });
-
-        // // Récupérer les préférences utilisateur
-        // const userPreferences = await fetchApi(
-        //   `/api/userPreferences/${userData.id}`,
-        //   dispatch,
-        // );
-        // if (userPreferences) {
-        //   console.log("USER PREFERENCES In ProfilePage ;;;; ", userPreferences);
-        //   dispatch({
-        //     type: "UPDATE_USER_PREFERENCES",
-        //     payload: {
-        //       countryId: userPreferences.countryId,
-        //       cityId: userPreferences.cityId,
-        //       officeId: userPreferences.officeId,
-        //       zoneId: userPreferences.zoneId,
-        //       reservationTypeId: userPreferences.reservationTypeId,
-        //       workAreaId: userPreferences.workAreaId,
-        //       equipmentIds: userPreferences.equipmentIds,
-        //       screenId: userPreferences.screenId,
-        //       furnitureIds: userPreferences.furnitureIds,
-        //     },
-        //   });
-        // }
-        // setUserPreferences(userPreferences);
       } else {
         dispatch({
           type: "FETCH_FAILURE",

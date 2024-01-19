@@ -8,6 +8,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//@Getter
+//@Setter
 public class UserDTO {
     private Long id;
     private String email;
@@ -19,6 +21,18 @@ public class UserDTO {
     private Boolean locked;
     private Boolean enabled;
 
+//    public static UserDTO fromEntity(User user) {
+//        UserDTO dto = new UserDTO();
+//        dto.setId(user.getId());
+//        dto.setEmail(user.getEmail());
+//        dto.setLastname(user.getLastname());
+//        dto.setFirstname(user.getFirstname());
+//        dto.setRole(user.getRole());
+//        dto.setTeamId(user.getTeamId());
+//        dto.setEnabled(user.getEnabled());
+//        dto.setLocked(user.getLocked());
+//        return dto;
+//    }
 
 
     public UserDTO(User user) {

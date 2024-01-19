@@ -19,9 +19,6 @@ public class UserPreferenceService {
         return userPreferenceRepository.findByUserId(userId);
     }
 
-//    public UserPreference saveUserPreference(UserPreference userPreference) {
-//        return userPreferenceRepository.save(userPreference);
-//    }
     public UserPreference saveUserPreference(UserPreference userPreference) {
         // Supposons que userPreference contient un identifiant d'utilisateur
         Long userId = userPreference.getUserId();
