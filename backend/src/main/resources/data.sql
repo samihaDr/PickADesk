@@ -9,7 +9,7 @@ INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_i
 INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-10-25', 4, 104, 2, 3);
 INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-10-25', 3, 104, 3, 2);
 INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-11-22', 1, 100, 1, 2);
-INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-11-26', 1, 10, 1, 20);
+INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2024-01-17', 1, 10, 1, 20);
 
 --Insert into country table
 INSERT INTO country (name) VALUES ('Belgium');
@@ -99,8 +99,8 @@ INSERT INTO furniture (name) VALUES ('Normal chair');
 INSERT INTO furniture (name) VALUES ('Adjustable chair');
 
 -- Insert into userPreference table
-INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 1, 7, 8, 1, 1, 1,5);
-INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (2, 3, 2, 2, 1, 1, 3,3);
+INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 3, 7, 8, 1, 1, 1,5);
+INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (2, 1, 2, 2, 1, 1, 3,3);
 -- INSERT INTO team (user_id, counytry_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 1, 2, 2, 1, 1, 4);
 -- INSERT INTO team (user_id, counytry_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 1, 2, 2, 1, 1, 4);
 
@@ -116,3 +116,86 @@ INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VA
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (1, 4);
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (2, 2);
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (2, 3);
+
+-- Insert into WorkStation table
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 1, 1, 1, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 2, 2, 1, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 2, 1, 1, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 2, 2, 2, 'OCCUPIED');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 2, 2, 2, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 3, 3, 3, 'MAINTENANCE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 2, 1, 3, 'MAINTENANCE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 3, 1, 1, 4, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 3, 2, 2, 5, 'OCCUPIED');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 3, 3, 5, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 1, 1, 2, 'OCCUPIED');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 3, 2, 2, 2, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 1, 2, 2, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 2, 3, 1, 'OCCUPIED');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 3, 2, 2, 5, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 1, 1, 1, 'AVAILABLE');
+INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 1, 1, 1, 'AVAILABLE');
+-- Continuez à ajouter plus d'insertions selon vos besoins
+
+--Insert into workStationEquipmentIds
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (1,1);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (1,2);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (2, 1);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (2, 2);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (2, 3);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (3, 3);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (3, 1);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (4, 2);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (4, 4);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (5, 2);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (5, 3);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (6, 1);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (6, 2);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (7, 3);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (7, 4);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (8, 4);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (8, 1);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (9, 2);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (9, 4);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (9, 3);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (10, 4);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (10, 3);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (11,1 );
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (11, 3);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (12, 2);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (16,1);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (16,2);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (17,1);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (17,2);
+
+--Insert into userPreferenceFurnitureIds
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (1, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (1, 3);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (2, 2);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (2, 4);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (3, 2);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (3, 4);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (4, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (4, 3);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (5, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (5, 3);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (6, 3);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (7, 4);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (8, 3);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (8, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (9, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (9, 3);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (10, 2);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (10, 4);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (11, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (11, 4);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (12, 2);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (12, 3);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (13, 4);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (13, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (14, 2);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (14, 4);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (16, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (16, 3);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (17, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (17, 3);
