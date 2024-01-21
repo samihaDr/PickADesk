@@ -1,5 +1,5 @@
 import "./Menu.scss";
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import { GlobalContext } from "../../services/GlobalState";
 import { Link } from "react-router-dom";
 
@@ -27,7 +27,7 @@ export default function Menu() {
           Current reservations
         </Link>
         <Link
-          to="/addReservation"
+          to="/searchWorkStation"
           className="nav-link active"
           aria-current="page"
         >

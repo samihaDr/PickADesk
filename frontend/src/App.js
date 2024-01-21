@@ -10,6 +10,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import Layout from "./Layout";
 import ProfilePage from "./components/profilePage/ProfilePage";
 import ChangePassword from "./components/changePassword/ChangePassword";
+import SearchWorkStation from "./components/searchWorkStation/SearchWorkStation";
 
 import "bootstrap/dist/css/bootstrap-grid.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -38,6 +39,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="addReservation" element={<AddReservation />} />
+        <Route path="searchWorkStation" element={<SearchWorkStation />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="changePassword" element={<ChangePassword />} />
         <Route path="registerPage" element={<RegisterPage />} />
