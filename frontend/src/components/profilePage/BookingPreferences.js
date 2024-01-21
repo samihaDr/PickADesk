@@ -130,7 +130,7 @@ const BookingPreferences = ({
             )}
           </div>
           <div className="mb-3">
-            <label>Equipments</label>
+            <label>Equipment</label>
 
             {formData.equipments &&
               formData.equipments.map((equipment) => (
