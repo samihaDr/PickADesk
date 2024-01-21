@@ -7,12 +7,10 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Getter
-@Setter
+
 public class Screen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
