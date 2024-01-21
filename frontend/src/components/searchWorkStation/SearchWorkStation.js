@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../../services/GlobalState";
-import { getLocationData } from "../../services/GetLocationData";
 import { getBookingPreferencesData } from "../../services/GetBookingPreferencesData";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css"; // CSS import
 export default function SearchWorkStation() {
   const [data, setData] = useState({
     reservationTypes: [],
@@ -11,18 +11,15 @@ export default function SearchWorkStation() {
     equipment: [],
     furniture: [],
   });
+
   const [loading, setLoading] = useState(true);
   const { userConnected, userPreferences } = useContext(GlobalContext);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date());
   const [timePeriod, setTimePeriod] = useState({
     morning: false,
     afternoon: false,
   });
-  // const [date, setDate] = useState(userPreferences.date || '');
-  // const [timePeriod, setTimePeriod] = useState({
-  //     morning: userPreferences.timePeriod?.morning || false,
-  //     afternoon: userPreferences.timePeriod?.afternoon || false
-  // });
+
   const [reservationType, setReservationType] = useState("");
   const [workArea, setWorkArea] = useState("");
   const [screen, setScreen] = useState("");
@@ -36,21 +33,18 @@ export default function SearchWorkStation() {
       setData(bookingPreferencesData);
       setLoading(false);
     }
+    //console.log("Booking Preferences equipment DATA : ", data.equipment);
+    //console.log("Booking Preferences furniture DATA : ", data.furniture);
     fetchData();
   }, []);
 
   useEffect(() => {
     if (userPreferences) {
-      setDate(userPreferences.date || "");
-      setTimePeriod({
-        morning: userPreferences.timePeriod?.morning || false,
-        afternoon: userPreferences.timePeriod?.afternoon || false,
-      });
       setReservationType(userPreferences.reservationType?.id || "");
       setWorkArea(userPreferences.workArea?.id || "");
       setScreen(userPreferences.screen?.id || "");
-      setEquipment(userPreferences.equipment || []);
-      setFurniture(userPreferences.furniture || []);
+      setEquipment(userPreferences.equipment.map((e) => e.id) || []);
+      setFurniture(userPreferences.furniture.map((f) => f.id) || []);
     }
   }, [userPreferences]);
 
@@ -58,7 +52,7 @@ export default function SearchWorkStation() {
     e.preventDefault();
     // Logic to handle form submission
     console.log({
-      date,
+      startDate: date,
       timePeriod,
       reservationType,
       workArea,
@@ -68,7 +62,7 @@ export default function SearchWorkStation() {
     });
   };
   console.log("MON OBJET IN SEARCH ...... : ", {
-    date,
+    startDate: date,
     timePeriod,
     reservationType,
     workArea,
@@ -76,19 +70,21 @@ export default function SearchWorkStation() {
     equipment,
     furniture,
   });
-  const handleCheckboxChange = (e) => {
+  const handleTimePeriodCheckboxChange = (e) => {
     setTimePeriod({
       ...timePeriod,
       [e.target.name]: e.target.checked,
     });
   };
 
-  const handleEquipmentChange = (e) => {
-    if (e.target.checked) {
-      setEquipment([...equipment, e.target.value]);
-    } else {
-      setEquipment(equipment.filter((item) => item !== e.target.value));
-    }
+  const handleCheckboxChange = (itemId, category) => {
+    const isEquipment = category === "equipment";
+    const selectedItems = isEquipment ? equipment : furniture;
+    const newItems = selectedItems.includes(itemId)
+      ? selectedItems.filter((id) => id !== itemId)
+      : [...selectedItems, itemId];
+
+    isEquipment ? setEquipment(newItems) : setFurniture(newItems);
   };
   if (!userConnected) {
     return null; // Ne rien rendre si l'utilisateur n'est pas connecté
@@ -97,17 +93,20 @@ export default function SearchWorkStation() {
   return (
     <div>
       <div className="main">
-        <h2 style={{ color: "#1f4e5f" }}>Choose your workstation!</h2>
+        <h2 style={{ color: "#1f4e5f" }}>Make a reservation!</h2>
         <div className="add-reservation-container">
           <div>
             <div className="form-container">
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label>Date</label>
-                  <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
+                  <DatePicker
+                    showIcon
+                    selected={date}
+                    onChange={(date) => setDate(date)}
+                    dateFormat="dd/MM/yyyy"
+                    toggleCalendarOnIconClick
+                    className="form-control"
                   />
                 </div>
                 <div className="mb-3">
@@ -116,14 +115,14 @@ export default function SearchWorkStation() {
                     type="checkbox"
                     name="morning"
                     checked={timePeriod.morning}
-                    onChange={handleCheckboxChange}
+                    onChange={handleTimePeriodCheckboxChange}
                   />
                   <label>Afternoon</label>
                   <input
                     type="checkbox"
                     name="afternoon"
                     checked={timePeriod.afternoon}
-                    onChange={handleCheckboxChange}
+                    onChange={handleTimePeriodCheckboxChange}
                   />
                 </div>
                 <div className="mb-3">
@@ -175,14 +174,17 @@ export default function SearchWorkStation() {
                 </div>
                 <div>
                   <div className="mb-3">
-                    <label>Equipments</label>
+                    <label>Equipment</label>
                     {data.equipment.map((equip) => (
-                      <div key={equip.id}>
+                      <div key={equip.id} className="form-check">
                         <input
                           type="checkbox"
                           value={equip.id}
                           checked={equipment.includes(equip.id)}
-                          onChange={handleEquipmentChange}
+                          onChange={() =>
+                            handleCheckboxChange(equip.id, "equipment")
+                          }
+                          className="form-check-input"
                         />{" "}
                         {equip.name}
                       </div>
@@ -196,7 +198,9 @@ export default function SearchWorkStation() {
                           type="checkbox"
                           value={furn.id}
                           checked={furniture.includes(furn.id)}
-                          onChange={handleEquipmentChange} // Assuming the same function for furniture
+                          onChange={() =>
+                            handleCheckboxChange(furn.id, "furniture")
+                          }
                         />{" "}
                         {furn.name}
                       </div>
