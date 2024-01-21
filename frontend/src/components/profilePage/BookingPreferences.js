@@ -1,43 +1,28 @@
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
 const BookingPreferences = ({
   formData,
   updateBookingPreferences,
   userPreferences,
 }) => {
-  // const [initialReservationTypes, setInitialReservationTypes] = useState([]);
-  // const [initialWorkAreas, setInitialWorkAreas] = useState([]);
-  // const [initialScreens, setInitialScreens] = useState([]);
-  // const [initialEquipments, setInitialEquipments] = useState([]);
-  // const [initialFurnitures, setInitialFurnitures] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  //const userPrefs = userPreferences?.[0] ?? {};
+  const hasUserPrefs =
+    userPreferences && Object.keys(userPreferences).length > 0;
 
-  console.log("UserPreferebces in BookingPreferences : ", userPreferences);
-  console.log("FormData : ", formData);
-  const initialReservationTypeId =
-    userPreferences.reservationTypeId ?? formData.reservationTypeId ?? "";
-  const initialWorkAreaId =
-    userPreferences.workAreaId ?? formData.workAreaId ?? "";
-  const initialScreenId = userPreferences.screenId ?? formData.screenId ?? "";
-  const initialEquipmentIds =
-    userPreferences.equipmentIds ?? formData.equipmentIds ?? "";
-  const initialFurnitureIds =
-    userPreferences.furnitureIds ?? formData.furnitureIds ?? "";
-  //const hasUserPrefs = userPrefs && Object.keys(userPrefs).length > 0;
-  const hasUserPrefs = userPreferences.length !== 0;
-  console.log("hasUserPrefs in BOoking Preferences : ", hasUserPrefs);
+  // Utiliser directement l'objet pour les préférences initiales
+  const initialReservationType =
+    userPreferences.reservationType ?? formData.reservationType;
+  const initialWorkArea = userPreferences.workArea ?? formData.workArea;
+  const initialScreen = userPreferences.screen ?? formData.screen;
 
-  const findNameById = (list, id) => {
-    console.log("FindNAmeById   :   ", list);
-    return list.find((item) => item.id === id)?.name ?? "Not found";
-  };
-  const handleCheckboxChange = (field, value) => {
-    const updatedValues = formData[field].includes(value)
-      ? formData[field].filter((item) => item !== value)
-      : [...formData[field], value];
-    updateBookingPreferences(field, updatedValues);
+  // Gérer les équipements et les meubles comme des listes d'objets
+  const initialEquipments = userPreferences.equipment ?? formData.equipment;
+  const initialFurnitures = userPreferences.furniture ?? formData.furniture;
+
+  const handleCheckboxChange = (field, itemId) => {
+    const isItemInList = formData[field].some((item) => item.id === itemId);
+    const updatedList = isItemInList
+      ? formData[field].filter((item) => item.id !== itemId)
+      : [...formData[field], { id: itemId }];
+
+    updateBookingPreferences(field, updatedList);
   };
   return (
     <div className="accordion-item">
@@ -66,10 +51,7 @@ const BookingPreferences = ({
               <input
                 type="text"
                 className="form-control"
-                value={findNameById(
-                  formData.reservationTypes,
-                  userPreferences.reservationTypeId,
-                )}
+                value={initialReservationType?.name || ""}
                 disabled
               />
             ) : (
@@ -79,7 +61,7 @@ const BookingPreferences = ({
                   updateBookingPreferences(e.target.name, e.target.value)
                 }
                 className="form-select"
-                value={initialReservationTypeId}
+                value={initialReservationType}
               >
                 <option value="">Select a Reservation Type</option>
                 {formData.reservationTypes &&
@@ -97,10 +79,7 @@ const BookingPreferences = ({
               <input
                 type="text"
                 className="form-control"
-                value={findNameById(
-                  formData.workAreas,
-                  userPreferences.workAreaId,
-                )}
+                value={initialWorkArea?.name || ""}
                 disabled
               />
             ) : (
@@ -110,7 +89,7 @@ const BookingPreferences = ({
                   updateBookingPreferences(e.target.name, e.target.value)
                 }
                 className="form-select"
-                value={initialWorkAreaId}
+                value={initialWorkArea}
               >
                 <option value="">Select a Work area</option>
                 {formData.workAreas &&
@@ -128,7 +107,7 @@ const BookingPreferences = ({
               <input
                 type="text"
                 className="form-control"
-                value={findNameById(formData.screens, userPreferences.screenId)}
+                value={initialScreen?.name || ""}
                 disabled
               />
             ) : (
@@ -138,7 +117,7 @@ const BookingPreferences = ({
                   updateBookingPreferences(e.target.name, e.target.value)
                 }
                 className="form-select"
-                value={initialScreenId}
+                value={initialScreen}
               >
                 <option value="">Select a screen</option>
                 {formData.screens &&
@@ -161,11 +140,14 @@ const BookingPreferences = ({
                     id={`equipment-${equipment.id}`}
                     name="equipmentIds"
                     value={equipment.id}
-                    checked={initialEquipmentIds?.includes(equipment.id)}
+                    checked={initialEquipments.some(
+                      (e) => e.id === equipment.id,
+                    )}
                     onChange={() =>
                       handleCheckboxChange("equipmentIds", equipment.id)
                     }
                     className="form-check-input"
+                    disabled={hasUserPrefs} // Les cases à cocher seront désactivées si l'utilisateur a des préférences
                   />
                   <label
                     htmlFor={`equipment-${equipment.id}`}
@@ -187,11 +169,14 @@ const BookingPreferences = ({
                     id={`furniture-${furniture.id}`}
                     name="furnitureIds"
                     value={furniture.id}
-                    checked={initialFurnitureIds?.includes(furniture.id)}
+                    checked={initialFurnitures.some(
+                      (e) => e.id === furniture.id,
+                    )}
                     onChange={() =>
                       handleCheckboxChange("furnitureIds", furniture.id)
                     }
                     className="form-check-input"
+                    disabled={hasUserPrefs} // Les cases à cocher seront désactivées si l'utilisateur a des préférences
                   />
                   <label
                     htmlFor={`furniture-${furniture.id}`}

@@ -9,30 +9,17 @@ import BookingPreferences from "./BookingPreferences";
 
 const initialState = {
   formData: {
-    lastname: "",
-    firstname: "",
-    department: "",
-    team: "",
-    countries: [],
-    cities: [],
-    offices: [],
-    zones: [],
-    countryId: "",
-    cityId: "",
-    officeId: "",
-    zoneId: "",
-    reservationTypes: [],
-    workAreas: [],
-    equipments: [],
-    screens: [],
-    furnitures: [],
-    reservationTypeId: "",
-    workAreaId: "",
-    equipmentIds: [],
-    screenId: "",
-    furnitureIds: [],
+    userId: "",
+    country: null,
+    city: null,
+    office: null,
+    zone: null,
+    reservationType: null,
+    workArea: null,
+    screen: null,
+    equipment: [],
+    furniture: [],
   },
-
   error: "",
   isLoading: false,
 };
@@ -50,6 +37,15 @@ function reducer(state, action) {
     case "START_FETCH":
       return { ...state, isLoading: true };
     case "UPDATE_FIELD":
+      if (["equipment", "furniture"].includes(action.field)) {
+        return {
+          ...state,
+          formData: {
+            ...state.formData,
+            [action.field]: [...state.formData[action.field], action.value],
+          },
+        };
+      }
       return {
         ...state,
         formData: { ...state.formData, [action.field]: action.value },
@@ -206,15 +202,15 @@ const EditProfile = () => {
   const getPreferencesData = (formData) => {
     return {
       userId: formData.userId,
-      countryId: formData.countryId,
-      cityId: formData.cityId,
-      officeId: formData.officeId,
-      zoneId: formData.zoneId,
-      reservationTypeId: formData.reservationTypeId,
-      workAreaId: formData.workAreaId,
-      equipmentIds: formData.equipmentIds,
+      country: formData.country,
+      city: formData.city,
+      office: formData.office,
+      zone: formData.zone,
+      reservationType: formData.reservationType,
+      workArea: formData.workArea,
       screenId: formData.screenId,
-      furnitureIds: formData.furnitureIds,
+      equipment: formData.equipment,
+      furniture: formData.furniture,
     };
   };
   const onSubmit = async (event) => {

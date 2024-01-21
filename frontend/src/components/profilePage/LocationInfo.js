@@ -1,49 +1,36 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { getLocationData } from "../../services/GetLocationData";
 
 const LocationInfo = ({ userPreferences, formData, handleChange }) => {
-  const [initialCities, setInitialCities] = useState([]);
-  const [initialOffices, setInitialOffices] = useState([]);
-  const [initialZones, setInitialZones] = useState([]);
+  const [data, setData] = useState({
+    cities: [],
+    offices: [],
+    zones: [],
+  });
   const [loading, setLoading] = useState(true);
-  //const userPrefs = userPreferences?.[0] ?? {};
 
-  const initialCountryId =
-    userPreferences.countryId ?? formData.countryId ?? "";
-  const initialCityId = userPreferences.cityId ?? formData.cityId ?? "";
-  const initialOfficeId = userPreferences.officeId ?? formData.officeId ?? "";
-  const initialZoneId = userPreferences.zoneId ?? formData.zoneId ?? "";
+  const initialCountry = userPreferences.country ?? formData.country;
+  const initialCity = userPreferences.city ?? formData.city;
+  const initialOffice = userPreferences.office ?? formData.office;
+  const initialZone = userPreferences.zone ?? formData.zone;
 
-  // Cette variable détermine si l'utilisateur a déjà des préférences
-  //const hasUserPrefs = userPrefs && Object.keys(userPrefs).length > 0;
-  const hasUserPrefs = userPreferences.length !== 0;
-  console.log("hasUserPrefs in LocationINfo : ", hasUserPrefs);
-  // Recuperation des données
+  const hasUserPrefs =
+    userPreferences && Object.keys(userPreferences).length > 0;
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [citiesResponse, officesResponse, zonesResponse] =
-          await Promise.all([
-            axios.get(`/api/cities/getCities`),
-            axios.get(`/api/offices/getOffices`),
-            axios.get(`/api/zones/getZones`),
-          ]);
-        setInitialCities(citiesResponse.data);
-        setInitialOffices(officesResponse.data);
-        setInitialZones(zonesResponse.data);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des données", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
+    async function fetchData() {
+      setLoading(true);
+      const locationData = await getLocationData();
+      setData({
+        countries: locationData.countries,
+        cities: locationData.cities,
+        offices: locationData.offices,
+        zones: locationData.zones,
+      });
+      setLoading(false);
+    }
     fetchData();
   }, []);
-  const findNameById = (list, id) => {
-    // console.log("FindNAmeById   :   ", list);
-    return list.find((item) => item.id === id)?.name ?? "Not found";
-  };
 
   if (loading) {
     return <div>Loading form data...</div>;
@@ -86,10 +73,7 @@ const LocationInfo = ({ userPreferences, formData, handleChange }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={findNameById(
-                    formData.countries,
-                    userPreferences.countryId,
-                  )}
+                  value={initialCountry?.name || ""}
                   disabled
                 />
               ) : (
@@ -97,7 +81,7 @@ const LocationInfo = ({ userPreferences, formData, handleChange }) => {
                   name="countryId"
                   onChange={handleChange}
                   className="form-select"
-                  value={initialCountryId}
+                  value={initialCountry}
                 >
                   <option value="">Select a Country</option>
                   {formData.countries.map((country) => (
@@ -117,7 +101,7 @@ const LocationInfo = ({ userPreferences, formData, handleChange }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={findNameById(initialCities, userPreferences.cityId)}
+                  value={initialCity?.name || ""}
                   disabled
                 />
               ) : (
@@ -125,7 +109,7 @@ const LocationInfo = ({ userPreferences, formData, handleChange }) => {
                   name="cityId"
                   onChange={handleChange}
                   className="form-select"
-                  value={initialCityId}
+                  value={initialCity}
                 >
                   <option value="">Select a City</option>
                   {formData.cities?.map((city) => (
@@ -145,7 +129,7 @@ const LocationInfo = ({ userPreferences, formData, handleChange }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={findNameById(initialOffices, userPreferences.officeId)}
+                  value={initialOffice?.name || ""}
                   disabled
                 />
               ) : (
@@ -153,7 +137,7 @@ const LocationInfo = ({ userPreferences, formData, handleChange }) => {
                   name="officeId"
                   onChange={handleChange}
                   className="form-select"
-                  value={initialOfficeId}
+                  value={initialOffice}
                 >
                   <option value="">Select a Office</option>
                   {formData.offices?.map((office) => (
@@ -172,7 +156,7 @@ const LocationInfo = ({ userPreferences, formData, handleChange }) => {
                 <input
                   type="text"
                   className="form-control"
-                  value={findNameById(initialZones, userPreferences.zoneId)}
+                  value={initialZone?.name || ""}
                   disabled
                 />
               ) : (
@@ -180,7 +164,7 @@ const LocationInfo = ({ userPreferences, formData, handleChange }) => {
                   name="zoneId"
                   onChange={handleChange}
                   className="form-select"
-                  value={initialZoneId}
+                  value={initialZone}
                 >
                   <option value="">Select a Zone</option>
                   {formData.zones?.map((zone) => (
