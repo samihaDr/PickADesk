@@ -18,7 +18,10 @@ export default function SearchWorkStation() {
   const today = new Date();
   const oneMonthLater = new Date();
   oneMonthLater.setMonth(today.getMonth() + 1);
-
+  const isWeekday = (date) => {
+    const day = date.getDay();
+    return day !== 0 && day !== 6; // 0 pour dimanche, 6 pour samedi
+  };
   const [timePeriod, setTimePeriod] = useState({
     morning: false,
     afternoon: false,
@@ -111,6 +114,7 @@ export default function SearchWorkStation() {
                     dateFormat="dd/MM/yyyy"
                     minDate={today}
                     maxDate={oneMonthLater}
+                    filterDate={isWeekday}
                     toggleCalendarOnIconClick
                     className="form-control"
                   />
