@@ -15,6 +15,10 @@ export default function SearchWorkStation() {
   const [loading, setLoading] = useState(true);
   const { userConnected, userPreferences } = useContext(GlobalContext);
   const [date, setDate] = useState(new Date());
+  const today = new Date();
+  const oneMonthLater = new Date();
+  oneMonthLater.setMonth(today.getMonth() + 1);
+
   const [timePeriod, setTimePeriod] = useState({
     morning: false,
     afternoon: false,
@@ -105,6 +109,8 @@ export default function SearchWorkStation() {
                     selected={date}
                     onChange={(date) => setDate(date)}
                     dateFormat="dd/MM/yyyy"
+                    minDate={today}
+                    maxDate={oneMonthLater}
                     toggleCalendarOnIconClick
                     className="form-control"
                   />
