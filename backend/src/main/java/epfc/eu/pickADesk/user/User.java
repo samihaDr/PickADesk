@@ -22,8 +22,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Getter
-@Setter
 
 public class User implements UserDetails {
     @Id

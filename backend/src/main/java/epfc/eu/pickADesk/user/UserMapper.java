@@ -1,5 +1,6 @@
 package epfc.eu.pickADesk.user;
 
+import epfc.eu.pickADesk.dto.UserDTO;
 import epfc.eu.pickADesk.reservation.ReservationMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

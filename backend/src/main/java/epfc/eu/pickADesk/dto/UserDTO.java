@@ -1,6 +1,8 @@
-package epfc.eu.pickADesk.user;
+package epfc.eu.pickADesk.dto;
 
 import epfc.eu.pickADesk.reservation.Reservation;
+import epfc.eu.pickADesk.user.Role;
+import epfc.eu.pickADesk.user.User;
 import lombok.*;
 
 import java.util.List;

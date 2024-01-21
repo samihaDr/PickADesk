@@ -1,5 +1,6 @@
 package epfc.eu.pickADesk.user;
 
+import epfc.eu.pickADesk.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;

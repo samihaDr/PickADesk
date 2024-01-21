@@ -1,5 +1,6 @@
 package epfc.eu.pickADesk.user;
 
+import epfc.eu.pickADesk.dto.UserDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
