@@ -1,5 +1,8 @@
 package epfc.eu.pickADesk.userPreference;
 
+import epfc.eu.pickADesk.dto.UserPreferenceDTO;
+import epfc.eu.pickADesk.equipment.Equipment;
+import epfc.eu.pickADesk.furniture.Furniture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +18,11 @@ public class UserPreferenceService {
         this.userPreferenceRepository = userPreferenceRepository;
     }
 
-    public Optional<UserPreference> getUserPreference(Long userId) {
-        return userPreferenceRepository.findByUserId(userId);
+    public Optional<UserPreferenceDTO> getUserPreference(Long userId) {
+        return userPreferenceRepository.findByUserId(userId).map(UserPreferenceDTO::fromEntity);
     }
 
-    public UserPreference saveUserPreference(UserPreference userPreference) {
+    public Optional<UserPreferenceDTO> saveUserPreference(UserPreference userPreference) {
         // Supposons que userPreference contient un identifiant d'utilisateur
         Long userId = userPreference.getUserId();
 
@@ -30,42 +33,42 @@ public class UserPreferenceService {
             // Si des préférences existent, les mettre à jour
             UserPreference updatedPreference = existingPreference.get();
             // Mettre à jour les champs de updatedPreference avec ceux de userPreference
-            updatedPreference.setCityId(userPreference.getCityId());
-            updatedPreference.setCountryId(userPreference.getCountryId());
-            updatedPreference.setOfficeId(userPreference.getOfficeId());
-            updatedPreference.setZoneId(userPreference.getZoneId());
-            updatedPreference.setReservationTypeId(userPreference.getReservationTypeId());
-            updatedPreference.setWorkAreaId(userPreference.getWorkAreaId());
-            updatedPreference.setScreenId(userPreference.getScreenId());
-            updatedPreference.setEquipmentIds(userPreference.getEquipmentIds());
-            updatedPreference.setFurnitureIds(userPreference.getFurnitureIds());
+            updatedPreference.setCity(userPreference.getCity());
+            updatedPreference.setCountry(userPreference.getCountry());
+            updatedPreference.setOffice(userPreference.getOffice());
+            updatedPreference.setZone(userPreference.getZone());
+            updatedPreference.setReservationType(userPreference.getReservationType());
+            updatedPreference.setWorkArea(userPreference.getWorkArea());
+            updatedPreference.setScreen(userPreference.getScreen());
+            updatedPreference.setEquipment(userPreference.getEquipment());
+            updatedPreference.setFurniture(userPreference.getFurniture());
 
             // Sauvegarder les préférences mises à jour
-            return userPreferenceRepository.save(updatedPreference);
+            return Optional.of(UserPreferenceDTO.fromEntity(userPreferenceRepository.save(updatedPreference)));
         } else {
             // Si aucune préférence n'existe, enregistrer les nouvelles préférences
-            return userPreferenceRepository.save(userPreference);
+            return Optional.of(UserPreferenceDTO.fromEntity(userPreferenceRepository.save(userPreference)));
         }
     }
 
-    public UserPreference addUserEquipments(Long userId, List<Integer> equipments) {
+    public Optional<UserPreferenceDTO> addUserEquipments(Long userId, List<Equipment> equipment) {
         Optional<UserPreference> userPreferenceOptional = userPreferenceRepository.findByUserId(userId);
         if (userPreferenceOptional.isPresent()) {
             UserPreference userPreference = userPreferenceOptional.get();
-            userPreference.getEquipmentIds().addAll(equipments);
-            return userPreferenceRepository.save(userPreference);
+            userPreference.getEquipment().addAll(equipment);
+            return userPreferenceOptional.map(UserPreferenceDTO::fromEntity);
         }
-        return null;
+        return Optional.empty();
     }
 
-    public UserPreference addUserFurnitures(Long userId, List<Integer> furnitureIds) {
+    public Optional<UserPreferenceDTO> addUserFurnitures(Long userId, List<Furniture> furniture) {
         Optional<UserPreference> userPreferenceOptional = userPreferenceRepository.findByUserId(userId);
         if (userPreferenceOptional.isPresent()) {
             UserPreference userPreference = userPreferenceOptional.get();
-            userPreference.getFurnitureIds().addAll(furnitureIds);
-            return userPreferenceRepository.save(userPreference);
+            userPreference.getFurniture().addAll(furniture);
+            return userPreferenceOptional.map(UserPreferenceDTO::fromEntity);
         }
-        return null;
+        return Optional.empty();
     }
 
 }

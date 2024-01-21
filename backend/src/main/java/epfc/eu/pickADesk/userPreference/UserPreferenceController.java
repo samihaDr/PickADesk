@@ -1,5 +1,8 @@
 package epfc.eu.pickADesk.userPreference;
 
+import epfc.eu.pickADesk.dto.UserPreferenceDTO;
+import epfc.eu.pickADesk.equipment.Equipment;
+import epfc.eu.pickADesk.furniture.Furniture;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,23 +24,32 @@ public class UserPreferenceController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Optional<UserPreference>> getUserPreferences(@PathVariable Long userId) {
-        return  new ResponseEntity<>(userPreferenceService.getUserPreference(userId), HttpStatus.OK);
+    public ResponseEntity<UserPreferenceDTO> getUserPreferences(@PathVariable Long userId) {
+        Optional<UserPreferenceDTO> userPreferenceDTO = userPreferenceService.getUserPreference(userId);
+        return userPreferenceDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping ("/addPreferences")
-    public ResponseEntity<UserPreference> saveUserPreferences(@RequestBody UserPreference userPreference) {
-        return  ResponseEntity.ok(userPreferenceService.saveUserPreference(userPreference));
+    public ResponseEntity<UserPreferenceDTO> saveUserPreferences(@RequestBody UserPreference userPreference) {
+        Optional<UserPreferenceDTO> userPreferenceDTO = userPreferenceService.saveUserPreference(userPreference);
+        return userPreferenceDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/{userId}/addEquipments")
-    public UserPreference addUserEquipments(@PathVariable Long userId, @RequestBody List<Integer> equipmentIds) {
-        return userPreferenceService.addUserEquipments(userId, equipmentIds);
+    public ResponseEntity<UserPreferenceDTO> addUserEquipments(@PathVariable Long userId, @RequestBody List<Equipment> equipment) {
+        Optional<UserPreferenceDTO> userPreferenceDTO = userPreferenceService.addUserEquipments(userId, equipment);
+        return userPreferenceDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/{userId}/addFurnitures")
-    public UserPreference addUserFurnitures(@PathVariable Long userId, @RequestBody List<Integer> furnitureIds) {
-        return userPreferenceService.addUserFurnitures(userId, furnitureIds);
+    public ResponseEntity<UserPreferenceDTO> addUserFurnitures(@PathVariable Long userId, @RequestBody List<Furniture> furniture) {
+        Optional<UserPreferenceDTO> userPreferenceDTO = userPreferenceService.addUserFurnitures(userId, furniture);
+        return userPreferenceDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
+
