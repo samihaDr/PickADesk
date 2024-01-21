@@ -1,7 +1,7 @@
 package epfc.eu.pickADesk.reservation;
 
 import epfc.eu.pickADesk.user.User;
-import epfc.eu.pickADesk.user.UserDTO;
+import epfc.eu.pickADesk.dto.UserDTO;
 import epfc.eu.pickADesk.user.UserRepository;
 import epfc.eu.pickADesk.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

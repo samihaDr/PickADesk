@@ -1,12 +1,9 @@
-package epfc.eu.pickADesk.reservation;
+package epfc.eu.pickADesk.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import epfc.eu.pickADesk.user.UserDTO;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class ReservationDTO {
     private Long id;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC")
