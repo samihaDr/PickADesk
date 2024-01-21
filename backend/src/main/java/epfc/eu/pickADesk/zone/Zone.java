@@ -10,8 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Getter
-@Setter
 public class Zone {
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

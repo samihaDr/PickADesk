@@ -11,8 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Getter
-@Setter
+
 public class Equipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

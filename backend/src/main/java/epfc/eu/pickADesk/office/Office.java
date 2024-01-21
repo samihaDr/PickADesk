@@ -3,15 +3,18 @@ package epfc.eu.pickADesk.office;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import epfc.eu.pickADesk.city.City;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Getter
-@Setter
+
 public class Office {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -16,32 +16,24 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+
 public class WorkStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //    private Integer reservationTypeId;
-//    private Integer workAreaId;
-//    private Integer screenId;
-//    @ElementCollection
-//    private List<Integer> equipmentIds;
-//    @ElementCollection
-//    private List<Integer> furnitureIds;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "zone_id")
     private Zone zone;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "reservation_type_id")
     private ReservationType reservationType;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "work_area_id")
     private WorkArea workArea;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "screen_id")
     private Screen screen;
 
