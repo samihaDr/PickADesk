@@ -52,7 +52,7 @@ export default function Dashboard() {
           <p>{dateFormatted}</p>
         </div>
         <div className="hello">
-          <p> Hello {userConnected}</p>
+          <p> Hello, </p>
         </div>
         {reservationData.id ? (
           <div className="content">
