@@ -1,14 +1,12 @@
 package epfc.eu.pickADesk.dto;
 
 import epfc.eu.pickADesk.workStation.WorkStation;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
+@Data
 public class WorkStationDTO {
     private Long id;
     private ZoneDTO zone;

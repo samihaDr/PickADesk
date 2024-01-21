@@ -1,11 +1,9 @@
 package epfc.eu.pickADesk.dto;
 
 import epfc.eu.pickADesk.reservationType.ReservationType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 
 public class ReservationTypeDTO {
     private Integer id;

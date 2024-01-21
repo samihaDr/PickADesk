@@ -1,11 +1,9 @@
 package epfc.eu.pickADesk.dto;
 
 import epfc.eu.pickADesk.screen.Screen;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class ScreenDTO {
     private Integer id;
     private String name;

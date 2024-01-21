@@ -1,11 +1,9 @@
 package epfc.eu.pickADesk.dto;
 
 import epfc.eu.pickADesk.city.City;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class CityDTO {
     private Integer id;
     private String name;
