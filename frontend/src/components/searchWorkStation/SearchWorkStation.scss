@@ -1,0 +1,22 @@
+.datepicker-container {
+  display: flex;
+  align-items: center;
+}
+
+.datepicker-icon {
+  margin-right: 10px; /* Ajustez cet espace selon vos besoins */
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Ajustez cet espace selon vos besoins */
+}
+
+.checkbox-label {
+  margin-left: 5px; /* Espace entre la case à cocher et le label */
+  margin-right: 20px; /* Espace entre les ensembles de cases à cocher */
+}
+.checkbox + .checkbox-label {
+  margin-right: 20px; /* Espace entre les ensembles de cases à cocher */
+}
