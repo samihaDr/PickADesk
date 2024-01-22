@@ -3,6 +3,7 @@ import { GlobalContext } from "../../services/GlobalState";
 import { getBookingPreferencesData } from "../../services/GetBookingPreferencesData";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // CSS import
+import "./SearchWorkStation.scss";
 export default function SearchWorkStation() {
   const [data, setData] = useState({
     reservationTypes: [],
@@ -16,11 +17,20 @@ export default function SearchWorkStation() {
   const { userConnected, userPreferences } = useContext(GlobalContext);
   const [date, setDate] = useState(new Date());
   const today = new Date();
+  let minDate = new Date();
   const oneMonthLater = new Date();
   oneMonthLater.setMonth(today.getMonth() + 1);
+
   const isWeekday = (date) => {
     const day = date.getDay();
     return day !== 0 && day !== 6; // 0 pour dimanche, 6 pour samedi
+  };
+  if (today.getHours() >= 13) {
+    minDate.setDate(today.getDate() + 1);
+  }
+
+  const isDateSelectable = (date) => {
+    return date >= minDate;
   };
   const [timePeriod, setTimePeriod] = useState({
     morning: false,
@@ -40,8 +50,7 @@ export default function SearchWorkStation() {
       setData(bookingPreferencesData);
       setLoading(false);
     }
-    //console.log("Booking Preferences equipment DATA : ", data.equipment);
-    //console.log("Booking Preferences furniture DATA : ", data.furniture);
+
     fetchData();
   }, []);
 
@@ -107,33 +116,39 @@ export default function SearchWorkStation() {
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label>Date</label>
-                  <DatePicker
-                    showIcon
-                    selected={date}
-                    onChange={(date) => setDate(date)}
-                    dateFormat="dd/MM/yyyy"
-                    minDate={today}
-                    maxDate={oneMonthLater}
-                    filterDate={isWeekday}
-                    toggleCalendarOnIconClick
-                    className="form-control"
-                  />
+                  <div className="datepicker-container">
+                    <span className="datepicker-icon">📅</span>
+                    <DatePicker
+                      selected={date}
+                      onChange={(date) => setDate(date)}
+                      dateFormat="dd/MM/yyyy"
+                      minDate={minDate}
+                      maxDate={oneMonthLater}
+                      filterDate={isDateSelectable}
+                      filterDate={isWeekday}
+                      toggleCalendarOnIconClick
+                      className="form-control"
+                    />
+                  </div>
                 </div>
-                <div className="mb-3">
-                  <label>Morning</label>
+                <div className="checkbox-container">
                   <input
                     type="checkbox"
                     name="morning"
+                    className="checkbox"
                     checked={timePeriod.morning}
                     onChange={handleTimePeriodCheckboxChange}
                   />
-                  <label>Afternoon</label>
+                  <label className="checkbox-label">Morning</label>
+
                   <input
                     type="checkbox"
                     name="afternoon"
+                    className="checkbox"
                     checked={timePeriod.afternoon}
                     onChange={handleTimePeriodCheckboxChange}
                   />
+                  <label className="checkbox-label">Afternoon</label>
                 </div>
                 <div className="mb-3">
                   <label>Reservation Type</label>
