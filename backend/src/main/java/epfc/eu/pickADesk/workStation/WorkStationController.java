@@ -1,7 +1,6 @@
 package epfc.eu.pickADesk.workStation;
 
 import epfc.eu.pickADesk.dto.WorkStationDTO;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/api/workStations")
 public class WorkStationController {
     private final WorkStationService workStationService;
