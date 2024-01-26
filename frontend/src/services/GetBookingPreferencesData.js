@@ -3,12 +3,14 @@ import axios from "axios";
 export async function getBookingPreferencesData() {
   try {
     const [
+      zonesResponse,
       reservationTypesResponse,
       workAreasResponse,
       screensResponse,
       equipmentResponse,
       furnitureResponse,
     ] = await Promise.all([
+      axios.get(`/api/zones/getZones`),
       axios.get(`/api/reservationTypes`),
       axios.get(`/api/workAreas`),
       axios.get(`/api/screens`),
@@ -16,6 +18,7 @@ export async function getBookingPreferencesData() {
       axios.get(`/api/furnitures`),
     ]);
     return {
+      zones: zonesResponse.data,
       reservationTypes: reservationTypesResponse.data,
       workAreas: workAreasResponse.data,
       screens: screensResponse.data,
@@ -25,6 +28,7 @@ export async function getBookingPreferencesData() {
   } catch (error) {
     console.error("Erreur lors de la récupération des données", error);
     return {
+      zones: [],
       reservationTypes: [],
       workAreas: [],
       screens: [],
