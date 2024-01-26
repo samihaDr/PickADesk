@@ -11,6 +11,8 @@ import Layout from "./Layout";
 import ProfilePage from "./components/profilePage/ProfilePage";
 import ChangePassword from "./components/changePassword/ChangePassword";
 import SearchWorkStation from "./components/searchWorkStation/SearchWorkStation";
+import AvailableWorkStations from "./components/availableWorkStations/AvailableWorkStations";
+import { WorkStationProvider } from "./services/WorkStationContext";
 
 import "bootstrap/dist/css/bootstrap-grid.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -35,18 +37,25 @@ export default function App() {
   });
   return (
     <GlobalProvider>
-      <Layout />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="addReservation" element={<AddReservation />} />
-        <Route path="searchWorkStation" element={<SearchWorkStation />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="changePassword" element={<ChangePassword />} />
-        <Route path="registerPage" element={<RegisterPage />} />
-        <Route path="profilePage" element={<ProfilePage />} />
-        <Route path="loginPage" element={<LoginPage />} />
-        <Route path="*" element={<LoginPage />} />
-      </Routes>
+      <WorkStationProvider>
+        {" "}
+        <Layout />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="addReservation" element={<AddReservation />} />
+          <Route path="searchWorkStation" element={<SearchWorkStation />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="changePassword" element={<ChangePassword />} />
+          <Route path="registerPage" element={<RegisterPage />} />
+          <Route path="profilePage" element={<ProfilePage />} />
+          <Route path="loginPage" element={<LoginPage />} />
+          <Route path="*" element={<LoginPage />} />
+          <Route
+            path="availableWorkStations"
+            element={<AvailableWorkStations />}
+          />
+        </Routes>
+      </WorkStationProvider>
     </GlobalProvider>
   );
 }
