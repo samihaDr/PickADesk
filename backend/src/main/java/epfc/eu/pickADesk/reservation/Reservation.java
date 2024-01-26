@@ -3,6 +3,7 @@ package epfc.eu.pickADesk.reservation;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import epfc.eu.pickADesk.user.User;
+import epfc.eu.pickADesk.workStation.WorkStation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,16 +17,29 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Table(
+        name = "reservation",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"reservation_date", "work_station_id", "morning"}),
+                @UniqueConstraint(columnNames = {"reservation_date", "work_station_id", "afternoon"})
+        }
+)
 public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "reservation_date", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC")
     private LocalDate reservationDate;
-    private Integer nbTimeSlot;
-    private Integer workStationId;
+    private Boolean morning;
+    private Boolean afternoon;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "work_station_id", nullable = false)
+    private WorkStation workStation;
+
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

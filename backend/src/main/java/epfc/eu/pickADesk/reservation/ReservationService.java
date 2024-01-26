@@ -1,7 +1,8 @@
 package epfc.eu.pickADesk.reservation;
 
-import epfc.eu.pickADesk.user.User;
+import epfc.eu.pickADesk.dto.ReservationDTO;
 import epfc.eu.pickADesk.dto.UserDTO;
+import epfc.eu.pickADesk.user.User;
 import epfc.eu.pickADesk.user.UserRepository;
 import epfc.eu.pickADesk.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,38 +12,44 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final ReservationMapper reservationMapper;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, UserService userService, UserRepository userRepository) {
+    public ReservationService(ReservationRepository reservationRepository, UserService userService, UserRepository userRepository, ReservationMapper reservationMapper) {
         this.reservationRepository = reservationRepository;
         this.userService = userService;
         this.userRepository = userRepository;
+        this.reservationMapper = reservationMapper;
     }
 
-    public Optional<Reservation> hasReservationToday(Principal principal) {
+    public List<ReservationDTO> hasReservationToday(Principal principal) {
         UserDTO userConnected = this.userService.getUserConnected(principal);
         LocalDate localDate = LocalDate.now();
 
-        return this.reservationRepository.findReservationsByUserIdAndReservationDate(userConnected.getId(), localDate);
+        List<Reservation> reservations = this.reservationRepository.findReservationsForTodayWithFlexibleTiming(userConnected.getId(), localDate);
+        return reservations.stream()
+                .map(reservationMapper::reservationToReservationDTO)
+                .collect(Collectors.toList());
     }
 
-
-    public List<Reservation> getReservations(Principal principal) {
+    public List<ReservationDTO> getReservations(Principal principal) {
         UserDTO userConnected = this.userService.getUserConnected(principal);
-        System.out.println("USER CONNECTED SERVICE ========== " + userConnected.getEmail());
-        //retourne la liste des reservations de cet utilisateur
         List<Reservation> listReservations = reservationRepository.findByUserId(userConnected.getId());
-        System.out.println("LA TAILLE DE MA LISTE EST " + listReservations.size());
+
         if (listReservations.isEmpty()) {
             throw new IllegalArgumentException("Vous n'avez pas de reservations ");
         }
-        return listReservations;
+
+        return listReservations.stream()
+                .map(reservationMapper::reservationToReservationDTO)
+                .collect(Collectors.toList());
     }
 
     public Reservation addReservation(Reservation reservation, Principal principal) {

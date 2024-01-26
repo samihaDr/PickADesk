@@ -1,5 +1,6 @@
 package epfc.eu.pickADesk.reservation;
 
+import epfc.eu.pickADesk.dto.ReservationDTO;
 import epfc.eu.pickADesk.utils.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @SecurityRequirement(name = "bearerAuth")
@@ -20,40 +20,45 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @Autowired
+    private ReservationMapper reservationMapper;
+
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
     @GetMapping(value = "/myReservations")
-    public ResponseEntity<List<Reservation>> getReservations(Principal principal) {
-        return new ResponseEntity<>(reservationService.getReservations(principal), HttpStatus.OK);
+    public ResponseEntity<List<ReservationDTO>> getReservations(Principal principal) {
+        List<ReservationDTO> reservations = reservationService.getReservations(principal);
+        return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
     @PostMapping(value = "/addReservation")
-    public ResponseEntity<Reservation> addReservation(@RequestBody @Validated Reservation reservation, Principal principal) {
-        return ResponseEntity.ok(reservationService.addReservation(reservation, principal));
+    public ResponseEntity<ReservationDTO> addReservation(@RequestBody @Validated Reservation reservation, Principal principal) {
+        Reservation addedReservation = reservationService.addReservation(reservation, principal);
+        ReservationDTO reservationDTO = reservationMapper.reservationToReservationDTO(addedReservation);
+        return ResponseEntity.ok(reservationDTO);
     }
 
-    @GetMapping(value = "hasReservationToday")
+    @GetMapping(value = "/hasReservationToday")
     public ApiResponse hasReservationToday(Principal principal) {
-        ApiResponse response;
-        if (principal == null) {
-            return new ApiResponse(false);
-        }
+        try {
+            if (principal == null) {
+                return new ApiResponse(false, "User is not authenticated", null);
+            }
 
-        Optional<Reservation> result = reservationService.hasReservationToday(principal);
-        if (result.isEmpty()) {
-            response = new ApiResponse(false,"You don't have any reservations for today",result);
-        } else {
-            response = new ApiResponse(true,"Success message",result);
-        }
+            List<ReservationDTO> results = reservationService.hasReservationToday(principal);
+            if (results == null || results.isEmpty()) {
+                return new ApiResponse(false, "No reservations for today", null);
+            }
 
-        return response;
-        
+            return new ApiResponse(true, "You have reservations for today", results);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Error checking reservations", null);
+        }
     }
 
     @DeleteMapping(value = "/deleteReservation/{reservationId}")
-    public ResponseEntity<Reservation> deleteReservation(@PathVariable("reservationId") Long reservationId) {
+    public ResponseEntity<?> deleteReservation(@PathVariable("reservationId") Long reservationId) {
         reservationService.deleteReservation(reservationId);
         return ResponseEntity.noContent().build();
     }
