@@ -13,12 +13,7 @@ export default function Dashboard() {
     year: "numeric",
   };
   const dateFormatted = new Intl.DateTimeFormat("en-US", options).format(today);
-  const [reservationData, setReservationData] = useState({
-    id: "",
-    reservationDate: "",
-    nbTimeSlot: "",
-    workStationId: "",
-  });
+  const [reservationData, setReservationData] = useState([]);
   useEffect(() => {
     const jwt = localStorage.getItem(AUTH_TOKEN_KEY);
     axios
@@ -31,6 +26,7 @@ export default function Dashboard() {
         const { success, message, data } = response.data;
         if (success) {
           setReservationData(data);
+          console.log("ReservationDAta :::51515151 ", reservationData);
         } else {
           console.error("Erreur de récupération de la réservation :", message);
         }
@@ -39,6 +35,10 @@ export default function Dashboard() {
         console.error("Erreur lors de la requête :", error);
       });
   }, []);
+
+  useEffect(() => {
+    console.log("ReservationData updated:", reservationData);
+  }, [reservationData]); // Cet effet s'exécute chaque fois que reservationData change
   if (!userConnected) {
     return null;
   }
@@ -54,31 +54,23 @@ export default function Dashboard() {
         <div className="hello">
           <p> Hello, </p>
         </div>
-        {reservationData.id ? (
-          <div className="content">
-            <p>You are working in the office today.</p>
-            <p>
-              The desk number{" "}
-              <strong color={"#1f4e5f"}>
-                {" "}
-                {reservationData.workStationId}{" "}
-              </strong>{" "}
-              is reserved for you.
-            </p>
-            <p>
-              you have reserved a{" "}
-              <strong color={"#1f4e5f"}>{reservationData.nbTimeSlot} </strong>{" "}
-              slots
-            </p>
-            <p>
-              You still have <strong color={"#1f4e5f"}>{} </strong> slots
-            </p>
-          </div>
+        {reservationData.length > 0 ? (
+          reservationData.map((reservation, index) => (
+            <div key={index}>
+              <p>You are working in the office today.</p>
+              <p>
+                This <strong>{reservation.morning && "morning "}</strong>
+                <strong>
+                  {reservation.afternoon &&
+                    (reservation.morning ? "and afternoon" : "afternoon")}
+                </strong>{" "}
+                the desk <strong>{reservation.workStation.workPlace}</strong>,
+                is reserved for you.
+              </p>
+            </div>
+          ))
         ) : (
-          <div className="content">
-            <p>You are working remotely today.</p>
-            <p>You still have {reservationData.nbTimeSlot} telework slots</p>
-          </div>
+          <p>You are working remotely today.</p>
         )}
         <button type="submit" className="btn btn-primary">
           Change your status
