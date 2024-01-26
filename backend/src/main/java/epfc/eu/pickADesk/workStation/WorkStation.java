@@ -2,12 +2,14 @@ package epfc.eu.pickADesk.workStation;
 
 import epfc.eu.pickADesk.equipment.Equipment;
 import epfc.eu.pickADesk.furniture.Furniture;
-import epfc.eu.pickADesk.reservationType.ReservationType;
 import epfc.eu.pickADesk.screen.Screen;
 import epfc.eu.pickADesk.workArea.WorkArea;
 import epfc.eu.pickADesk.zone.Zone;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -21,13 +23,12 @@ public class WorkStation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String workPlace;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "zone_id")
     private Zone zone;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "reservation_type_id")
-    private ReservationType reservationType;
+    private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "work_area_id")
@@ -53,6 +54,6 @@ public class WorkStation {
     )
     private List<Furniture> furnitures;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
+//    @Enumerated(EnumType.STRING)
+//    private Status status;
 }
