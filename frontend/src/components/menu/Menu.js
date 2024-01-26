@@ -31,7 +31,7 @@ export default function Menu() {
           className="nav-link active"
           aria-current="page"
         >
-          New reservation
+          Make a reservation
         </Link>
         <Link to="/" className="nav-link active" aria-current="page">
           Find Colleague
