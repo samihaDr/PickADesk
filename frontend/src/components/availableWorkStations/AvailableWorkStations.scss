@@ -1,0 +1,30 @@
+.search-resume {
+  width: 30%;
+  padding: 15px;
+  margin: 100px auto auto;
+  border: 1px solid #1f4e5f;
+  border-radius: 25px;
+  //height: 70%;
+}
+
+.search-result {
+  width: 30%;
+  padding: 15px;
+  margin: 10px auto auto;
+  border: 1px solid #1f4e5f;
+  border-radius: 25px;
+  height: 60%;
+}
+.bold-text {
+  font-weight: bold;
+}
+
+.back-button {
+  /* Votre style ici */
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  /* Autres styles selon vos besoins */
+}
