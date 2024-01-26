@@ -31,13 +31,12 @@ public class WorkStationService {
     }
 
     public Page<WorkStationDTO> findWorkStationsWithOptionalCriteria(Integer zoneId,
-                                                                     Integer reservationTypeId,
                                                                      Integer workAreaId,
                                                                      Integer screenId,
                                                                      List<Integer> equipmentIds,
                                                                      List<Integer> furnitureIds,
                                                                      Pageable pageable) {
-        Page<WorkStation> page = workStationRepository.findWorkStationsWithOptionalCriteria(zoneId, reservationTypeId, workAreaId, screenId, equipmentIds, furnitureIds, pageable);
+        Page<WorkStation> page = workStationRepository.findWorkStationsWithOptionalCriteria(zoneId, workAreaId, screenId, equipmentIds, furnitureIds, pageable);
         return page.map(WorkStationDTO::fromEntity);
     }
 
