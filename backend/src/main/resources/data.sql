@@ -4,12 +4,12 @@ INSERT INTO user ( firstname, lastname, email, password, role, team_id, locked, 
 INSERT INTO user ( firstname, lastname, email, password, role, team_id, locked, enabled) VALUES ('Hicham', 'Doum', 'hich@example.com', '$2y$13$fEUeq3qqcrXm.G2yYh.AM.EWh3qzu77zRB1uB.MVfAJGTVNbyA1.u', 'ADMIN',5, FALSE, TRUE);
 
 -- Insert into reservation table
-INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-11-01', 3, 101, 1, 1);
-INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-10-22', 2, 102, 2, 1);
-INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-10-25', 4, 104, 2, 3);
-INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-10-25', 3, 104, 3, 2);
-INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2023-11-22', 1, 100, 1, 2);
-INSERT INTO reservation (reservation_date, nb_time_slot, work_station_id, user_id, reservation_type_id) VALUES ('2024-01-17', 1, 10, 1, 20);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-01-26',true ,true, 1, 1, 1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-01-26',true, true, 2, 2, 1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-02-02', false, true, 3, 2, 3);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2023-10-25',true, true, 1, 3, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2023-11-22',false, true, 3, 1, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-01-17',true, false, 2, 1, 20);
 
 --Insert into country table
 INSERT INTO country (name) VALUES ('Belgium');
@@ -105,37 +105,36 @@ INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, r
 -- INSERT INTO team (user_id, counytry_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 1, 2, 2, 1, 1, 4);
 
 --Insert into userPreferenceEquipmentIds
-INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_ids) VALUES (1, 2);
-INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_ids) VALUES (1, 4);
-INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_ids) VALUES (2, 1);
-INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_ids) VALUES (1, 3);
+INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (1, 2);
+INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (1, 4);
+INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (2, 1);
+INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (1, 3);
 
 --Insert into userPreferenceFurnitureIds
-INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (1, 1);
-INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (1, 2);
-INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (1, 4);
-INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (2, 2);
-INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_ids) VALUES (2, 3);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (1, 1);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (1, 2);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (1, 4);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (2, 2);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (2, 3);
 
 -- Insert into WorkStation table
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 1, 1, 1, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 2, 2, 1, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 2, 1, 1, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 2, 2, 2, 'OCCUPIED');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 2, 2, 2, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 3, 3, 3, 'MAINTENANCE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 2, 1, 3, 'MAINTENANCE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 3, 1, 1, 4, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 3, 2, 2, 5, 'OCCUPIED');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 3, 3, 5, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 1, 1, 2, 'OCCUPIED');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 3, 2, 2, 2, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 1, 2, 2, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 2, 2, 3, 1, 'OCCUPIED');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 3, 2, 2, 5, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 1, 1, 1, 'AVAILABLE');
-INSERT INTO Work_station ( zone_id,reservation_type_id, work_area_id, screen_id, status) VALUES ( 1, 1, 1, 1, 'AVAILABLE');
--- Continuez à ajouter plus d'insertions selon vos besoins
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.01',1, 1, 1, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.02', 1, 2, 1, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.03',1, 2, 1, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.01', 2, 2, 2, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.02', 2, 2, 2, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.03', 2, 3, 3, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.04', 2, 2, 3, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.01', 3, 1, 4, false);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.02', 3, 2, 5, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.04', 1, 3, 5, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.05', 2, 1, 2, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.04', 3, 2, 2, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.05', 1, 1, 2, false);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.06', 2, 2, 1, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.05', 3, 2, 5, true);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.06',1, 1, 1, false);
+INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.07', 1, 1, 1,true);
 
 --Insert into workStationEquipmentIds
 INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (1,1);
