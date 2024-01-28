@@ -20,3 +20,10 @@
 .checkbox + .checkbox-label {
   margin-right: 20px; /* Espace entre les ensembles de cases à cocher */
 }
+.spinner-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 250px ;
+  height: 250px;
+}
