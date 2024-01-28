@@ -10,7 +10,7 @@ export default function AvailableWorkStations() {
   const navigate = useNavigate();
   const { userConnected } = useContext(GlobalContext);
   const { workStations, selectedOptions } = useContext(WorkStationContext);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState({
     zones: [],
     reservationTypes: [],
@@ -41,17 +41,20 @@ export default function AvailableWorkStations() {
   }, [selectedOptions, workStations]);
 
   if (!workStations || !selectedOptions) {
-    return <p>Chargement des données...</p>; // Ou tout autre message/gestion d'erreur
+    return <p>Loading data...</p>; // Ou tout autre message/gestion d'erreur
   }
 
   // Accéder au tableau 'content' pour la liste des postes de travail
   const workStationList = workStations.content || [];
+  console.log("WorkStationsList in AVAi: ", workStationList);
+  console.log("WorkStations in AVAIl: ", workStations);
+
   if (!userConnected) {
     return null;
   }
 
   const handleBackClick = () => {
-    navigate("/searchWorkStation"); // Assurez-vous que le chemin est correct
+    navigate("/searchWorkStation");
   };
   // Fonction pour obtenir le nom correspondant à un ID donné dans une catégorie spécifique
   const getNameById = (category, id) => {
@@ -77,10 +80,12 @@ export default function AvailableWorkStations() {
     return "any"; // ou toute autre valeur par défaut
   };
   const timePeriodString = getTimePeriod();
+
   function handleReservationClick(stationId) {
     console.log("Réservation demandée pour le poste de travail ID:", stationId);
     // Ici, vous pouvez ajouter la logique pour gérer la réservation
   }
+
   return (
     <div>
       <div className="search-resume">
@@ -118,26 +123,25 @@ export default function AvailableWorkStations() {
       <div className="search-result">
         <h2 style={{ color: "#1f4e5f" }}>Pick a desk</h2>
         <h4>Available workStations :</h4>
-        {workStations.length > 0 ? (
+        {workStationList.length > 0 ? (
           <table className="table">
             <thead>
               <tr>
                 <th scope="col">WorkPlace</th>
                 <th scope="col">Zone</th>
-                <th scope="col">ReservationType</th>
-                <th scope="col">Handle</th>
+                <th scope="col">AreaWork Type</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
               {workStationList.map((station) => (
                 <tr key={station.id}>
-                  <td>{station.id}</td>
                   <td>{station.workPlace}</td>
-                  <td>{station.zone}</td>
-                  <td>{station.reservationType}</td>
+                  <td>{station.zone.name}</td>
+                  <td>{station.workArea.name}</td>
                   <td>
                     <button onClick={() => handleReservationClick(station.id)}>
-                      Réserver
+                      Book
                     </button>
                   </td>{" "}
                   {/* Bouton de réservation pour chaque ligne */}
