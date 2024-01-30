@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,9 @@ public class WorkStationController {
             @RequestParam(required = false) Integer screenId,
             @RequestParam(required = false) List<Integer> equipmentIds,
             @RequestParam(required = false) List<Integer> furnitureIds,
+            @RequestParam LocalDate reservationDate,
+            @RequestParam Boolean morning,
+            @RequestParam Boolean afternoon,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -48,7 +52,7 @@ public class WorkStationController {
 
         PageRequest pageable = PageRequest.of(page, size, Sort.Direction.fromString(order), sortBy);
         Page<WorkStationDTO> workStationPage = workStationService.findWorkStationsWithOptionalCriteria(
-                zoneId, workAreaId, screenId, equipmentIds, furnitureIds, pageable);
+                zoneId, workAreaId, screenId, equipmentIds, furnitureIds, reservationDate, morning, afternoon,pageable);
 
         return ResponseEntity.ok(workStationPage);
     }

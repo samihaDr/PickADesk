@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,8 +36,11 @@ public class WorkStationService {
                                                                      Integer screenId,
                                                                      List<Integer> equipmentIds,
                                                                      List<Integer> furnitureIds,
+                                                                     LocalDate reservationDate,
+                                                                     Boolean morning,
+                                                                     Boolean afternoon,
                                                                      Pageable pageable) {
-        Page<WorkStation> page = workStationRepository.findWorkStationsWithOptionalCriteria(zoneId, workAreaId, screenId, equipmentIds, furnitureIds, pageable);
+        Page<WorkStation> page = workStationRepository.findWorkStationsWithOptionalCriteria(zoneId, workAreaId, screenId, equipmentIds, furnitureIds, reservationDate, morning, afternoon, pageable);
         return page.map(WorkStationDTO::fromEntity);
     }
 
