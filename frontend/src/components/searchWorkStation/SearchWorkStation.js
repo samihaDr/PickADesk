@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../../services/GlobalState";
 import { getBookingPreferencesData } from "../../services/GetBookingPreferencesData";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; // CSS import
+import "react-datepicker/dist/react-datepicker.css";
 import "./SearchWorkStation.scss";
 import { useNavigate } from "react-router-dom";
 import { WorkStationContext } from "../../services/WorkStationContext";
@@ -22,22 +22,25 @@ export default function SearchWorkStation() {
   const [isLoading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const { userConnected, userPreferences } = useContext(GlobalContext);
+  const [isAnyEquipmentChecked, setIsAnyEquipmentChecked] = useState(false);
+  const [isAnyFurnitureChecked, setIsAnyFurnitureChecked] = useState(false);
   const [date, setDate] = useState(new Date());
   const today = new Date();
-  let minDate = new Date();
+  today.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour aujourd'hui à minuit
+  let minDate = new Date(today);
+  //let minDate = new Date();
   const oneMonthLater = new Date();
   oneMonthLater.setMonth(today.getMonth() + 1);
 
-  const isWeekday = (date) => {
-    const day = date.getDay();
-    return day !== 0 && day !== 6; // 0 pour dimanche, 6 pour samedi
-  };
-  if (today.getHours() >= 13) {
+  if (new Date().getHours() >= 13) {
     minDate.setDate(today.getDate() + 1);
   }
+  minDate.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour minDate à minuit
 
-  const isDateSelectable = (date) => {
-    return date >= minDate;
+  const combinedDateFilter = (date) => {
+    const day = date.getDay();
+    const isWeekend = day === 0 || day === 6; // 0 pour dimanche, 6 pour samedi
+    return !isWeekend && date >= minDate;
   };
 
   const [timePeriod, setTimePeriod] = useState({
@@ -79,14 +82,23 @@ export default function SearchWorkStation() {
   }, [userPreferences]);
 
   const validateFormData = () => {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour aujourd'hui à minuit
+
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0); // Réinitialiser l'heure de la date sélectionnée à minuit
+
     // Vérifier que la date est sélectionnée et valide
     if (!date) {
       return "The date is compulsory.";
     }
 
-    // Vérifier que la date sélectionnée n'est pas dans le passé
-    if (date <= today) {
-      return "The date selected cannot be in the past.";
+    // Vérifier que la date sélectionnée n'est pas aujourd'hui après 13h
+    if (
+      selectedDate.getTime() === currentDate.getTime() &&
+      new Date().getHours() >= 13
+    ) {
+      return "It is impossible to make a booking after 1pm on the same day.";
     }
 
     // Vérifier que soit morning, soit afternoon, soit les deux sont cochés
@@ -109,7 +121,7 @@ export default function SearchWorkStation() {
     setLoading(true);
 
     const formData = {
-      startDate: date,
+      date,
       timePeriod,
       zone,
       reservationType,
@@ -141,23 +153,24 @@ export default function SearchWorkStation() {
 
   const sendFormDataToServer = async (formData) => {
     const {
-      //startDate,  // Note: Vous devrez peut-être adapter ce champ en fonction de la façon dont votre backend gère les dates
-      //timePeriod, // Note: Ce champ n'est pas directement utilisé dans le backend, à moins qu'il ne corresponde à 'zoneId'
+      date, // 'yyyy-MM-dd'
+      timePeriod, // { morning: true/false, afternoon: true/false }
       zone,
       workArea,
       screen,
-      equipment,
-      furniture,
+      equipment, // Ce sont des listes d'IDs
+      furniture, // Ce sont des listes d'IDs
     } = formData;
 
     const params = new URLSearchParams({
-      zoneId: zone,
-      workAreaId: workArea,
-      screenId: screen,
-      // Convertir les tableaux en chaînes de requête, par exemple: "1,2,3"
-      equipmentIds: equipment.join(","),
-      furnitureIds: furniture.join(","),
-      // Paramètres de pagination par défaut, modifiez-les si nécessaire
+      reservationDate: date.toISOString().split("T")[0], // Convertit la date en format ISO (yyyy-MM-dd)
+      morning: timePeriod.morning,
+      afternoon: timePeriod.afternoon,
+      zoneId: zone || "", // Si zone est null ou undefined, cela enverra une chaîne vide
+      workAreaId: workArea || "",
+      screenId: screen || "",
+      equipmentIds: equipment.join(",") || "",
+      furnitureIds: furniture.join(",") || "",
       page: 0,
       size: 10,
       sortBy: "id",
@@ -165,12 +178,15 @@ export default function SearchWorkStation() {
     });
 
     try {
-      const response = await fetch(`/api/workStations/search?${params}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/workStations/search?${params.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -190,15 +206,42 @@ export default function SearchWorkStation() {
     });
   };
 
-  const handleCheckboxChange = (itemId, category) => {
-    const isEquipment = category === "equipment";
-    const selectedItems = isEquipment ? equipment : furniture;
-    const newItems = selectedItems.includes(itemId)
-      ? selectedItems.filter((id) => id !== itemId)
-      : [...selectedItems, itemId];
-
-    isEquipment ? setEquipment(newItems) : setFurniture(newItems);
+  const handleAnyEquipmentChange = () => {
+    setIsAnyEquipmentChecked(!isAnyEquipmentChecked);
+    if (!isAnyEquipmentChecked) {
+      setEquipment([]);
+    }
   };
+
+  const handleAnyFurnitureChange = () => {
+    setIsAnyFurnitureChecked(!isAnyFurnitureChecked);
+    if (!isAnyFurnitureChecked) {
+      setFurniture([]);
+    }
+  };
+
+  const handleEquipmentChange = (itemId) => {
+    if (isAnyEquipmentChecked) {
+      setIsAnyEquipmentChecked(false);
+    }
+    setEquipment((prev) =>
+      prev.includes(itemId)
+        ? prev.filter((id) => id !== itemId)
+        : [...prev, itemId],
+    );
+  };
+
+  const handleFurnitureChange = (itemId) => {
+    if (isAnyFurnitureChecked) {
+      setIsAnyFurnitureChecked(false);
+    }
+    setFurniture((prev) =>
+      prev.includes(itemId)
+        ? prev.filter((id) => id !== itemId)
+        : [...prev, itemId],
+    );
+  };
+
   if (!userConnected) {
     return null;
   }
@@ -227,11 +270,10 @@ export default function SearchWorkStation() {
                     <DatePicker
                       selected={date}
                       onChange={(date) => setDate(date)}
-                      dateFormat="dd/MM/yyyy"
+                      dateFormat="yyyy-MM-dd"
                       minDate={minDate}
                       maxDate={oneMonthLater}
-                      filterDate={isDateSelectable}
-                      filterDate={isWeekday}
+                      filterDate={combinedDateFilter}
                       toggleCalendarOnIconClick
                       className="form-control"
                     />
@@ -309,15 +351,25 @@ export default function SearchWorkStation() {
                 <div>
                   <div className="mb-3">
                     <label>Equipment</label>
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        checked={isAnyEquipmentChecked}
+                        onChange={handleAnyEquipmentChange}
+                        className="form-check-input"
+                      />{" "}
+                      Any
+                    </div>
                     {data.equipment.map((equip) => (
                       <div key={equip.id} className="form-check">
                         <input
                           type="checkbox"
                           value={equip.id}
-                          checked={equipment.includes(equip.id)}
-                          onChange={() =>
-                            handleCheckboxChange(equip.id, "equipment")
+                          checked={
+                            !isAnyEquipmentChecked &&
+                            equipment.includes(equip.id)
                           }
+                          onChange={() => handleEquipmentChange(equip.id)}
                           className="form-check-input"
                         />{" "}
                         {equip.name}
@@ -326,15 +378,25 @@ export default function SearchWorkStation() {
                   </div>
                   <div className="mb-3">
                     <label>Furniture</label>
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        checked={isAnyFurnitureChecked}
+                        onChange={handleAnyFurnitureChange}
+                        className="form-check-input"
+                      />{" "}
+                      Any
+                    </div>
                     {data.furniture.map((furn) => (
                       <div key={furn.id}>
                         <input
                           type="checkbox"
                           value={furn.id}
-                          checked={furniture.includes(furn.id)}
-                          onChange={() =>
-                            handleCheckboxChange(furn.id, "furniture")
+                          checked={
+                            !isAnyFurnitureChecked &&
+                            furniture.includes(furn.id)
                           }
+                          onChange={() => handleFurnitureChange(furn.id)}
                           className="form-check-input"
                         />{" "}
                         {furn.name}
