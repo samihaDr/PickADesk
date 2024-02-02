@@ -13,6 +13,7 @@ import ChangePassword from "./components/changePassword/ChangePassword";
 import SearchWorkStation from "./components/searchWorkStation/SearchWorkStation";
 import AvailableWorkStations from "./components/availableWorkStations/AvailableWorkStations";
 import { WorkStationProvider } from "./services/WorkStationContext";
+import "./App.css";
 
 import "bootstrap/dist/css/bootstrap-grid.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
