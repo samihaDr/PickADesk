@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AUTH_TOKEN_KEY } from "../../App";
 import { GlobalContext } from "../../services/GlobalState";
+import "./Dashboard.scss";
 
 export default function Dashboard() {
   const { userConnected } = useContext(GlobalContext);
@@ -49,16 +50,16 @@ export default function Dashboard() {
       <br />
       <div className="dashboard-container">
         <div className="date">
-          <p>{dateFormatted}</p>
+          <span>{dateFormatted}</span>
         </div>
         <div className="hello">
-          <p> Hello, </p>
+          <span> Hello, </span>
         </div>
         {reservationData.length > 0 ? (
           reservationData.map((reservation, index) => (
             <div key={index}>
-              <p>You are working in the office today.</p>
-              <p>
+              <span>You are working in the office today.</span>
+              <span>
                 This <strong>{reservation.morning && "morning "}</strong>
                 <strong>
                   {reservation.afternoon &&
@@ -66,11 +67,11 @@ export default function Dashboard() {
                 </strong>{" "}
                 the desk <strong>{reservation.workStation.workPlace}</strong>,
                 is reserved for you.
-              </p>
+              </span>
             </div>
           ))
         ) : (
-          <p>You are working remotely today.</p>
+          <span>You are working remotely today.</span>
         )}
         <button type="submit" className="btn btn-primary">
           Change your status
