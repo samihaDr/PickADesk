@@ -87,10 +87,10 @@ export default function AvailableWorkStations() {
   }
 
   return (
-    <div>
+    <div className="main">
       <div className="search-resume">
         <div className="selected-options-container">
-          <p>
+          <div>
             You are looking for a workspace in the{" "}
             <span className="bold-text">
               {getNameById("zones", selectedOptions.zone) || "any"}
@@ -108,7 +108,7 @@ export default function AvailableWorkStations() {
             </span>
             for this date: <span className="bold-text">{formattedDate}</span>,
             in <span className="bold-text"> {timePeriodString}</span>.
-          </p>
+          </div>
           <button onClick={handleBackClick} className="back-button">
             <img
               src={retour}
@@ -120,8 +120,8 @@ export default function AvailableWorkStations() {
           </button>
         </div>
       </div>
+      <h2 style={{ color: "#1f4e5f" }}>Pick a desk</h2>
       <div className="search-result">
-        <h2 style={{ color: "#1f4e5f" }}>Pick a desk</h2>
         <h4>Available workStations :</h4>
         {workStationList.length > 0 ? (
           <table className="table">
@@ -140,7 +140,10 @@ export default function AvailableWorkStations() {
                   <td>{station.zone.name}</td>
                   <td>{station.workArea.name}</td>
                   <td>
-                    <button onClick={() => handleReservationClick(station.id)}>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleReservationClick(station.id)}
+                    >
                       Book
                     </button>
                   </td>{" "}
