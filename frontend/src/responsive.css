@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media only screen and (max-width: 600px) {
+    /* Styles pour les écrans de moins de 600px */
+}
+
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+    /* Styles pour les écrans entre 601px et 1024px */
+}
+
+@media only screen and (min-width: 1025px) {
+    /* Styles pour les écrans de plus de 1024px */
+}
+
+body {
+    font-size: 16px; /* Taille de base */
+}
+
+h1 {
+    font-size: 2rem; /* 32px */
+}
+
+/*.main {*/
+/*    width: 40%;*/
+/*    padding: 30px;*/
+/*    margin: 0 0 auto;*/
+/*    border: 1px solid #1f4e5f;*/
+/*    border-radius: 25px;*/
+/*    height: auto;*/
+/*  }*/
+
+/*html, body {*/
+/*    height: 100%; !* Fixe la hauteur au niveau de la fenêtre du navigateur *!*/
+/*    width: 100%;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    !*overflow: scroll; !* Empêche le défilement vertical *!*!*/
+/*}*/
+
+/* Réinitialisation de base pour assurer la cohérence entre les navigateurs */
+
+
+/*html, body {*/
+/*    height: 100%; !* Fixe la hauteur au niveau de la fenêtre du navigateur *!*/
+/*    overflow: hidden; !* Empêche le défilement vertical *!*/
+/*}*/
+
+/*!* Style de la barre de navigation *!*/
+/*.navbar {*/
+/*    position: fixed; !* Fixe la navbar à gauche *!*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 200px; !* Largeur de la navbar *!*/
+/*    height: 100%; !* Hauteur complète de la vue *!*/
+/*    background-color: #333; !* Couleur de fond de la navbar *!*/
+/*    color: white;*/
+/*    padding: 20px;*/
+/*}*/
+
+/*!* Conteneur principal pour les autres composants *!*/
+/*.main {*/
+/*    margin-left: 200px; !* Décalage égal à la largeur de la navbar *!*/
+/*    height: 100%;*/
+/*    display: flex;*/
+/*    justify-content: center; !* Centre horizontalement *!*/
+/*    align-items: center; !* Centre verticalement *!*/
+/*    text-align: center;*/
+/*}*/
+
+/* Autres styles de composants au besoin */
