@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { PasswordValidator } from "../../services/PasswordValidator";
 import { useNavigate } from "react-router-dom";
+import "./ChangePassword.scss";
 
 const ChangePasswordForm = () => {
   const [passwordData, setPasswordData] = useState({
