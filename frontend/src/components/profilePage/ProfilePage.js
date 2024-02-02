@@ -256,7 +256,7 @@ const EditProfile = () => {
         </div>
         <br />
         <div>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary" disabled={true}>
             Save preferences
           </button>
 
