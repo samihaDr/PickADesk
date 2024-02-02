@@ -1,4 +1,4 @@
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logo1.png";
 import React, { useContext, useEffect } from "react";
 import "./Navbar.scss";
 import LogoutButton from "../logout/Logout";
@@ -23,22 +23,20 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <nav className="navbar navbar-expand-lg navbar-light fixed-top">
       <div className="container-fluid">
         <div className="welcome">
           <a className="navbar-brand" href="/">
             <img
               src={logo}
               alt="Logo"
-              width="80"
-              height="60"
               className="d-inline-block align-text-top"
             />
           </a>
           <span className="userInfo">
             {userConnected && (
-              <div style={{ fontWeight: "bold", color: "#1f4e5f" }}>
-                <p>Welcome, {userConnected}</p>
+              <div>
+                <span>Welcome, {userConnected}</span>
               </div>
             )}
           </span>

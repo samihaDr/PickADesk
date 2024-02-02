@@ -1,19 +1,81 @@
-.welcome {
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #1f4e5f; // Couleur de fond de la barre de navigation
+  color: #f4e7d3; // Couleur du texte
+  //padding-left: 200px; // Assurez-vous que cela correspond à la largeur de votre sidebar
   display: flex;
-  align-items: flex-start;
-}
-.userInfo {
-  align-self: center;
-}
+  align-items: center; // Centrer les éléments verticalement
+  justify-content: flex-start; // Espacer les éléments de la navbar
 
-.quotaInfo {
-  display: flex;
-  align-items: flex-end;
-}
-.weeklyQuota {
-  align-self: center;
-  margin-right: 15px;
-}
-.remaining {
-  align-self: center;
+  .container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    .welcome {
+      display: flex;
+      align-items: center;
+
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        img {
+          width: 183px; // Ajustez la largeur du logo ici si nécessaire
+          height: 60px; // Gardez le ratio d'aspect du logo
+          margin-right: 25px; // Espacement entre le logo et le texte suivant
+        }
+      }
+
+      .userInfo {
+        font-size: 1rem; // Taille du texte de bienvenue
+        color: #f4e7d3; // Couleur du texte
+        div {
+          span {
+            margin: 0; // Enlever la marge par défaut du paragraphe
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .quotaInfo {
+      display: flex;
+      align-items: center;
+
+      span {
+        margin-left: 1rem; // Espacement entre les infos de quota
+
+        div {
+          font-size: 0.9rem; // Taille du texte pour les infos de quota
+        }
+      }
+    }
+
+    .nav {
+      list-style: none; // Enlever les puces de liste
+
+      .nav-item {
+        margin-left: 1rem; // Espacement entre les éléments de navigation
+
+        .nav-link {
+          color: #f4e7d3; // Couleur des liens
+          text-decoration: none; // Enlever le soulignement des liens
+          &:hover {
+            color: #3498db; // Couleur des liens au survol
+          }
+
+          &.active {
+            font-weight: bold; // Mettre en gras l'élément actif
+          }
+        }
+      }
+    }
+  }
 }
