@@ -151,7 +151,7 @@ export default function LoginPage() {
           <span>Don't have an account? </span>
           <Link to="/registerPage">Register</Link>
         </div>
-        {error && <div style={{ color: "red" }}>{error}</div>}
+        {error && <div className="error-message">{error}</div>}
       </div>
     </div>
   );
