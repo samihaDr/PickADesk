@@ -1,7 +1,7 @@
-import "./Menu.scss";
 import React, { useContext } from "react";
 import { GlobalContext } from "../../services/GlobalState";
 import { Link } from "react-router-dom";
+import "./Menu.scss";
 
 export default function Menu() {
   const { userConnected } = useContext(GlobalContext);
@@ -13,7 +13,7 @@ export default function Menu() {
   return (
     <div className="fixed-menu">
       <nav className="nav flex-column">
-        <div>{userConnected}'s space</div>
+        <span>Your space</span>
         <br />
 
         <Link to="/dashboard" className="nav-link active" aria-current="page">

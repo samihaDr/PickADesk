@@ -1,19 +1,45 @@
-
-.nav flex-column {
-  margin-top: 100px;
+.fixed-menu {
   position: fixed;
+  top: 85px;
+  left: 0;
+  width: 200px; // Largeur de la sidebar
   height: 100%;
-  overflow-y: auto;
-}
-.fixed-menu  {
-  width: auto;
-  border: 1px solid #1f4e5f;
-  border-radius: 25px;
-  //position: fixed;
-  margin-left: 30px;
-  margin-top: 100px;
-  padding: 40px;
-  height: 50%;
-  position: absolute;
-  //margin-left: 30px;
+  background-color: #1f4e5f; // Une couleur de fond sombre pour la sidebar
+  color: #f4e7d3; // Couleur du texte clair pour un contraste élevé
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+
+  .nav {
+    list-style: none; // Enlever les puces de liste
+    flex-grow: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-y: auto; // Permet le défilement si le contenu dépasse la hauteur de la fenêtre
+
+    .nav-link {
+      color: #f4e7d3; // Couleur des liens
+      padding: 15px 15px;
+      margin: 5px 0; // Espacement entre les liens
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 4px;
+
+
+      &:hover {
+        background-color: #3498db; // Couleur de fond au survol
+      }
+
+      &.active {
+        font-weight: bold; // Couleur de fond pour l'élément actif
+      }
+    }
+  }
+
+  span {
+    font-weight: bold;
+    margin-bottom: 20px; // Espacement avant les liens
+    padding-left: 15px;
+  }
 }
