@@ -1,37 +1,63 @@
 .main {
-  width: 30%;
-  padding: 50px;
-  margin: 100px auto auto;
-  height: 50%;
-}
-h2 {
-  font-weight: bolder;
-  font-size: larger;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  color: #1f4e5f;
-}
-.card-body {
-  //width: 100%;
-  justify-content: center;
-  margin-top: 50px;
-}
+  padding: calc(var(--spacing-base) * 2);
+  background-color: var(--background-color);
+  min-height: 100vh;
 
-.card-img {
-  width: auto;
-  display: flex;
-  justify-content: center;
-}
+  h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-large);
+  }
 
-.card-text {
-  font-style: oblique;
-  font-family: "Arial Nova Cond Light", cursive;
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
-}
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px; // Coins arrondis pour le conteneur
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Ombre légère pour le conteneur
 
-.card-links {
-  display: flex;
-  justify-content: center;
+    .card-body {
+      text-align: center; // Centre le contenu de la carte
+
+      .card-img img {
+        width: 300px;
+        height: 250px; // Taille spécifiée pour l'image
+        object-fit: cover; // S'assure que l'image couvre bien l'espace disponible
+        border-radius: 4px; // Coins arrondis pour l'image
+        margin-bottom: 1rem;
+      }
+
+      .card-text {
+        color: #1f4e5f; // Couleur pour le texte sous l'image
+        margin-bottom: 2rem;
+      }
+
+      .card-links {
+        display: flex;
+        justify-content: center; // Centre les liens
+
+        .link {
+          text-decoration: none; // Enlève le soulignement des liens
+          background-color: #007bff; // Couleur de fond pour les liens
+          color: white; // Couleur du texte pour les liens
+          padding: 0.5rem 1rem;
+          border-radius: 4px; // Coins arrondis pour les liens
+          margin: 0 1rem; // Espacement entre les liens
+
+          &:hover {
+            background-color: #0056b3; // Couleur de fond au survol
+          }
+        }
+
+        .link-space {
+          display: none; // Cache l'espace supplémentaire entre les liens pour une apparence plus nette
+        }
+      }
+    }
+  }
 }
