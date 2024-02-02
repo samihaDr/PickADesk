@@ -258,45 +258,48 @@ export default function SearchWorkStation() {
   return (
     <div>
       <div className="main">
-        <h2 style={{ color: "#1f4e5f" }}>Make a reservation!</h2>
+        <h2>Make a reservation</h2>
         <div className="add-reservation-container">
           <div>
             <div className="form-container">
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label>Date</label>
-                  <div className="datepicker-container">
-                    <span className="datepicker-icon">📅</span>
-                    <DatePicker
-                      selected={date}
-                      onChange={(date) => setDate(date)}
-                      dateFormat="yyyy-MM-dd"
-                      minDate={minDate}
-                      maxDate={oneMonthLater}
-                      filterDate={combinedDateFilter}
-                      toggleCalendarOnIconClick
-                      className="form-control"
-                    />
-                  </div>
-                </div>
-                <div className="checkbox-container">
-                  <input
-                    type="checkbox"
-                    name="morning"
-                    className="checkbox"
-                    checked={timePeriod.morning}
-                    onChange={handleTimePeriodCheckboxChange}
-                  />
-                  <label className="checkbox-label">Morning</label>
+                  <div className="date-timePeriod">
+                    <div className="datepicker-container">
+                      <span className="datepicker-icon">📅</span>
+                      <DatePicker
+                        selected={date}
+                        onChange={(date) => setDate(date)}
+                        dateFormat="yyyy-MM-dd"
+                        minDate={minDate}
+                        maxDate={oneMonthLater}
+                        filterDate={combinedDateFilter}
+                        toggleCalendarOnIconClick
+                        className="form-control"
+                      />
+                    </div>
 
-                  <input
-                    type="checkbox"
-                    name="afternoon"
-                    className="checkbox"
-                    checked={timePeriod.afternoon}
-                    onChange={handleTimePeriodCheckboxChange}
-                  />
-                  <label className="checkbox-label">Afternoon</label>
+                    <div className="checkbox-container">
+                      <input
+                        type="checkbox"
+                        name="morning"
+                        className="checkbox"
+                        checked={timePeriod.morning}
+                        onChange={handleTimePeriodCheckboxChange}
+                      />
+                      <label className="checkbox-label">Morning</label>
+
+                      <input
+                        type="checkbox"
+                        name="afternoon"
+                        className="checkbox"
+                        checked={timePeriod.afternoon}
+                        onChange={handleTimePeriodCheckboxChange}
+                      />
+                      <label className="checkbox-label">Afternoon</label>
+                    </div>
+                  </div>
                 </div>
                 <div className="mb-3">
                   <label>Reservation Type</label>
