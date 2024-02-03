@@ -2,18 +2,17 @@ package epfc.eu.pickADesk.user;
 
 import epfc.eu.pickADesk.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -22,45 +21,49 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDTO getUserConnected(Principal principal) {
-        if (!(principal instanceof UsernamePasswordAuthenticationToken userPrincipal)) {
-            throw new RuntimeException("User not found");
-        }
-        Optional<User> userConnected = userRepository.findByEmail(userPrincipal.getName());
-        return userConnected.map(UserDTO::new).orElse(null);
+    public UserDTO getUserConnected() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(email)
+                .map(UserDTO::fromUser) // Utilisez la méthode fromUser pour convertir User en UserDTO
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public Boolean isAdmin(Principal principal) {
-        if (!(principal instanceof UsernamePasswordAuthenticationToken userPrincipal)) {
-            throw new RuntimeException("User not found");
-        }
-
-        return userRepository.findByEmail(userPrincipal.getName())
+    public Boolean isAdmin() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(email)
                 .map(User::getRole)
-                .orElse(Role.USER) == Role.ADMIN;
+                .map(Role.ADMIN::equals)
+                .orElse(false);
     }
 
-    public List<User> getUsers() {
+    public List<UserDTO> getUsers() {
         List<User> users = userRepository.findAll();
         if (users.isEmpty()) {
-            throw new IllegalArgumentException("Aucun utilisateur dans la liste ");
+            throw new IllegalArgumentException("Aucun utilisateur dans la liste");
         }
-        return users;
+        return users.stream()
+                .map(UserDTO::fromUser) // Convertir chaque User en UserDTO
+                .collect(Collectors.toList());
     }
 
-    public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
-        var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-        //check if the current password is correct
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+    public void changePassword(ChangePasswordRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Vérifiez si le mot de passe actuel est correct
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Wrong password");
         }
-        // check if the two new passwords are the same
+        // Vérifiez si les deux nouveaux mots de passe sont identiques
         if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
             throw new IllegalArgumentException("Passwords are not the same");
         }
-        //Update the password
+        // Mettez à jour le mot de passe
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        //save the new password
-        userRepository.save(user);
+        userRepository.save(user); // Sauvegardez le nouveau mot de passe
     }
 }

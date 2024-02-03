@@ -17,25 +17,32 @@ public class UserDTO {
     private String email;
     private String lastname;
     private String firstname;
-    private List<ReservationDTO> reservationList;
+    private List<ReservationDTO> reservations;
     private Integer teamId;
     private Role role;
     private Boolean locked;
     private Boolean enabled;
 
 
-    public UserDTO(User user) {
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.lastname = user.getLastname();
-        this.firstname = user.getFirstname();
-        this.reservationList = user.getReservationList().stream()
-                .map(ReservationDTO::fromEntity)
-                .collect(Collectors.toList());
-        this.teamId = user.getTeamId();
-        this.role = user.getRole();
-        this.enabled = user.getEnabled();
-        this.locked = user.getLocked();
+    // Constructeur supplémentaire pour créer un UserDTO à partir d'un User
+    public static UserDTO fromUser(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        return UserDTO.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .lastname(user.getLastname())
+                .firstname(user.getFirstname())
+                .reservations(user.getReservations().stream()
+                        .map(ReservationDTO::fromEntity)
+                        .collect(Collectors.toList()))
+                .teamId(user.getTeamId())
+                .role(user.getRole())
+                .locked(user.getLocked())
+                .enabled(user.getEnabled())
+                .build();
     }
 }
 

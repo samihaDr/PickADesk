@@ -3,10 +3,7 @@ package epfc.eu.pickADesk.user;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import epfc.eu.pickADesk.reservation.Reservation;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,34 +24,35 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull(message = "Email is required")
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email format")
+
+    @Email(message = "Invalid email format") // Utilisation de @Email pour la validation d'email
+    @NotBlank(message = "Email is required") // @NotBlank implique déjà @NotNull
     private String email;
 
-    @NotBlank
-    @Size(min = 3, max = 25, message = "Lastname between 3 and 25 characters)")
+    @NotBlank(message = "Lastname must be between 3 and 25 characters")
+    @Size(min = 3, max = 25)
     private String lastname;
 
-    @NotBlank
-    @Size(min = 3, max = 25, message = "Firstname between 3 and 25 characters)")
+    @NotBlank(message = "Firstname must be between 3 and 25 characters")
+    @Size(min = 3, max = 25)
     private String firstname;
 
-    @NotNull
-    @Size(min = 8, message = "Password containing at least 8 letters, a number, and a special character.")
+    @NotBlank(message = "Password must contain at least 8 characters, including a number and a special character.")
+    @Size(min = 8)
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<Reservation> reservationList = new ArrayList<>();
+    private List<Reservation> reservations = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @JoinColumn(name = "team_id") // Cette colonne stocke la clé étrangère pour le team associé à cet utilisateur.
+    @NotNull(message = "Team ID is required")
     private Integer teamId;
-    //private double memberQuota = getMemberQuota() ;
-    private Boolean locked;
-    private Boolean enabled;
+
+    private Boolean locked = false;
+    private Boolean enabled = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
