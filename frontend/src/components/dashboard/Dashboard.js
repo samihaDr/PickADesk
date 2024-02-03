@@ -3,8 +3,10 @@ import axios from "axios";
 import { AUTH_TOKEN_KEY } from "../../App";
 import { GlobalContext } from "../../services/GlobalState";
 import "./Dashboard.scss";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { userConnected } = useContext(GlobalContext);
   const today = new Date();
   const options = {
@@ -40,13 +42,23 @@ export default function Dashboard() {
   useEffect(() => {
     console.log("ReservationData updated:", reservationData);
   }, [reservationData]); // Cet effet s'exécute chaque fois que reservationData change
+
+  // Fonction appelée lorsque l'utilisateur clique sur le bouton
+  const handleButtonClick = () => {
+    if (reservationData.length > 0) {
+      navigate("/");
+    } else {
+      navigate("/searchWorkStation");
+    }
+  };
+
   if (!userConnected) {
     return null;
   }
 
   return (
     <div className="main">
-      <h2 style={{ color: "#1f4e5f" }}>My status</h2>
+      <h2>My status</h2>
       <br />
       <div className="dashboard-container">
         <div className="date">
@@ -71,10 +83,18 @@ export default function Dashboard() {
             </div>
           ))
         ) : (
-          <span>You are working remotely today.</span>
+          <span>
+            You are working remotely (no reservation found for today){" "}
+          </span>
         )}
-        <button type="submit" className="btn btn-primary">
-          Change your status
+        <button
+          type="submit"
+          className="btn btn-primary"
+          onClick={handleButtonClick}
+        >
+          {reservationData.length > 0
+            ? "Go to reservation"
+            : "Make a reservation"}
         </button>
       </div>
     </div>
