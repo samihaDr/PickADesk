@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import epfc.eu.pickADesk.user.User;
 import epfc.eu.pickADesk.workStation.WorkStation;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,12 +31,15 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     @Column(name = "reservation_date", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC")
     private LocalDate reservationDate;
+
     private Boolean morning;
     private Boolean afternoon;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_station_id", nullable = false)
     private WorkStation workStation;
@@ -46,5 +50,6 @@ public class Reservation {
     // Cette colonne stocke la clé étrangère pour l'utilisateur associé à cette réservation.
     @JsonBackReference
     private User user;
+
     private Integer reservationTypeId;
 }
