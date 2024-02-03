@@ -5,6 +5,7 @@ import { getBookingPreferencesData } from "../../services/GetBookingPreferencesD
 import "./AvailableWorkStations.scss";
 import { useNavigate } from "react-router-dom";
 import retour from "../../assets/images/retour.png";
+import { bookWorkStation } from "../../services/AddReservation";
 
 export default function AvailableWorkStations() {
   const navigate = useNavigate();
@@ -83,7 +84,17 @@ export default function AvailableWorkStations() {
 
   function handleReservationClick(stationId) {
     console.log("Réservation demandée pour le poste de travail ID:", stationId);
-    // Ici, vous pouvez ajouter la logique pour gérer la réservation
+    console.log("Reservation in HandleReservationClick", selectedOptions);
+    bookWorkStation(stationId, selectedOptions)
+      .then((data) => {
+        console.log("Reservation successful", data);
+
+        // Gérer ici la réservation réussie
+      })
+      .catch((error) => {
+        console.error("Error during the reservation:", error);
+        // Gérer ici l'échec de la réservation
+      });
   }
 
   return (
@@ -144,7 +155,7 @@ export default function AvailableWorkStations() {
                       className="btn btn-primary"
                       onClick={() => handleReservationClick(station.id)}
                     >
-                      Book
+                      Pick this one
                     </button>
                   </td>{" "}
                   {/* Bouton de réservation pour chaque ligne */}
