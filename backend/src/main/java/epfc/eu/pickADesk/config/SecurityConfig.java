@@ -28,6 +28,7 @@ public class SecurityConfig {
                        "/api/teams/**",
                        "/api/departments/**",
                        "/api/workStations/**",
+                       "/api/reservations/getReservation/**",
                        "/v3/api-docs/**",
                        "/swagger-ressources/**",
                        "/swagger-ui/**",
