@@ -108,7 +108,7 @@ export default function LoginPage() {
 
   return (
     <div className="main">
-      <h2 style={{ color: "#1f4e5f" }}>Log In</h2>
+      <h2>Log In</h2>
       <div className="login-container">
         <div className="form-container">
           <form onSubmit={handleSubmit}>
