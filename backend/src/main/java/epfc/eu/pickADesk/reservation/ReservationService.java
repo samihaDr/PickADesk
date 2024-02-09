@@ -1,7 +1,6 @@
 package epfc.eu.pickADesk.reservation;
 
 import epfc.eu.pickADesk.dto.ReservationDTO;
-import epfc.eu.pickADesk.user.User;
 import epfc.eu.pickADesk.user.UserService;
 import epfc.eu.pickADesk.workStation.WorkStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +25,11 @@ public class ReservationService {
         this.workStationRepository = workStationRepository;
     }
 
+    public ReservationDTO findReservationById(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Reservation not found with ID: " + reservationId));
+        return reservationMapper.reservationToReservationDTO(reservation);
+    }
     public List<ReservationDTO> hasReservationToday() {
         Long userId = this.userService.getUserConnected().getId();
         LocalDate today = LocalDate.now();
@@ -63,11 +66,6 @@ public class ReservationService {
         return reservationMapper.reservationToReservationDTO(savedReservation);
     }
 
-    // Méthode pour récupérer un utilisateur par ID, supposant l'existence d'une telle méthode dans UserService
-    public Optional<User> findById(Long userId) {
-        return userService.findById(userId);
-    }
-
     public void validateReservationDate(Reservation reservation) {
         LocalDate today = LocalDate.now();
         LocalDate oneMonthLater = today.plusMonths(1);
@@ -83,13 +81,5 @@ public class ReservationService {
         }
     }
 
-    public void deleteReservation(Long reservationId) {
-        if (reservationId == null) {
-            throw new IllegalArgumentException("L'ID de réservation doit être spécifié lors de la suppression.");
-        }
 
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new IllegalArgumentException("Aucune réservation ne correspond à cet ID."));
-        reservationRepository.delete(reservation);
-    }
 }
