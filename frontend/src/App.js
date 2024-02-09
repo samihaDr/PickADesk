@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { GlobalProvider } from "./services/GlobalState";
 import LoginPage from "./components/loginPage/LoginPage.js";
-import AddReservation from "./components/reservation/AddReservation";
+import AddReservation from "./components/reservation/ReservationDetails";
 import RegisterPage from "./components/registerPage/RegisterPage";
 import Home from "./components/home/Home";
 import Dashboard from "./components/dashboard/Dashboard";
@@ -19,6 +19,7 @@ import "bootstrap/dist/css/bootstrap-grid.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import axios from "axios";
+import ReservationDetails from "./components/reservation/ReservationDetails";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 export default function App() {
@@ -55,6 +56,7 @@ export default function App() {
             path="availableWorkStations"
             element={<AvailableWorkStations />}
           />
+          <Route path="reservationDetails" element={<ReservationDetails />} />
         </Routes>
       </WorkStationProvider>
     </GlobalProvider>
