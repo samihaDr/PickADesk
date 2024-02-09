@@ -81,5 +81,13 @@ public class ReservationService {
         }
     }
 
+    public void deleteReservation(Long reservationId) {
+        if (reservationId == null) {
+            throw new IllegalArgumentException("L'ID de réservation doit être spécifié lors de la suppression.");
+        }
 
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Aucune réservation ne correspond à cet ID."));
+        reservationRepository.delete(reservation);
+    }
 }
