@@ -64,5 +64,15 @@ public class ReservationController {
             return new ApiResponse(false, "Error checking reservations", e.getMessage());
         }
     }
-
+    @SecurityRequirement(name = "bearerAuth")
+    @DeleteMapping(value = "/deleteReservation/{reservationId}")
+    public ResponseEntity<ApiResponse> deleteReservation(@PathVariable("reservationId") Long reservationId) {
+        try {
+            reservationService.deleteReservation(reservationId);
+            return ResponseEntity.ok(new ApiResponse(true, "Reservation successfully deleted.", null));
+        } catch (Exception e) {
+            // En cas d'erreur, renvoyer une réponse avec le message d'erreur
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Error deleting reservation: " + e.getMessage(), null));
+        }
+    }
 }
