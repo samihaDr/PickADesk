@@ -1,0 +1,25 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--spacing-base) * 2);
+  background-color: var(--background-color);
+  min-height: 100vh;
+}
+h2 {
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-large);
+}
+
+p {
+  //color: black;
+  font-size: large;
+  color: steelblue;
+}
+
+
+.container-submit {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
