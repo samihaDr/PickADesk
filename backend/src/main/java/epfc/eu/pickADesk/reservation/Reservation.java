@@ -45,7 +45,7 @@ public class Reservation {
     private WorkStation workStation;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     // Cette colonne stocke la clé étrangère pour l'utilisateur associé à cette réservation.
     @JsonBackReference
