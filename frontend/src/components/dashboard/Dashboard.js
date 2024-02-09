@@ -29,7 +29,6 @@ export default function Dashboard() {
         const { success, message, data } = response.data;
         if (success) {
           setReservationData(data);
-          console.log("ReservationDAta :::51515151 ", reservationData);
         } else {
           console.error("Erreur de récupération de la réservation :", message);
         }
@@ -46,7 +45,8 @@ export default function Dashboard() {
   // Fonction appelée lorsque l'utilisateur clique sur le bouton
   const handleButtonClick = () => {
     if (reservationData.length > 0) {
-      navigate("/");
+      const reservationId = reservationData[0].id; // Prendre l'ID de la première réservation comme exemple
+      navigate("/reservationDetails", { state: { reservationId } }); // Passer l'ID via l'état
     } else {
       navigate("/searchWorkStation");
     }
@@ -71,6 +71,7 @@ export default function Dashboard() {
           reservationData.map((reservation, index) => (
             <div key={index}>
               <span>You are working in the office today.</span>
+              <br />
               <span>
                 This <strong>{reservation.morning && "morning "}</strong>
                 <strong>
