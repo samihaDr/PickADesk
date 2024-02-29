@@ -10,17 +10,17 @@ export default function Navbar() {
     userConnected,
     weeklyQuota,
     userPreferences,
-    setUserConnected,
+    isAuthenticated,
+    userInfo,
+    setUserInfo,
     setUserPreferences,
   } = useContext(GlobalContext);
 
   useEffect(() => {
-    console.log("USER CONNECTED in Navbar: ", userConnected);
-    console.log("Weekly quota in Navbar :", weeklyQuota);
-  }, [userConnected, weeklyQuota]);
-  if (!userConnected) {
-    return null; // Ne rien rendre si l'utilisateur n'est pas connecté
-  }
+    if (!isAuthenticated) {
+      return null;
+    }
+  }, [userConnected, weeklyQuota, isAuthenticated, userInfo]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light fixed-top">
@@ -34,9 +34,11 @@ export default function Navbar() {
             />
           </a>
           <span className="userInfo">
-            {userConnected && (
+            {userInfo && (
               <div>
-                <span>Welcome, {userConnected}</span>
+                <span>
+                  Welcome, {userInfo.firstname + " " + userInfo.lastname}
+                </span>
               </div>
             )}
           </span>
@@ -76,7 +78,7 @@ export default function Navbar() {
 
           <li className="nav-item">
             <LogoutButton
-              setUserConnected={setUserConnected}
+              setUserInfo={setUserInfo}
               setUserPreferences={setUserPreferences}
             />
           </li>

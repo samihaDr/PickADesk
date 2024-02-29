@@ -1,14 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { GlobalContext } from "../../services/GlobalState";
 import { Link } from "react-router-dom";
 import "./Menu.scss";
 
 export default function Menu() {
-  const { userConnected } = useContext(GlobalContext);
-
-  if (!userConnected) {
-    return null; // Ne rien rendre si l'utilisateur n'est pas connecté
-  }
+  const { isAuthenticated } = useContext(GlobalContext);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return null;
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="fixed-menu">
