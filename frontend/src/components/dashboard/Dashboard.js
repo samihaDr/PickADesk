@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { userConnected } = useContext(GlobalContext);
+  const { userInfo, isAuthenticated } = useContext(GlobalContext); // Utilisation de isAuthenticated pour vérifier l'état de connexion
   const today = new Date();
   const options = {
     weekday: "long",
@@ -17,8 +17,14 @@ export default function Dashboard() {
   };
   const dateFormatted = new Intl.DateTimeFormat("en-US", options).format(today);
   const [reservationData, setReservationData] = useState([]);
+
+  // Modification pour utiliser isAuthenticated et récupérer le JWT de sessionStorage au lieu de localStorage
   useEffect(() => {
-    const jwt = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (!isAuthenticated) {
+      navigate("/loginPage"); // Rediriger l'utilisateur vers la page de connexion s'il n'est pas authentifié
+      return;
+    }
+    const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
     axios
       .get("/api/reservations/hasReservationToday", {
         headers: {
@@ -36,11 +42,10 @@ export default function Dashboard() {
       .catch((error) => {
         console.error("Erreur lors de la requête :", error);
       });
-  }, []);
+  }, [isAuthenticated, navigate]);
 
-  useEffect(() => {
-    console.log("ReservationData updated:", reservationData);
-  }, [reservationData]); // Cet effet s'exécute chaque fois que reservationData change
+  // Affichage conditionnel basé sur userInfo pour saluer l'utilisateur
+  const greeting = userInfo ? `Hello, ${userInfo.firstname}` : "Hello";
 
   // Fonction appelée lorsque l'utilisateur clique sur le bouton
   const handleButtonClick = () => {
@@ -52,10 +57,6 @@ export default function Dashboard() {
     }
   };
 
-  if (!userConnected) {
-    return null;
-  }
-
   return (
     <div className="main">
       <h2>My status</h2>
@@ -65,7 +66,7 @@ export default function Dashboard() {
           <span>{dateFormatted}</span>
         </div>
         <div className="hello">
-          <span> Hello, </span>
+          <span>{greeting},</span>
         </div>
         {reservationData.length > 0 ? (
           reservationData.map((reservation, index) => (
@@ -85,7 +86,7 @@ export default function Dashboard() {
           ))
         ) : (
           <span>
-            You are working remotely (no reservation found for today){" "}
+            You are working remotely (no reservation found for today).
           </span>
         )}
         <button
