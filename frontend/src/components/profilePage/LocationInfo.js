@@ -3,6 +3,7 @@ import { getLocationData } from "../../services/GetLocationData";
 
 const LocationInfo = ({ userPreferences, formData, handleChange }) => {
   const [data, setData] = useState({
+    countries: [],
     cities: [],
     offices: [],
     zones: [],
@@ -19,15 +20,21 @@ const LocationInfo = ({ userPreferences, formData, handleChange }) => {
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true);
-      const locationData = await getLocationData();
-      setData({
-        countries: locationData.countries,
-        cities: locationData.cities,
-        offices: locationData.offices,
-        zones: locationData.zones,
-      });
-      setLoading(false);
+      try {
+        setLoading(true);
+        const locationData = await getLocationData();
+        setData({
+          countries: locationData.countries,
+          cities: locationData.cities,
+          offices: locationData.offices,
+          zones: locationData.zones,
+        });
+      } catch (error) {
+        console.error("Error fetching location data:", error);
+        // Gérez ici l'état d'erreur si nécessaire
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);

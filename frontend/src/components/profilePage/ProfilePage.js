@@ -81,7 +81,7 @@ const fetchApi = async (url, dispatch) => {
 };
 
 const EditProfile = () => {
-  const { userConnected, userPreferences, setUserPreferences } =
+  const { userInfo, userPreferences, setUserPreferences } =
     useContext(GlobalContext);
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -122,7 +122,7 @@ const EditProfile = () => {
     };
 
     fetchUserData();
-  }, [userConnected, setUserPreferences]);
+  }, [userInfo, setUserPreferences]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -231,7 +231,7 @@ const EditProfile = () => {
     }
   };
 
-  if (!userConnected) {
+  if (!userInfo) {
     return <div>User not found</div>;
   }
 
