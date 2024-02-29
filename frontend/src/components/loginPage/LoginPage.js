@@ -10,9 +10,9 @@ export default function LoginPage() {
   const {
     userConnected,
     setUserConnected,
-    weeklyQuota,
+    setUserInfo,
+    setIsAuthenticated,
     setWeeklyQuota,
-    userPreferences,
     setUserPreferences,
   } = useContext(GlobalContext);
   const navigate = useNavigate();
@@ -30,7 +30,6 @@ export default function LoginPage() {
       const userInfoResponse = await axios.get("/api/users/userConnected", {
         headers: { Authorization: `Bearer ${jwt}` },
       });
-      console.log("UserInfoResponse : ", userInfoResponse.data);
       return userInfoResponse.data;
     } catch (error) {
       throw new Error("Error fetching user info");
@@ -41,7 +40,6 @@ export default function LoginPage() {
     const userPreferencesResponse = await axios.get(
       `/api/userPreferences/${userId}`,
     );
-    console.log("UserPreferencesResponse : ", userPreferencesResponse.data);
     return userPreferencesResponse.data;
   };
 
@@ -49,7 +47,6 @@ export default function LoginPage() {
     const teamInfoResponse = await axios.get(
       `/api/teams/getTeamById/${teamId}`,
     );
-    console.log("TeamInfoResponse : ", teamInfoResponse.data);
     return teamInfoResponse.data;
   };
 
@@ -79,14 +76,24 @@ export default function LoginPage() {
       const userData = await authenticateUser(jwt);
       setUserConnected(`${userData.firstname} ${userData.lastname}`);
       console.log("UserConnected : ", userConnected);
+      const userInfo = {
+        id: userData.id,
+        email: userData.email,
+        lastname: userData.lastname,
+        firstname: userData.firstname,
+        role: userData.role,
+        teamId: userData.teamId,
+        locked: userData.locked,
+        enabled: userData.enabled,
+      };
+      setUserInfo(userInfo);
+      setIsAuthenticated(true);
 
       const userPreferencesData = await getUserPreferences(userData.id);
       setUserPreferences(userPreferencesData);
-      console.log("User Preferences : ", userPreferences);
 
       const teamInfoData = await getTeamInfo(userData.teamId);
       setWeeklyQuota(`${teamInfoData.memberQuota}`);
-      console.log("WeeklyQuota : ", weeklyQuota);
 
       navigate("/dashboard");
     } catch (error) {
