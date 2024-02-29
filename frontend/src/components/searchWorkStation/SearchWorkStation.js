@@ -21,7 +21,7 @@ export default function SearchWorkStation() {
     useContext(WorkStationContext);
   const [isLoading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-  const { userConnected, userPreferences } = useContext(GlobalContext);
+  const { userInfo, userPreferences } = useContext(GlobalContext);
   const [isAnyEquipmentChecked, setIsAnyEquipmentChecked] = useState(false);
   const [isAnyFurnitureChecked, setIsAnyFurnitureChecked] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -189,7 +189,7 @@ export default function SearchWorkStation() {
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        new Error(`HTTP error! status: ${response.status}`);
       }
 
       return await response.json();
@@ -242,7 +242,7 @@ export default function SearchWorkStation() {
     );
   };
 
-  if (!userConnected) {
+  if (!userInfo) {
     return null;
   }
 

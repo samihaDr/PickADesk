@@ -7,13 +7,13 @@ import { AUTH_TOKEN_KEY } from "../../App";
 export default function ReservationDetails() {
   const { reservationId } = useLocation().state || {};
   const navigate = useNavigate();
-  const { userConnected } = useContext(GlobalContext);
+  const { userInfo } = useContext(GlobalContext);
   const [reservation, setReservation] = useState(null);
   const [error, setError] = useState(""); // État pour stocker le message d'erreur
 
   useEffect(() => {
     async function fetchReservation() {
-      if (reservationId && userConnected) {
+      if (reservationId && userInfo) {
         try {
           const response = await axios.get(
             `/api/reservations/getReservation/${reservationId}`,
@@ -33,11 +33,11 @@ export default function ReservationDetails() {
     }
 
     fetchReservation();
-  }, [reservationId, userConnected]);
+  }, [reservationId, userInfo]);
 
   // Fonction pour annuler la réservation
   const cancelReservation = async () => {
-    const jwt = localStorage.getItem(AUTH_TOKEN_KEY);
+    const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
     try {
       const response = await axios.delete(
         `/api/reservations/deleteReservation/${reservationId}`,
@@ -61,7 +61,7 @@ export default function ReservationDetails() {
       );
     }
   };
-  if (!userConnected)
+  if (!userInfo)
     return (
       <div>
         Veuillez vous connecter pour voir les détails de la réservation.
