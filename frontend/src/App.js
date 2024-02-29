@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
-import { GlobalProvider } from "./services/GlobalState";
+import { GlobalContext, GlobalProvider } from "./services/GlobalState";
 import LoginPage from "./components/loginPage/LoginPage.js";
 import AddReservation from "./components/reservation/ReservationDetails";
 import RegisterPage from "./components/registerPage/RegisterPage";
@@ -22,6 +22,21 @@ import axios from "axios";
 import ReservationDetails from "./components/reservation/ReservationDetails";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
+const UserConnected = () => {
+  const history = useNavigate();
+  const { isAuthenticated, userInfo, setUserInfo } = useContext(GlobalContext);
+
+  useEffect(() => {
+    console.log("UserInfo in App  :", userInfo);
+    if (!isAuthenticated) {
+      history("/loginPage");
+    }
+  }, [history, isAuthenticated]);
+
+  return (
+    <>{userInfo && <Layout userInfo={userInfo} setUserInfo={setUserInfo} />}</>
+  );
+};
 export default function App() {
   useEffect(() => {
     axios.interceptors.request.use(
@@ -37,11 +52,12 @@ export default function App() {
       },
     );
   });
+
   return (
     <GlobalProvider>
       <WorkStationProvider>
         {" "}
-        <Layout />
+        <UserConnected />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="addReservation" element={<AddReservation />} />
