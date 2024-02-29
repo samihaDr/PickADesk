@@ -9,12 +9,8 @@ import epfc.eu.pickADesk.user.Role;
 import epfc.eu.pickADesk.user.User;
 import epfc.eu.pickADesk.user.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -94,12 +90,5 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    public ResponseEntity<?> getUserConnected() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            return new ResponseEntity<>(((UserDetails) principal).getUsername(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>("User is not connected", HttpStatus.FORBIDDEN);
-    }
 }
 

@@ -24,9 +24,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 
-    @GetMapping( "/isConnected")
-    public ResponseEntity<?> isConnected () {
-        return ResponseEntity.ok((authService.getUserConnected()));
-    }
-
 }
