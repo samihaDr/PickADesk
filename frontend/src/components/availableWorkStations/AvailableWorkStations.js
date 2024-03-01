@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import back from "../../assets/images/back.png";
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
+import { bookWorkStation } from "../../services/BookWorkStation";
 
 export default function AvailableWorkStations() {
   const navigate = useNavigate();
@@ -51,8 +52,6 @@ export default function AvailableWorkStations() {
 
   // Accéder au tableau 'content' pour la liste des postes de travail
   const workStationList = workStations.content || [];
-  console.log("WorkStationsList in AVAi: ", workStationList);
-  console.log("WorkStations in AVAIl: ", workStations);
 
   if (!userInfo) {
     return null;
@@ -100,20 +99,27 @@ export default function AvailableWorkStations() {
     }
   };
 
-  const handleConfirmReservation = () => {
-    console.log(
-      "Confirmed reservation for station ID:",
-      selectedStationDetails.id,
-    );
-    setShowModal(false);
-    // Suppression de la réservation de la liste
-    setWorkStations({
-      ...workStations,
-      content: workStations.content.filter(
-        (s) => s.id !== selectedStationDetails.id,
-      ),
-    });
-    navigate("/currentReservation");
+  const handleConfirmReservation = async () => {
+    if (!selectedStationDetails) return;
+    try {
+      // Appel à bookWorkStation avec les détails nécessaires
+      await bookWorkStation(selectedStationDetails.id, selectedOptions);
+      console.log("Reservation added successfully");
+
+      // Mettre à jour la liste des postes de travail disponibles
+      setWorkStations({
+        ...workStations,
+        content: workStations.content.filter(
+          (station) => station.id !== selectedStationDetails.id,
+        ),
+      });
+
+      setShowModal(false); // Fermer la modal après la confirmation
+      navigate("/currentReservations");
+    } catch (error) {
+      console.error("Failed to confirm reservation:", error);
+      // alert("Failed to confirm reservation. Please try again."); // Informer l'utilisateur en cas d'échec
+    }
   };
 
   return (
