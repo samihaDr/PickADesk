@@ -8,9 +8,13 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.0",
     "bootstrap": "5.3",
+    "date-fns": "^3.3.1",
+    "node": "^21.2.0",
     "path-browserify": "^1.0.1",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.1",
     "react-cookie": "^6.1.1",
+    "react-datepicker": "^4.25.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
@@ -21,7 +25,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "clean": "rimraf node_modules/ && rimraf package-lock.json",
+    "rebuild": "npm run clean && npm install"
   },
   "proxy": "http://localhost:8080",
   "eslintConfig": {
@@ -30,7 +36,6 @@
       "react-app/jest"
     ]
   },
-
   "browserslist": {
     "production": [
       ">0.2%",
@@ -46,6 +51,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "prettier": "^3.0.3",
+    "rimraf": "^5.0.5",
     "sass": "^1.69.4"
   }
 }
