@@ -4,7 +4,6 @@ import { AUTH_TOKEN_KEY } from "../App";
 import { getUserConnected } from "./GetUserConnected";
 
 export const bookWorkStation = async (stationId, selectedOptions) => {
-  // Utilisez selectedOptions.date pour obtenir la date ISO et la convertir
   const isoDateString = selectedOptions.date; // Utilisez la date fournie par selectedOptions
   const date = new Date(isoDateString);
   const formattedDate = format(date, "yyyy-MM-dd"); // Formatez la date
@@ -20,28 +19,27 @@ export const bookWorkStation = async (stationId, selectedOptions) => {
     reservationTypeId: selectedOptions.reservationType,
   };
 
-  const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY); // Récupération du jeton stocké
+  const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
 
   if (jwt) {
     try {
-      // Utilisation de async/await pour attendre la réponse de l'appel Axios
       const response = await axios.post(
         "/api/reservations/addReservation",
         reservationDetails,
         {
           headers: {
-            Authorization: `Bearer ${jwt}`, // Inclusion du jeton dans les en-têtes
+            Authorization: `Bearer ${jwt}`,
           },
         },
       );
-      return response.data; // Retourne les données de la réponse pour une utilisation ultérieure
+      return response.data;
     } catch (error) {
-      console.error("Erreur lors de la réservation :", error);
+      console.error("Booking error :", error);
       throw error; // Propagation de l'erreur pour gestion ultérieure
     }
   } else {
-    console.log("Aucun jeton d'authentification trouvé");
+    console.log("No authentication token found.");
     // Vous pouvez choisir de gérer ce cas comme une erreur, par exemple en lançant une exception
-    throw new Error("Aucun jeton d'authentification trouvé.");
+    throw new Error("No authentication token found.");
   }
 };
