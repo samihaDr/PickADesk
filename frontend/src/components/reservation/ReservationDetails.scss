@@ -12,10 +12,11 @@ h2 {
   margin-bottom: var(--spacing-large);
 }
 
-p {
-  //color: black;
-  font-size: large;
-  color: steelblue;
+.item {
+  padding: 15px;
+  font-size: var(--font-size-large);
+  //font-size: large;
+  color: var(--text-color);
 }
 
 
