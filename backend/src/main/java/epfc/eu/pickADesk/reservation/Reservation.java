@@ -52,4 +52,8 @@ public class Reservation {
     private User user;
 
     private Integer reservationTypeId;
+
+    public LocalDate getDate() {
+        return reservationDate;
+    }
 }
