@@ -12,10 +12,10 @@ export default function Dashboard() {
   const options = {
     weekday: "long",
     day: "numeric",
-    month: "long",
+    month: "numeric",
     year: "numeric",
   };
-  const dateFormatted = new Intl.DateTimeFormat("en-US", options).format(today);
+  const dateFormatted = new Intl.DateTimeFormat("en-GB", options).format(today);
   const [reservationData, setReservationData] = useState([]);
 
   // Modification pour utiliser isAuthenticated et récupérer le JWT de sessionStorage au lieu de localStorage
