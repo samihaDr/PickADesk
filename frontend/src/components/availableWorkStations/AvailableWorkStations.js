@@ -209,12 +209,22 @@ export default function AvailableWorkStations() {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleConfirmReservation}>
-            Confirm Reservation
-          </Button>
+          <div className="w-100 d-flex justify-content-between">
+            <Button
+              variant="primary"
+              className="flex-grow-1 me-5"
+              onClick={handleConfirmReservation}
+            >
+              Confirm Reservation
+            </Button>
+            <Button
+              variant="secondary"
+              className="flex-grow-1 me-2"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </Button>
+          </div>
         </Modal.Footer>
       </Modal>
     </>
