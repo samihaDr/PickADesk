@@ -39,8 +39,8 @@ public class ReservationController {
     }
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/myReservations")
-    public ResponseEntity<List<ReservationDTO>> getReservations() {
-        List<ReservationDTO> reservations = reservationService.getReservations();
+    public ResponseEntity<List<ReservationDTO>> getReservations(@RequestParam String filter) {
+        List<ReservationDTO> reservations = reservationService.getReservationsByFilter(filter);
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
