@@ -5,6 +5,7 @@ import axios from "axios";
 import { AUTH_TOKEN_KEY } from "../../App";
 import { EmailValidator } from "../../services/EmailValidator";
 import { GlobalContext } from "../../services/GlobalState";
+import { Button, Modal } from "react-bootstrap";
 
 export default function LoginPage() {
   const {
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -52,18 +54,20 @@ export default function LoginPage() {
 
   const handleAuthenticationError = (error) => {
     if (error.response) {
-      setError(`Erreur du serveur: ${error.response.status}`);
+      setError(`Server error: ${error.response.status}`);
     } else if (error.request) {
-      setError("Problème de connexion, veuillez réessayer.");
+      setError("Connection problem, please try again");
     } else {
-      setError("Une erreur inattendue s'est produite, veuillez réessayer.");
+      setError("An unexpected error has occurred, please try again.");
     }
+    setShowModal(true); // Affiche le modal en cas d'erreur
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!EmailValidator(formData.email)) {
-      setError("Veuillez donner une adresse mail valide.");
+      setError("Please provide a valid e-mail address.");
+      setShowModal(true);
       return;
     }
 
@@ -103,6 +107,8 @@ export default function LoginPage() {
     }
   };
 
+  const handleCloseModal = () => setShowModal(false);
+
   if (isLoading) {
     return (
       <div className="text-center">
@@ -114,52 +120,65 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="main">
-      <h2>Log In</h2>
-      <div className="login-container">
-        <div className="form-container">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="InputEmail" className="form-label">
-                Email address
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                id="InputEmail"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                aria-describedby="emailHelp"
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="Password" className="form-label">
-                Password
-              </label>
-              <input
-                type="password"
-                className="form-control"
-                id="Password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-              <div id="passwordHelp" className="form-text">
-                We'll never share your password with anyone else.
+    <>
+      <div className="main">
+        <h2>Log In</h2>
+        <div className="login-container">
+          <div className="form-container">
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="InputEmail" className="form-label">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="InputEmail"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  aria-describedby="emailHelp"
+                />
               </div>
-            </div>
-            <button type="submit" className="btn btn-primary">
-              Login
-            </button>
-          </form>
+              <div className="mb-3">
+                <label htmlFor="Password" className="form-label">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="Password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <div id="passwordHelp" className="form-text">
+                  We'll never share your password with anyone else.
+                </div>
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Login
+              </button>
+            </form>
+          </div>
+          <div>
+            <span>Don't have an account? </span>
+            <Link to="/registerPage">Register</Link>
+          </div>
+          {error && <div className="error-message">{error}</div>}
         </div>
-        <div>
-          <span>Don't have an account? </span>
-          <Link to="/registerPage">Register</Link>
-        </div>
-        {error && <div className="error-message">{error}</div>}
       </div>
-    </div>
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Incorrect login</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{error}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
