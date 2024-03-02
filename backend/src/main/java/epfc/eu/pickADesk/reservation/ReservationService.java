@@ -71,6 +71,22 @@ public class ReservationService {
     }
 
 
+    public List<ReservationDTO> findPastReservationsLastThreeMonths() {
+        Long userId = this.userService.getUserConnected().getId();
+        LocalDate threeMonthsAgo = LocalDate.now().minusMonths(3);
+        LocalDate today = LocalDate.now();
+
+        List<Reservation> pastReservations = reservationRepository.findByUserIdAndReservationDateBetween(userId, threeMonthsAgo, today);
+
+        if (pastReservations.isEmpty()) {
+            throw new IllegalArgumentException("You have no reservations in the last three months.");
+        }
+
+        return pastReservations.stream()
+                .map(reservationMapper::reservationToReservationDTO)
+                .collect(Collectors.toList());
+    }
+
 
     public ReservationDTO addReservation(ReservationDTO reservationDTO) {
         Long userId = this.userService.getUserConnected().getId();
