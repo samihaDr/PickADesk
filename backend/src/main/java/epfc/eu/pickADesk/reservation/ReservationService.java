@@ -87,6 +87,21 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
+    public List<ReservationDTO> findNextMonthReservations() {
+        Long userId = this.userService.getUserConnected().getId();
+        LocalDate onMonth = LocalDate.now().plusMonths(2);
+        LocalDate today = LocalDate.now();
+
+        List<Reservation> futureReservations = reservationRepository.findByUserIdAndReservationDateBetween(userId, today, onMonth);
+
+        if (futureReservations.isEmpty()) {
+            throw new IllegalArgumentException("You have no bookings in the next month.");
+        }
+
+        return futureReservations.stream()
+                .map(reservationMapper::reservationToReservationDTO)
+                .collect(Collectors.toList());
+    }
 
     public ReservationDTO addReservation(ReservationDTO reservationDTO) {
         Long userId = this.userService.getUserConnected().getId();
