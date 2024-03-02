@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,15 +44,10 @@ public class ReservationService {
 
     public List<ReservationDTO> getReservationsByFilter(String filter) {
         Long userId = this.userService.getUserConnected().getId();
-        List<Reservation> listReservations = reservationRepository.findByUserId(userId);
-
-        if (listReservations.isEmpty()) {
-            throw new IllegalArgumentException("Vous n'avez pas de reservations.");
-        }
-
         LocalDate now = LocalDate.now();
-        LocalDate start;
-        LocalDate end = switch (filter) {
+        LocalDate start, end;
+
+        end = switch (filter) {
             case "week" -> {
                 start = now.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
                 yield now.with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY));
@@ -63,15 +59,17 @@ public class ReservationService {
             default -> throw new IllegalArgumentException("Filtre non supporté: " + filter);
         };
 
-        return listReservations.stream()
-                .filter(reservation -> {
-                    LocalDate reservationDate = reservation.getDate(); // Assurez-vous que `getDate` renvoie un `LocalDate`
-                    return (reservationDate.isEqual(start) || reservationDate.isAfter(start)) &&
-                            (reservationDate.isEqual(end) || reservationDate.isBefore(end));
-                })
+        List<Reservation> filteredReservations = reservationRepository.findByUserIdAndReservationDateBetween(userId, start, end);
+
+        if (filteredReservations.isEmpty()) {
+            return (Collections.emptyList());
+        }
+
+        return filteredReservations.stream()
                 .map(reservationMapper::reservationToReservationDTO)
                 .collect(Collectors.toList());
     }
+
 
 
     public ReservationDTO addReservation(ReservationDTO reservationDTO) {
