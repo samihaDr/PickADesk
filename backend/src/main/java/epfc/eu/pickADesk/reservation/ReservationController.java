@@ -51,7 +51,12 @@ public class ReservationController {
         return ResponseEntity.ok(pastReservations);
     }
 
-
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping("/nextMonthReservations")
+    public ResponseEntity<List<ReservationDTO>> getNextMonthReservations() {
+        List<ReservationDTO> pastReservations = reservationService.findNextMonthReservations();
+        return ResponseEntity.ok(pastReservations);
+    }
     @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/addReservation")
     public ResponseEntity<ReservationDTO> addReservation(@RequestBody @Validated ReservationDTO reservationDTO) {
