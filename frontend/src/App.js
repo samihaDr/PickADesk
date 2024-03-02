@@ -20,6 +20,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import axios from "axios";
 import ReservationDetails from "./components/reservation/ReservationDetails";
+import MyReservations from "./components/myReservations/MyReservations";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 const UserConnected = () => {
@@ -66,6 +67,7 @@ export default function App() {
           <Route path="changePassword" element={<ChangePassword />} />
           <Route path="registerPage" element={<RegisterPage />} />
           <Route path="profilePage" element={<ProfilePage />} />
+          <Route path="myReservations" element={<MyReservations />} />
           <Route path="loginPage" element={<LoginPage />} />
           <Route path="*" element={<LoginPage />} />
           <Route

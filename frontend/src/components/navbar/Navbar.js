@@ -26,7 +26,7 @@ export default function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-light fixed-top">
       <div className="container-fluid">
         <div className="welcome">
-          <a className="navbar-brand" href="/">
+          <a className="navbar-brand" href="">
             <img
               src={logo}
               alt="Logo"

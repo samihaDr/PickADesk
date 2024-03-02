@@ -21,11 +21,11 @@ export default function Menu() {
           Dashboard
         </Link>
         <Link
-          to="/currentReservation"
+          to="/myReservations"
           className="nav-link active"
           aria-current="page"
         >
-          Current reservations
+          My reservations
         </Link>
         <Link
           to="/searchWorkStation"
@@ -35,7 +35,7 @@ export default function Menu() {
           Make a reservation
         </Link>
         <Link to="/" className="nav-link active" aria-current="page">
-          Find Colleague
+          Find colleague
         </Link>
       </nav>
     </div>
