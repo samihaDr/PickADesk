@@ -51,53 +51,32 @@ function Reservations() {
   const convertReservationsToEvents = (reservations) => {
     return reservations.flatMap((reservation) => {
       const date = new Date(reservation.reservationDate);
-      let events = [];
+      let start = new Date(date);
+      let end = new Date(date);
+      // let events = [];
 
       if (reservation.morning) {
-        events.push({
-          title: `On site - morning`,
-          start: new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            8,
-            0,
-          ),
-          end: new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            12,
-            0,
-          ),
-          allDay: false,
-          resource: reservation.id,
-        });
+        start.setHours(8, 0, 0);
+      } else {
+        // Si pas le matin, supposer que la réservation commence l'après-midi
+        start.setHours(13, 0, 0);
       }
 
       if (reservation.afternoon) {
-        events.push({
-          title: `On site - afternoon`,
-          start: new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            13,
-            0,
-          ),
-          end: new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            17,
-            0,
-          ),
-          allDay: false,
-          resource: reservation.id,
-        });
+        end.setHours(17, 0, 0);
+      } else {
+        // Si pas l'après-midi, supposer que la réservation termine le matin
+        end.setHours(12, 0, 0);
       }
 
-      return events;
+      return {
+        title: reservation.title,
+        start: start,
+        end: end,
+        allDay: false,
+        resource: reservation.id,
+      };
+      // return events;
     });
   };
 
