@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { Button, Modal } from "react-bootstrap";
 
 const localizer = momentLocalizer(moment);
 
 function MyCalendar({ events }) {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const threeMonthsAgo = moment().subtract(3, "months").toDate();
   const minTime = new Date();
   minTime.setHours(7, 0, 0);
@@ -49,22 +52,55 @@ function MyCalendar({ events }) {
     setCurrentDate(newDate);
   };
 
+  const handleEventSelect = (event) => {
+    setSelectedEvent(event);
+    console.log("SelectedEvent: ", event);
+    setShowModal(true);
+  };
+
+  // Fonction pour formater la date
+  const formatDate = (date) => {
+    return moment(date).format("LLLL");
+  };
   return (
-    <div style={{ height: "600px", width: "950px" }}>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: "100%" }}
-        min={minTime}
-        max={maxTime}
-        eventPropGetter={eventPropGetter}
-        defaultView="week"
-        date={currentDate}
-        onNavigate={onNavigate}
-      />
-    </div>
+    <>
+      <div style={{ height: "600px", width: "850" }}>
+        <Calendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: "100%" }}
+          min={minTime}
+          max={maxTime}
+          eventPropGetter={eventPropGetter}
+          defaultView="week"
+          date={currentDate}
+          onNavigate={onNavigate}
+          onSelectEvent={handleEventSelect}
+        />
+      </div>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Reservation Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedEvent && (
+            <div>
+              <p>WorkPlace: {selectedEvent.workPlace}</p>
+              <p>Start: {formatDate(selectedEvent.start)}</p>
+              <p>End: {formatDate(selectedEvent.end)}</p>
+              {/* Affichez d'autres détails de la réservation ici */}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
 
