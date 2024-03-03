@@ -50,7 +50,7 @@ function MyCalendar({ events }) {
   };
 
   return (
-    <div style={{ height: "600px" }}>
+    <div style={{ height: "600px", width: "950px" }}>
       <Calendar
         localizer={localizer}
         events={events}
