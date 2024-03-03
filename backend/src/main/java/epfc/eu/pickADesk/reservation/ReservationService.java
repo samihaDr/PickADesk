@@ -32,6 +32,7 @@ public class ReservationService {
                 .orElseThrow(() -> new RuntimeException("Reservation not found with ID: " + reservationId));
         return reservationMapper.reservationToReservationDTO(reservation);
     }
+
     public List<ReservationDTO> hasReservationToday() {
         Long userId = this.userService.getUserConnected().getId();
         LocalDate today = LocalDate.now();
@@ -79,7 +80,7 @@ public class ReservationService {
         List<Reservation> pastReservations = reservationRepository.findByUserIdAndReservationDateBetween(userId, threeMonthsAgo, today);
 
         if (pastReservations.isEmpty()) {
-            throw new IllegalArgumentException("You have no reservations in the last three months.");
+            return (Collections.emptyList());
         }
 
         return pastReservations.stream()
@@ -95,7 +96,7 @@ public class ReservationService {
         List<Reservation> futureReservations = reservationRepository.findByUserIdAndReservationDateBetween(userId, today, onMonth);
 
         if (futureReservations.isEmpty()) {
-            throw new IllegalArgumentException("You have no bookings in the next month.");
+            return (Collections.emptyList());
         }
 
         return futureReservations.stream()
