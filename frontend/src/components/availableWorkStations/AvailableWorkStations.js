@@ -115,7 +115,7 @@ export default function AvailableWorkStations() {
       });
 
       setShowModal(false); // Fermer la modal après la confirmation
-      navigate("/currentReservations");
+      navigate("/myReservations");
     } catch (error) {
       console.error("Failed to confirm reservation:", error);
       // alert("Failed to confirm reservation. Please try again."); // Informer l'utilisateur en cas d'échec
