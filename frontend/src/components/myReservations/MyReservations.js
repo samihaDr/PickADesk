@@ -71,6 +71,7 @@ function Reservations() {
 
       return {
         title: reservation.title,
+        workPlace: reservation.workStation.workPlace,
         start: start,
         end: end,
         allDay: false,
