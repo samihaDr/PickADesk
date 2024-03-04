@@ -5,7 +5,13 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Button, Modal } from "react-bootstrap";
 
 const localizer = momentLocalizer(moment);
-
+const AgendaEvent = ({ event }) => {
+  return (
+    <div>
+      <span>WorkPlace n° {event.workPlace}</span>
+    </div>
+  );
+};
 function MyCalendar({ events }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
@@ -78,6 +84,11 @@ function MyCalendar({ events }) {
           date={currentDate}
           onNavigate={onNavigate}
           onSelectEvent={handleEventSelect}
+          components={{
+            agenda: {
+              event: AgendaEvent, // Utilisez votre composant personnalisé pour les événements de l'agenda
+            },
+          }}
         />
       </div>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
