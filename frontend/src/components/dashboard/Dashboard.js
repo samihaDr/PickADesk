@@ -4,10 +4,11 @@ import { AUTH_TOKEN_KEY } from "../../App";
 import { GlobalContext } from "../../services/GlobalState";
 import "./Dashboard.scss";
 import { useNavigate } from "react-router-dom";
+import ReservationDetails from "../reservation/ReservationDetails";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { userInfo, isAuthenticated } = useContext(GlobalContext); // Utilisation de isAuthenticated pour vérifier l'état de connexion
+  const { userInfo, isAuthenticated } = useContext(GlobalContext);
   const today = new Date();
   const options = {
     weekday: "long",
@@ -17,11 +18,12 @@ export default function Dashboard() {
   };
   const dateFormatted = new Intl.DateTimeFormat("en-GB", options).format(today);
   const [reservationData, setReservationData] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState(null);
 
-  // Modification pour utiliser isAuthenticated et récupérer le JWT de sessionStorage au lieu de localStorage
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("/loginPage"); // Rediriger l'utilisateur vers la page de connexion s'il n'est pas authentifié
+      navigate("/loginPage");
       return;
     }
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
@@ -32,11 +34,11 @@ export default function Dashboard() {
         },
       })
       .then((response) => {
-        const { success, message, data } = response.data;
+        const { success, data } = response.data;
         if (success) {
           setReservationData(data);
         } else {
-          console.error("Erreur de récupération de la réservation :", message);
+          console.error("Erreur de récupération de la réservation.");
         }
       })
       .catch((error) => {
@@ -44,61 +46,80 @@ export default function Dashboard() {
       });
   }, [isAuthenticated, navigate]);
 
-  // Affichage conditionnel basé sur userInfo pour saluer l'utilisateur
   const greeting = userInfo ? `Hello, ${userInfo.firstname}` : "Hello";
 
-  // Fonction appelée lorsque l'utilisateur clique sur le bouton
   const handleButtonClick = () => {
     if (reservationData.length > 0) {
-      const reservationId = reservationData[0].id; // Prendre l'ID de la première réservation comme exemple
-      navigate("/reservationDetails", { state: { reservationId } }); // Passer l'ID via l'état
-    } else {
-      navigate("/searchWorkStation");
+      console.log("ReservationData.lenght: ", reservationData.length);
+      // Mettre à jour l'état avec la première réservation pour l'exemple
+      setSelectedReservation(reservationData[0]);
+      console.log(
+        "SelectedReservation dans HandleButtonClick: ",
+        selectedReservation,
+      );
     }
+    setShowModal(true);
   };
 
+  // Utilisation de useEffect pour observer les changements de selectedReservation
+  useEffect(() => {
+    console.log("selectedReservation updated:", selectedReservation);
+  }, [selectedReservation]);
+
+  const closeModal = () => setShowModal(false);
+
   return (
-    <div className="main">
-      <h2>My status</h2>
-      <br />
-      <div className="dashboard-container">
-        <div className="date">
-          <span>{dateFormatted}</span>
+    <>
+      <div className="main">
+        <h2>My status</h2>
+        <br />
+        <div className="dashboard-container">
+          <div className="date">
+            <span>{dateFormatted}</span>
+          </div>
+          <div className="hello">
+            <span>{greeting},</span>
+          </div>
+          {reservationData.length > 0 ? (
+            reservationData.map((reservation, index) => (
+              <div key={index}>
+                <span>You are working in the office today.</span>
+                <br />
+                <span>
+                  This <strong>{reservation.morning && "morning "}</strong>
+                  <strong>
+                    {reservation.afternoon &&
+                      (reservation.morning ? "and afternoon " : "afternoon ")}
+                  </strong>
+                  the desk <strong>{reservation.workStation.workPlace}</strong>,
+                  is reserved for you.
+                </span>
+              </div>
+            ))
+          ) : (
+            <span>
+              You are working remotely (no reservation found for today).
+            </span>
+          )}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={handleButtonClick}
+          >
+            {reservationData.length > 0
+              ? "Go to reservation"
+              : "Make a reservation"}
+          </button>
         </div>
-        <div className="hello">
-          <span>{greeting},</span>
-        </div>
-        {reservationData.length > 0 ? (
-          reservationData.map((reservation, index) => (
-            <div key={index}>
-              <span>You are working in the office today.</span>
-              <br />
-              <span>
-                This <strong>{reservation.morning && "morning "}</strong>
-                <strong>
-                  {reservation.afternoon &&
-                    (reservation.morning ? "and afternoon" : "afternoon")}
-                </strong>{" "}
-                the desk <strong>{reservation.workStation.workPlace}</strong>,
-                is reserved for you.
-              </span>
-            </div>
-          ))
-        ) : (
-          <span>
-            You are working remotely (no reservation found for today).
-          </span>
+        {/* Affichage conditionnel du modal basé sur showModal et selectedReservation */}
+        {showModal && selectedReservation && (
+          <ReservationDetails
+            show={showModal}
+            onHide={closeModal}
+            event={selectedReservation}
+          />
         )}
-        <button
-          type="submit"
-          className="btn btn-primary"
-          onClick={handleButtonClick}
-        >
-          {reservationData.length > 0
-            ? "Go to reservation"
-            : "Make a reservation"}
-        </button>
       </div>
-    </div>
+    </>
   );
 }
