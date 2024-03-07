@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Button, Modal } from "react-bootstrap";
+import ReservationDetails from "../reservation/ReservationDetails";
 
 const localizer = momentLocalizer(moment);
 const AgendaEvent = ({ event }) => {
@@ -12,12 +12,14 @@ const AgendaEvent = ({ event }) => {
     </div>
   );
 };
+
 function MyCalendar({ events }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const threeMonthsAgo = moment().subtract(3, "months").toDate();
   const minTime = new Date();
+
   minTime.setHours(7, 0, 0);
 
   const maxTime = new Date();
@@ -41,7 +43,7 @@ function MyCalendar({ events }) {
     }
 
     if (eventStart < now && startHour < 12) {
-      newStyle.backgroundColor = "#f3d3a4"; // Couleur pour les événements passés, par exemple rouge
+      newStyle.backgroundColor = "#f3d3a4"; // Couleur pour les événements passés grisées
     } else if (eventStart < now && startHour > 12) {
       newStyle.backgroundColor = "#8ab48a";
     }
@@ -60,14 +62,12 @@ function MyCalendar({ events }) {
 
   const handleEventSelect = (event) => {
     setSelectedEvent(event);
-    console.log("SelectedEvent: ", event);
+    console.log("Selected Reservation: ", event);
     setShowModal(true);
   };
 
-  // Fonction pour formater la date
-  const formatDate = (date) => {
-    return moment(date).format("LLLL");
-  };
+  const closeModal = () => setShowModal(false);
+
   return (
     <>
       <div style={{ height: "600px", width: "850" }}>
@@ -86,31 +86,19 @@ function MyCalendar({ events }) {
           onSelectEvent={handleEventSelect}
           components={{
             agenda: {
-              event: AgendaEvent, // Utilisez votre composant personnalisé pour les événements de l'agenda
+              event: AgendaEvent,
             },
           }}
         />
       </div>
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Reservation Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedEvent && (
-            <div>
-              <p>WorkPlace: {selectedEvent.workPlace}</p>
-              <p>Start: {formatDate(selectedEvent.start)}</p>
-              <p>End: {formatDate(selectedEvent.end)}</p>
-              {/* Affichez d'autres détails de la réservation ici */}
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+
+      {selectedEvent && (
+        <ReservationDetails
+          show={showModal}
+          onHide={closeModal}
+          event={selectedEvent}
+        />
+      )}
     </>
   );
 }
