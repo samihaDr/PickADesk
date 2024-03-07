@@ -72,12 +72,15 @@ function Reservations() {
       return {
         title: reservation.title,
         workPlace: reservation.workStation.workPlace,
+        workStation: reservation.workStation,
+        reservationDate: reservation.reservationDate,
+        morning: reservation.morning,
+        afternoon: reservation.afternoon,
         start: start,
         end: end,
         allDay: false,
         resource: reservation.id,
       };
-      // return events;
     });
   };
 
