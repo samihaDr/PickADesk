@@ -35,7 +35,17 @@ public class ReservationService {
 
     public List<ReservationDTO> hasReservationToday() {
         Long userId = this.userService.getUserConnected().getId();
-        LocalDate today = LocalDate.now();
+        LocalDate tomorrow = LocalDate.now();
+
+        List<Reservation> reservations = this.reservationRepository.findReservationsForTodayWithFlexibleTiming(userId, tomorrow);
+        return reservations.stream()
+                .map(reservationMapper::reservationToReservationDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ReservationDTO> hasReservationTomorrow() {
+        Long userId = this.userService.getUserConnected().getId();
+        LocalDate today = LocalDate.now().plusDays(1);
 
         List<Reservation> reservations = this.reservationRepository.findReservationsForTodayWithFlexibleTiming(userId, today);
         return reservations.stream()

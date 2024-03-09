@@ -77,6 +77,21 @@ public class ReservationController {
             return new ApiResponse(false, "Error checking reservations", e.getMessage());
         }
     }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping(value = "/hasReservationTomorrow")
+    public ApiResponse hasReservationTomorrow() {
+        try {
+            List<ReservationDTO> results = reservationService.hasReservationTomorrow();
+            if (results.isEmpty()) {
+                return new ApiResponse(false, "No reservations for tomorrow", null);
+            }
+
+            return new ApiResponse(true, "You have reservations for tomorrow", results);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Error checking reservations", e.getMessage());
+        }
+    }
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping(value = "/deleteReservation/{reservationId}")
     public ResponseEntity<ApiResponse> deleteReservation(@PathVariable("reservationId") Long reservationId) {
