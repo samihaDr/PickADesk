@@ -28,6 +28,7 @@ export default function Dashboard() {
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const isAfter18h = today.getHours() >= 18;
+  const isWeekend = today.getDay() === 0 || today.getDay() === 6;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -35,8 +36,13 @@ export default function Dashboard() {
       return;
     }
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
+
+    let queryUrl = "/api/reservations/hasReservationToday";
+    if (isAfter18h) {
+      queryUrl = "/api/reservations/hasReservationTomorrow";
+    }
     axios
-      .get("/api/reservations/hasReservationToday", {
+      .get(queryUrl, {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
@@ -93,7 +99,9 @@ export default function Dashboard() {
           <div className="hello">
             <span>{greeting},</span>
           </div>
-          {reservationData.length > 0 ? (
+          {isWeekend ? (
+            <div className="special-message">Enjoy your weekend!</div>
+          ) : reservationData.length > 0 ? (
             reservationData.map((reservation, index) => (
               <div key={index}>
                 <span>{isAfter18h ? "Tomorrow, " : "Today, "}</span>
