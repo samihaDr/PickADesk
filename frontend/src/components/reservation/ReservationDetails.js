@@ -2,20 +2,36 @@ import React, { useContext } from "react";
 import { GlobalContext } from "../../services/GlobalState";
 import "./ReservationDetails.scss";
 import { Button, Modal } from "react-bootstrap";
+import axios from "axios";
+import { AUTH_TOKEN_KEY } from "../../App";
 
 export default function ReservationDetails({
   event,
   onModify,
   onDelete,
+  setShowConfirmationModal,
+  showConfirmationModal,
   show,
   onHide,
 }) {
   const { userInfo } = useContext(GlobalContext);
+  const reservationId = event?.id ? event.id : event?.resource;
+  console.log("ReservationId : ", reservationId);
+  const reservationDateTime = new Date(event.reservationDate);
+  const now = new Date();
 
-  // Affichage conditionnel en cas d'utilisateur non connecté
+  // Vérifier si la réservation est passée
+  const isReservationPassed = reservationDateTime < now;
+
+  const modalStyle = {
+    backgroundColor: event.color,
+    color:
+      event.color === "#f3d3a4" || event.color === "#8ab48a"
+        ? "black"
+        : "white",
+  };
   if (!userInfo) return <div>Please log in to view booking details.</div>;
 
-  // Formatage de la date
   const formattedDate = event?.reservationDate
     ? new Date(event.reservationDate).toLocaleDateString("en-GB", {
         weekday: "long",
@@ -24,6 +40,38 @@ export default function ReservationDetails({
         day: "numeric",
       })
     : "N/A";
+
+  // Fonction pour annuler la réservation
+  const confirmCancelReservation = async () => {
+    const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    if (!jwt) {
+      console.log("No authentication token found. Please login.");
+      return;
+    }
+    const reservationDateTime = new Date(event.reservationDate);
+    const now = new Date();
+
+    if (reservationDateTime < now) {
+      console.log("Vous ne pouvez pas annuler une réservation passée.");
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `/api/reservations/deleteReservation/${reservationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        },
+      );
+      onHide(true);
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to cancel reservation:", error);
+      // Ici, vous pouvez afficher l'erreur dans la modal ou d'une autre manière
+    }
+  };
   return (
     <>
       <Modal
@@ -33,7 +81,7 @@ export default function ReservationDetails({
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton style={modalStyle}>
           <Modal.Title id="contained-modal-title-vcenter">
             Reservation Details
           </Modal.Title>
@@ -75,12 +123,52 @@ export default function ReservationDetails({
           <br />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => onModify(event)}>
+          <Button
+            variant="secondary"
+            onClick={() => onModify(event)}
+            disabled={isReservationPassed}
+          >
             Modify
           </Button>
-          <Button variant="danger" onClick={() => onDelete(event)}>
+          <Button
+            variant="danger"
+            onClick={() => onDelete(event)}
+            disabled={isReservationPassed}
+          >
             Delete
           </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={showConfirmationModal}
+        onHide={() => setShowConfirmationModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Cancellation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to cancel this reservation?
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="w-100 d-flex justify-content-between">
+            <Button
+              variant="primary"
+              className="flex-grow-1 me-5"
+              onClick={() => {
+                confirmCancelReservation();
+                setShowConfirmationModal(false); // Fermez la modal après la confirmation
+              }}
+            >
+              Yes, Cancel It
+            </Button>
+            <Button
+              variant="secondary"
+              className="flex-grow-1 me-2"
+              onClick={() => setShowConfirmationModal(false)}
+            >
+              No
+            </Button>
+          </div>
         </Modal.Footer>
       </Modal>
     </>
