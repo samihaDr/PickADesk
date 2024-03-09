@@ -5,11 +5,13 @@ import { GlobalContext } from "../../services/GlobalState";
 import "./Dashboard.scss";
 import { useNavigate } from "react-router-dom";
 import ReservationDetails from "../reservation/ReservationDetails";
+import moment from "moment/moment";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { userInfo, isAuthenticated } = useContext(GlobalContext);
   const today = new Date();
+  const tomorrow = moment().add(1, "days").toDate();
   const options = {
     weekday: "long",
     day: "numeric",
@@ -17,9 +19,15 @@ export default function Dashboard() {
     year: "numeric",
   };
   const dateFormatted = new Intl.DateTimeFormat("en-GB", options).format(today);
+  const dateFormattedTomorrow = new Intl.DateTimeFormat(
+    "en-GB",
+    options,
+  ).format(tomorrow);
   const [reservationData, setReservationData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const isAfter18h = today.getHours() >= 18;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -67,6 +75,11 @@ export default function Dashboard() {
   }, [selectedReservation]);
 
   const closeModal = () => setShowModal(false);
+  const onModify = () => {
+    // Exemple de navigation vers un formulaire de modification pour l'événement sélectionné
+    // navigate(`/modifyReservation/${selectedEvent.reservationId}`);
+    console.log("Je suis dans ONModify", selectedReservation.id);
+  };
 
   return (
     <>
@@ -75,7 +88,7 @@ export default function Dashboard() {
         <br />
         <div className="dashboard-container">
           <div className="date">
-            <span>{dateFormatted}</span>
+            <span>{isAfter18h ? dateFormattedTomorrow : dateFormatted}</span>
           </div>
           <div className="hello">
             <span>{greeting},</span>
@@ -83,7 +96,8 @@ export default function Dashboard() {
           {reservationData.length > 0 ? (
             reservationData.map((reservation, index) => (
               <div key={index}>
-                <span>You are working in the office today.</span>
+                <span>{isAfter18h ? "Tomorrow, " : "Today, "}</span>
+                <span>you are working in the office. </span>
                 <br />
                 <span>
                   This <strong>{reservation.morning && "morning "}</strong>
@@ -98,9 +112,12 @@ export default function Dashboard() {
             ))
           ) : (
             <span>
-              You are working remotely (no reservation found for today).
+              {isAfter18h
+                ? "You are working remotely tomorrow (no reservation found for tomorrow)."
+                : "You are working remotely today (no reservation found for today)."}
             </span>
           )}
+
           <button
             type="submit"
             className="btn btn-primary"
@@ -117,6 +134,10 @@ export default function Dashboard() {
             show={showModal}
             onHide={closeModal}
             event={selectedReservation}
+            onModify={() => onModify(selectedReservation)}
+            onDelete={() => setShowConfirmationModal(true)} // Mise à jour pour afficher le modal de confirmation
+            showConfirmationModal={showConfirmationModal}
+            setShowConfirmationModal={setShowConfirmationModal}
           />
         )}
       </div>
