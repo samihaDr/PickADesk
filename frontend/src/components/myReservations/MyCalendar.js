@@ -5,12 +5,37 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import ReservationDetails from "../reservation/ReservationDetails";
 
 const localizer = momentLocalizer(moment);
-const AgendaEvent = ({ event }) => {
-  return (
-    <div>
-      <span>WorkPlace n° {event.workPlace}</span>
-    </div>
-  );
+
+const AgendaEvent = React.memo(({ event }) => (
+  <div>
+    <span>WorkPlace n° {event.workPlace}</span>
+  </div>
+));
+
+const getEventStyle = (event) => {
+  const eventStart = moment(event.start);
+  const eventEnd = moment(event.end);
+  const now = moment();
+  let backgroundColor = "#3174ad";
+
+  if (eventStart.hours() < 12 && eventEnd.hours() > 12) {
+    backgroundColor = "#44d095";
+  } else if (eventStart.hours() < 12) {
+    backgroundColor = "#ADD8E6";
+  } else {
+    backgroundColor = "#FFEF4F";
+  }
+
+  if (eventStart.isBefore(now, "day")) {
+    backgroundColor = "#e6e6e6"; // Couleur pour les événements passés
+  }
+
+  return {
+    backgroundColor,
+    color: "#1f4e5f",
+    borderRadius: "10px",
+    border: "none",
+  };
 };
 
 function MyCalendar({ events }) {
@@ -18,84 +43,39 @@ function MyCalendar({ events }) {
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const threeMonthsAgo = moment().subtract(3, "months").toDate();
-  const minTime = new Date();
+  const threeMonthsAgo = moment().subtract(3, "months");
+  const minTime = new Date().setHours(7, 0, 0);
+  const maxTime = new Date().setHours(19, 0, 0);
 
-  minTime.setHours(7, 0, 0);
-
-  const maxTime = new Date();
-  maxTime.setHours(19, 0, 0);
-
-  const eventPropGetter = (event, start) => {
-    const eventStart = new Date(event.start);
-    const now = new Date();
-    const startHour = new Date(start).getHours();
-    let newStyle = {
-      backgroundColor: "#3174ad",
-      color: "white",
-      borderRadius: "0px",
-      border: "none",
-    };
-
-    if (startHour < 12) {
-      newStyle.backgroundColor = "#f0ad4e";
-    } else {
-      newStyle.backgroundColor = "#5cb85c";
-    }
-
-    if (eventStart < now && startHour < 12) {
-      newStyle.backgroundColor = "#f3d3a4"; // Couleur pour les événements passés grisées
-    } else if (eventStart < now && startHour > 12) {
-      newStyle.backgroundColor = "#709170";
-    }
-
-    return {
-      style: newStyle,
-    };
-  };
+  const eventPropGetter = (event) => ({
+    style: getEventStyle(event),
+  });
 
   const onNavigate = (newDate, view, action) => {
     if (action === "PREV" && moment(newDate).isBefore(threeMonthsAgo, "day")) {
-      return; // Empêche la navigation si elle dépasse 3 mois dans le passé
+      return;
     }
     setCurrentDate(newDate);
   };
 
   const handleEventSelect = (event) => {
-    const now = new Date();
-    const eventStart = new Date(event.start);
-    const startHour = eventStart.getHours();
-    let color;
-
-    if (eventStart < now) {
-      color = "#e6e6e6"; // Couleurs pour les événements passés
-    } else {
-      color = startHour < 12 ? "#f0ad4e" : "#5cb85c"; // Couleurs pour matin ou après-midi
-    }
-
-    setSelectedEvent({ ...event, color });
-    // console.log("Selected Reservation: ", event);
+    setSelectedEvent({ ...event, color: getEventStyle(event).backgroundColor });
     setShowModal(true);
   };
 
   const closeModal = () => setShowModal(false);
-  const onModify = () => {
-    // Exemple de navigation vers un formulaire de modification pour l'événement sélectionné
-    // navigate(`/modifyReservation/${selectedEvent.reservationId}`);
-    console.log("Je suis dans ONModify", selectedEvent.source);
-  };
 
   return (
     <>
-      <div style={{ height: "600px", width: "850" }}>
+      <div style={{ height: "600px", width: "1000px" }}>
         <Calendar
           localizer={localizer}
           events={events}
           startAccessor="start"
           endAccessor="end"
           style={{ height: "100%" }}
-          min={minTime}
-          max={maxTime}
+          min={new Date(minTime)}
+          max={new Date(maxTime)}
           eventPropGetter={eventPropGetter}
           defaultView="week"
           date={currentDate}
@@ -114,7 +94,6 @@ function MyCalendar({ events }) {
           show={showModal}
           onHide={closeModal}
           event={selectedEvent}
-          onModify={() => onModify(selectedEvent)}
           onDelete={() => setShowConfirmationModal(true)} // Mise à jour pour afficher le modal de confirmation
           showConfirmationModal={showConfirmationModal}
           setShowConfirmationModal={setShowConfirmationModal}
