@@ -64,28 +64,22 @@ export default function Dashboard() {
 
   const handleButtonClick = () => {
     if (reservationData.length > 0) {
-      console.log("ReservationData.lenght: ", reservationData.length);
-      // Mettre à jour l'état avec la première réservation pour l'exemple
       setSelectedReservation(reservationData[0]);
       console.log(
         "SelectedReservation dans HandleButtonClick: ",
         selectedReservation,
       );
+      setShowModal(true);
+    } else {
+      navigate("/searchWorkStation");
     }
-    setShowModal(true);
   };
 
-  // Utilisation de useEffect pour observer les changements de selectedReservation
   useEffect(() => {
     console.log("selectedReservation updated:", selectedReservation);
   }, [selectedReservation]);
 
   const closeModal = () => setShowModal(false);
-  const onModify = () => {
-    // Exemple de navigation vers un formulaire de modification pour l'événement sélectionné
-    // navigate(`/modifyReservation/${selectedEvent.reservationId}`);
-    console.log("Je suis dans ONModify", selectedReservation.id);
-  };
 
   return (
     <>
@@ -99,7 +93,7 @@ export default function Dashboard() {
           <div className="hello">
             <span>{greeting},</span>
           </div>
-          {isWeekend ? (
+          {isWeekend && !isAfter18h ? (
             <div className="special-message">Enjoy your weekend!</div>
           ) : reservationData.length > 0 ? (
             reservationData.map((reservation, index) => (
@@ -142,7 +136,6 @@ export default function Dashboard() {
             show={showModal}
             onHide={closeModal}
             event={selectedReservation}
-            onModify={() => onModify(selectedReservation)}
             onDelete={() => setShowConfirmationModal(true)} // Mise à jour pour afficher le modal de confirmation
             showConfirmationModal={showConfirmationModal}
             setShowConfirmationModal={setShowConfirmationModal}
