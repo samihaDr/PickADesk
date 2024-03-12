@@ -37,7 +37,6 @@ public class WorkStationController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<WorkStationDTO>> searchWorkStations(
-            @RequestParam(required = false) Integer zoneId,
             @RequestParam(required = false) Integer workAreaId,
             @RequestParam(required = false) Integer screenId,
             @RequestParam(required = false) List<Integer> equipmentIds,
@@ -52,7 +51,7 @@ public class WorkStationController {
 
         PageRequest pageable = PageRequest.of(page, size, Sort.Direction.fromString(order), sortBy);
         Page<WorkStationDTO> workStationPage = workStationService.findWorkStationsWithOptionalCriteria(
-                zoneId, workAreaId, screenId, equipmentIds, furnitureIds, reservationDate, morning, afternoon,pageable);
+                workAreaId, screenId, equipmentIds, furnitureIds, reservationDate, morning, afternoon,pageable);
 
         return ResponseEntity.ok(workStationPage);
     }

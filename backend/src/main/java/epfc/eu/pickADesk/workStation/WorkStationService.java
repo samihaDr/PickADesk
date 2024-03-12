@@ -31,7 +31,7 @@ public class WorkStationService {
                 .collect(Collectors.toList());
     }
 
-    public Page<WorkStationDTO> findWorkStationsWithOptionalCriteria(Integer zoneId,
+    public Page<WorkStationDTO> findWorkStationsWithOptionalCriteria(
                                                                      Integer workAreaId,
                                                                      Integer screenId,
                                                                      List<Integer> equipmentIds,
@@ -40,7 +40,7 @@ public class WorkStationService {
                                                                      Boolean morning,
                                                                      Boolean afternoon,
                                                                      Pageable pageable) {
-        Page<WorkStation> page = workStationRepository.findWorkStationsWithOptionalCriteria(zoneId, workAreaId, screenId, equipmentIds, furnitureIds, reservationDate, morning, afternoon, pageable);
+        Page<WorkStation> page = workStationRepository.findWorkStationsWithOptionalCriteria( workAreaId, screenId, equipmentIds, furnitureIds, reservationDate, morning, afternoon, pageable);
         return page.map(WorkStationDTO::fromEntity);
     }
 

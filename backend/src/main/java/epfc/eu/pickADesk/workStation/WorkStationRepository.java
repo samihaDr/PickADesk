@@ -19,14 +19,13 @@ public interface WorkStationRepository extends JpaRepository<WorkStation, Long> 
     List<WorkStation> findAll();
 
     @Query("SELECT DISTINCT ws FROM WorkStation ws WHERE ws.active = true " +
-            "AND (:zoneId IS NULL OR ws.zone.id = :zoneId) " +
             "AND (:workAreaId IS NULL OR ws.workArea.id = :workAreaId) " +
             "AND (:screenId IS NULL OR ws.screen.id = :screenId) " +
             "AND NOT EXISTS (SELECT 1 FROM Equipment e WHERE e.id IN :equipmentIds AND e NOT MEMBER OF ws.equipments) " +
             "AND NOT EXISTS (SELECT 1 FROM Furniture f WHERE f.id IN :furnitureIds AND f NOT MEMBER OF ws.furnitures) " +
             "AND NOT EXISTS (SELECT r FROM Reservation r WHERE r.workStation = ws AND r.reservationDate = :reservationDate " +
             "AND ((:morning = true AND r.morning = true) OR (:afternoon = true AND r.afternoon = true)))")
-    Page<WorkStation> findWorkStationsWithOptionalCriteria(@Param("zoneId") Integer zoneId,
+    Page<WorkStation> findWorkStationsWithOptionalCriteria(
                                                            @Param("workAreaId") Integer workAreaId,
                                                            @Param("screenId") Integer screenId,
                                                            @Param("equipmentIds") List<Integer> equipmentIds,
