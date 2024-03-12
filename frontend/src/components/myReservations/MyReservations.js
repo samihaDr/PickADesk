@@ -6,83 +6,66 @@ function Reservations() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    const fetchAllReservations = async () => {
-      try {
-        const pastResResponse = await axios.get(
-          "/api/reservations/pastReservationsLastThreeMonths",
-        );
-        const currentResResponse = await axios.get(
-          "/api/reservations/myReservations?filter=week",
-        );
-        const futureResResponse = await axios.get(
-          "/api/reservations/nextMonthReservations",
-        );
-        const pastReservations = pastResResponse.data || [];
-        const currentReservations = currentResResponse.data || [];
-        const futureReservations = futureResResponse.data || [];
-        const allReservations = [
-          ...pastReservations,
-          ...currentReservations,
-          ...futureReservations,
-        ];
-        console.log(
-          "AllReservations in Reservations Current : ",
-          allReservations,
-        );
-        // Convertir toutes les réservations en événements de calendrier
-        const allEvents = convertReservationsToEvents(allReservations);
-
-        // Filtrer les doublons en se basant sur l'id de la réservation
-        const uniqueEvents = allEvents.filter(
-          (event, index, self) =>
-            index === self.findIndex((e) => e.resource === event.resource),
-        );
-
-        setEvents(uniqueEvents);
-        console.log("Events in Reservations Current : ", events);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des réservations", error);
-      }
-    };
-
-    fetchAllReservations();
+    fetchAllReservations().then(setEvents).catch(console.error);
   }, []);
 
-  const convertReservationsToEvents = (reservations) => {
+  async function fetchAllReservations() {
+    const urls = [
+      "/api/reservations/pastReservationsLastThreeMonths",
+      "/api/reservations/myReservations?filter=week",
+      "/api/reservations/nextMonthReservations",
+    ];
+
+    try {
+      const responses = await Promise.all(urls.map((url) => axios.get(url)));
+      const allReservations = responses.flatMap(
+        (response) => response.data || [],
+      );
+      const allEvents = convertReservationsToEvents(allReservations);
+      return deduplicateEvents(allEvents);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des réservations", error);
+      throw error; // Rethrow l'erreur pour le catch dans useEffect
+    }
+  }
+
+  function convertReservationsToEvents(reservations) {
     return reservations.flatMap((reservation) => {
-      const date = new Date(reservation.reservationDate);
-      let start = new Date(date);
-      let end = new Date(date);
-      // let events = [];
-
-      if (reservation.morning) {
-        start.setHours(8, 0, 0);
-      } else {
-        // Si pas le matin, supposer que la réservation commence l'après-midi
-        start.setHours(13, 0, 0);
-      }
-
-      if (reservation.afternoon) {
-        end.setHours(17, 0, 0);
-      } else {
-        // Si pas l'après-midi, supposer que la réservation termine le matin
-        end.setHours(12, 0, 0);
-      }
-
+      const { start, end } = calculateEventTimes(reservation);
       return {
-        title: reservation.title,
-        workPlace: reservation.workStation.workPlace,
-        workStation: reservation.workStation,
-        reservationDate: reservation.reservationDate,
-        morning: reservation.morning,
-        afternoon: reservation.afternoon,
-        start: start,
-        end: end,
+        title: `Post n° : ${reservation.workStation.workPlace}`,
+        ...reservation,
+        start,
+        end,
         allDay: false,
         resource: reservation.id,
       };
     });
-  };
+  }
+
+  function calculateEventTimes(reservation) {
+    const date = new Date(reservation.reservationDate);
+    let start = new Date(date);
+    let end = new Date(date);
+    if (reservation.morning && reservation.afternoon) {
+      start.setHours(8, 0, 0); // Début de journée
+      end.setHours(18, 0, 0); // Fin de journée
+    } else if (reservation.morning) {
+      start.setHours(8, 0, 0);
+      end.setHours(12, 0, 0);
+    } else if (reservation.afternoon) {
+      start.setHours(13, 0, 0);
+      end.setHours(17, 0, 0);
+    }
+    return { start, end };
+  }
+
+  function deduplicateEvents(events) {
+    return events.filter(
+      (event, index, self) =>
+        index === self.findIndex((e) => e.resource === event.resource),
+    );
+  }
 
   return (
     <div className="main">
