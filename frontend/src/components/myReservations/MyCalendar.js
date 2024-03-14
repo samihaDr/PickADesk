@@ -38,7 +38,7 @@ const getEventStyle = (event) => {
   };
 };
 
-function MyCalendar({ events }) {
+function MyCalendar({ events, refreshEvents }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -94,6 +94,7 @@ function MyCalendar({ events }) {
           show={showModal}
           onHide={closeModal}
           event={selectedEvent}
+          refreshEvents={refreshEvents}
           onDelete={() => setShowConfirmationModal(true)} // Mise à jour pour afficher le modal de confirmation
           showConfirmationModal={showConfirmationModal}
           setShowConfirmationModal={setShowConfirmationModal}

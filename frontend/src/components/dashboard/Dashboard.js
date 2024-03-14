@@ -29,7 +29,7 @@ export default function Dashboard() {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const isAfter18h = today.getHours() >= 18;
   const isWeekend = today.getDay() === 0 || today.getDay() === 6;
-
+  const [refreshKey, setRefreshKey] = useState(0); // Ajouté pour le rafraîchissement
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/loginPage");
@@ -58,7 +58,7 @@ export default function Dashboard() {
       .catch((error) => {
         console.error("Erreur lors de la requête :", error);
       });
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, refreshKey]);
 
   const greeting = userInfo ? `Hello, ${userInfo.firstname}` : "Hello";
 
@@ -99,23 +99,27 @@ export default function Dashboard() {
             reservationData.map((reservation, index) => (
               <div key={index}>
                 <span>{isAfter18h ? "Tomorrow, " : "Today, "}</span>
-                <span>you are working in the office. </span>
+                <span>
+                  {isAfter18h
+                    ? "you'll be working in the office."
+                    : "you are working in the office."}
+                </span>
                 <br />
                 <span>
-                  This <strong>{reservation.morning && "morning "}</strong>
+                  Seat n°: <strong>{reservation.workStation.workPlace}</strong>,
+                  is reserved for you in the{" "}
+                  <strong>{reservation.morning && "morning "}</strong>
                   <strong>
                     {reservation.afternoon &&
                       (reservation.morning ? "and afternoon " : "afternoon ")}
                   </strong>
-                  the desk <strong>{reservation.workStation.workPlace}</strong>,
-                  is reserved for you.
                 </span>
               </div>
             ))
           ) : (
             <span>
               {isAfter18h
-                ? "You are working remotely tomorrow (no reservation found for tomorrow)."
+                ? "You'll be working remotely tomorrow (no reservation found for tomorrow)."
                 : "You are working remotely today (no reservation found for today)."}
             </span>
           )}
@@ -139,6 +143,7 @@ export default function Dashboard() {
             onDelete={() => setShowConfirmationModal(true)} // Mise à jour pour afficher le modal de confirmation
             showConfirmationModal={showConfirmationModal}
             setShowConfirmationModal={setShowConfirmationModal}
+            refreshEvents={() => setRefreshKey((prevKey) => prevKey + 1)}
           />
         )}
       </div>

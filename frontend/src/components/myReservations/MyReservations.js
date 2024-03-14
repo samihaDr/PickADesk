@@ -4,10 +4,10 @@ import MyCalendar from "./MyCalendar";
 
 function Reservations() {
   const [events, setEvents] = useState([]);
-
+  const [refreshKey, setRefreshKey] = useState(0); // Ajouté pour le rafraîchissement
   useEffect(() => {
     fetchAllReservations().then(setEvents).catch(console.error);
-  }, []);
+  }, [refreshKey]);
 
   async function fetchAllReservations() {
     const urls = [
@@ -70,7 +70,10 @@ function Reservations() {
   return (
     <div className="main">
       <h2>My Reservations</h2>
-      <MyCalendar events={events} />
+      <MyCalendar
+        events={events}
+        refreshEvents={() => setRefreshKey((prevKey) => prevKey + 1)}
+      />
     </div>
   );
 }
