@@ -130,10 +130,6 @@ export default function AvailableWorkStations() {
             <div>
               You are looking for a workspace in the{" "}
               <span className="bold-text">
-                {getNameById("zones", selectedOptions.zone) || "any"}
-              </span>{" "}
-              ,
-              <span className="bold-text">
                 {getNameById("workAreas", selectedOptions.workArea) || "any"}
               </span>{" "}
               area, of type{" "}
