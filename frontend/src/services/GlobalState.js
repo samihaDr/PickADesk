@@ -8,6 +8,7 @@ const initialState = {
   userInfo: null,
   userPreferences: null,
   weeklyQuota: null,
+  reservations: [],
   isAuthenticated: !!sessionStorage.getItem(AUTH_TOKEN_KEY),
 };
 
@@ -42,6 +43,18 @@ const globalReducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: !!action.payload,
+      };
+    case "SET_RESERVATIONS":
+      return {
+        ...state,
+        reservations: action.payload,
+      };
+    case "DELETE_RESERVATION":
+      return {
+        ...state,
+        reservations: state.reservations.filter(
+          (reservation) => reservation.id !== action.payload,
+        ),
       };
     default:
       return state;
@@ -81,6 +94,14 @@ export const GlobalProvider = ({ children }) => {
       sessionStorage.removeItem(AUTH_TOKEN_KEY);
     }
   };
+
+  const setReservations = (reservations) => {
+    dispatch({ type: "SET_RESERVATIONS", payload: reservations });
+  };
+
+  const deleteReservation = (reservationId) => {
+    dispatch({ type: "DELETE_RESERVATION", payload: reservationId });
+  };
   // Restaurer l'état de connexion de l'utilisateur au démarrage de l'application
   useEffect(() => {
     const storedUserInfo = sessionStorage.getItem("userInfo");
@@ -109,6 +130,8 @@ export const GlobalProvider = ({ children }) => {
         setWeeklyQuota,
         setUserPreferences,
         setIsAuthenticated,
+        setReservations,
+        deleteReservation,
       }}
     >
       {children}
