@@ -2,75 +2,47 @@ import React, { useContext } from "react";
 import { GlobalContext } from "../../services/GlobalState";
 import "./ReservationDetails.scss";
 import { Button, Modal } from "react-bootstrap";
-import axios from "axios";
-import { AUTH_TOKEN_KEY } from "../../App";
+import moment from "moment";
+import useDeleteReservation from "../hooks/useDeleteReservation";
 
 export default function ReservationDetails({
   event,
-  onModify,
   onDelete,
   setShowConfirmationModal,
   showConfirmationModal,
   show,
   onHide,
+  refreshEvents,
 }) {
   const { userInfo } = useContext(GlobalContext);
-  const reservationId = event?.id ? event.id : event?.resource;
-  console.log("ReservationId : ", reservationId);
-  const reservationDateTime = new Date(event.reservationDate);
-  const now = new Date();
+  const deleteReservation = useDeleteReservation(); // Utilisation du hook
+  if (!userInfo) {
+    return <div>Please log in to view booking details.</div>;
+  }
 
+  const reservationId = event?.id || event?.resource;
+  const formattedDate = event?.reservationDate
+    ? moment(event.reservationDate).format("dddd, D MMMM YYYY")
+    : "N/A";
+  const isReservationPassed = moment().isAfter(event.reservationDate, "day");
   // Vérifier si la réservation est passée
-  const isReservationPassed = reservationDateTime < now;
 
   const modalStyle = {
     backgroundColor: event.color,
-    color:
-      event.color === "#f3d3a4" || event.color === "#8ab48a"
-        ? "black"
-        : "white",
+    color: ["#44d095", "#ADD8E6", "#FFEF4F"].includes(event.color)
+      ? "black"
+      : "#1f4e5f",
   };
-  if (!userInfo) return <div>Please log in to view booking details.</div>;
-
-  const formattedDate = event?.reservationDate
-    ? new Date(event.reservationDate).toLocaleDateString("en-GB", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "N/A";
 
   // Fonction pour annuler la réservation
   const confirmCancelReservation = async () => {
-    const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
-    if (!jwt) {
-      console.log("No authentication token found. Please login.");
-      return;
-    }
-    const reservationDateTime = new Date(event.reservationDate);
-    const now = new Date();
-
-    if (reservationDateTime < now) {
+    if (isReservationPassed) {
       console.log("Vous ne pouvez pas annuler une réservation passée.");
       return;
     }
-
-    try {
-      await axios.delete(
-        `/api/reservations/deleteReservation/${reservationId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        },
-      );
-      onHide(true);
-      window.location.reload();
-    } catch (error) {
-      console.error("Failed to cancel reservation:", error);
-      // Ici, vous pouvez afficher l'erreur dans la modal ou d'une autre manière
-    }
+    await deleteReservation(reservationId);
+    onHide(); // Ferme la modal après la suppression
+    refreshEvents();
   };
   return (
     <>
@@ -123,12 +95,8 @@ export default function ReservationDetails({
           <br />
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => onModify(event)}
-            disabled={isReservationPassed}
-          >
-            Modify
+          <Button variant="secondary" onClick={() => onHide()}>
+            Close
           </Button>
           <Button
             variant="danger"
