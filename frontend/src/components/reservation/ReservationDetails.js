@@ -16,6 +16,7 @@ export default function ReservationDetails({
 }) {
   const { userInfo } = useContext(GlobalContext);
   const deleteReservation = useDeleteReservation(); // Utilisation du hook
+
   if (!userInfo) {
     return <div>Please log in to view booking details.</div>;
   }
@@ -24,8 +25,13 @@ export default function ReservationDetails({
   const formattedDate = event?.reservationDate
     ? moment(event.reservationDate).format("dddd, D MMMM YYYY")
     : "N/A";
-  const isReservationPassed = moment().isAfter(event.reservationDate, "day");
-  // Vérifier si la réservation est passée
+  // Déterminez si la réservation est considérée comme passée
+  const now = moment();
+  const reservationDate = moment(event.reservationDate);
+  const isReservationToday = reservationDate.isSame(now, "day");
+  const isAfter18h = now.hours() >= 18;
+  const isReservationPassed =
+    reservationDate.isBefore(now, "day") || (isReservationToday && isAfter18h);
 
   const modalStyle = {
     backgroundColor: event.color,
