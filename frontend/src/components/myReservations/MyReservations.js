@@ -33,7 +33,7 @@ function Reservations() {
     return reservations.flatMap((reservation) => {
       const { start, end } = calculateEventTimes(reservation);
       return {
-        title: `Post n° : ${reservation.workStation.workPlace}`,
+        title: `Seat n° : ${reservation.workStation.workPlace}`,
         ...reservation,
         start,
         end,
