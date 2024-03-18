@@ -26,7 +26,10 @@ const getEventStyle = (event) => {
     backgroundColor = "#FFEF4F";
   }
 
-  if (eventStart.isBefore(now, "day")) {
+  if (
+    eventStart.isBefore(now, "day") ||
+    (eventStart.isSame(now, "day") && now.hours() >= 18)
+  ) {
     backgroundColor = "#e6e6e6"; // Couleur pour les événements passés
   }
 
