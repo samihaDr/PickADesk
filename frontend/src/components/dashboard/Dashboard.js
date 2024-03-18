@@ -30,6 +30,7 @@ export default function Dashboard() {
   const isAfter18h = today.getHours() >= 18;
   const isWeekend = today.getDay() === 0 || today.getDay() === 6;
   const [refreshKey, setRefreshKey] = useState(0); // Ajouté pour le rafraîchissement
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/loginPage");
@@ -38,7 +39,7 @@ export default function Dashboard() {
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
 
     let queryUrl = "/api/reservations/hasReservationToday";
-    if (isAfter18h) {
+    if (isAfter18h || refreshKey > 0) {
       queryUrl = "/api/reservations/hasReservationTomorrow";
     }
     axios
@@ -51,6 +52,7 @@ export default function Dashboard() {
         const { success, data } = response.data;
         if (success) {
           setReservationData(data);
+          console.log(" longueur de ReservationsData : ", reservationData);
         } else {
           console.error("Erreur de récupération de la réservation.");
         }
@@ -58,6 +60,7 @@ export default function Dashboard() {
       .catch((error) => {
         console.error("Erreur lors de la requête :", error);
       });
+    console.log("RefreshKey : ", refreshKey);
   }, [isAuthenticated, navigate, refreshKey]);
 
   const greeting = userInfo ? `Hello, ${userInfo.firstname}` : "Hello";
@@ -75,10 +78,6 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    console.log("selectedReservation updated:", selectedReservation);
-  }, [selectedReservation]);
-
   const closeModal = () => setShowModal(false);
 
   return (
@@ -86,7 +85,8 @@ export default function Dashboard() {
       <div className="main">
         <h2>My status</h2>
         <br />
-        <div className="dashboard-container">
+
+        <div key={refreshKey} className="dashboard-container">
           <div className="date">
             <span>{isAfter18h ? dateFormattedTomorrow : dateFormatted}</span>
           </div>
