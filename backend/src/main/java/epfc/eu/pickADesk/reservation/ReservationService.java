@@ -35,9 +35,18 @@ public class ReservationService {
 
     public List<ReservationDTO> hasReservationToday() {
         Long userId = this.userService.getUserConnected().getId();
-        LocalDate tomorrow = LocalDate.now();
+        LocalDate today = LocalDate.now();
 
-        List<Reservation> reservations = this.reservationRepository.findReservationsForTodayWithFlexibleTiming(userId, tomorrow);
+        List<Reservation> reservations = this.reservationRepository.findReservationsForTodayWithFlexibleTiming(userId, today);
+        return reservations.stream()
+                .map(reservationMapper::reservationToReservationDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ReservationDTO> EmployeeHasReservationToday( Long employeeId) {
+        LocalDate today = LocalDate.now();
+
+        List<Reservation> reservations = this.reservationRepository.findReservationsForTodayWithFlexibleTiming(employeeId, today);
         return reservations.stream()
                 .map(reservationMapper::reservationToReservationDTO)
                 .collect(Collectors.toList());
@@ -45,9 +54,9 @@ public class ReservationService {
 
     public List<ReservationDTO> hasReservationTomorrow() {
         Long userId = this.userService.getUserConnected().getId();
-        LocalDate today = LocalDate.now().plusDays(1);
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
 
-        List<Reservation> reservations = this.reservationRepository.findReservationsForTodayWithFlexibleTiming(userId, today);
+        List<Reservation> reservations = this.reservationRepository.findReservationsForTodayWithFlexibleTiming(userId, tomorrow);
         return reservations.stream()
                 .map(reservationMapper::reservationToReservationDTO)
                 .collect(Collectors.toList());
