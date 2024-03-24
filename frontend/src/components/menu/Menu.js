@@ -34,7 +34,11 @@ export default function Menu() {
         >
           Make a reservation
         </Link>
-        <Link to="/" className="nav-link active" aria-current="page">
+        <Link
+          to="/findColleague"
+          className="nav-link active"
+          aria-current="page"
+        >
           Find colleague
         </Link>
       </nav>

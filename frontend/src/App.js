@@ -21,6 +21,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import axios from "axios";
 import ReservationDetails from "./components/reservation/ReservationDetails";
 import MyReservations from "./components/myReservations/MyReservations";
+import FindColleague from "./components/findColleague/FindColleague";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 const UserConnected = () => {
@@ -69,6 +70,7 @@ export default function App() {
           <Route path="profilePage" element={<ProfilePage />} />
           <Route path="myReservations" element={<MyReservations />} />
           <Route path="loginPage" element={<LoginPage />} />
+          <Route path="findColleague" element={<FindColleague />} />
           <Route path="*" element={<LoginPage />} />
           <Route
             path="availableWorkStations"
