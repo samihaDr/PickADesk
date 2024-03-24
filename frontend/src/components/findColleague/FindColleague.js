@@ -60,11 +60,17 @@ export default function FindColleague() {
         `/api/users/findColleague/${employeeId}`,
       );
       setEmployeeInfo(infoResponse.data);
-
-      const deskResponse = await axios.get(
-        `/api/reservations/employeeHasReservationToday/${employeeId}`,
-      );
-      setResult(deskResponse.data.data);
+      if (searchPeriod === "today") {
+        const deskResponse = await axios.get(
+          `/api/reservations/employeeHasReservationToday/${employeeId}`,
+        );
+        setResult(deskResponse.data.data);
+      } else {
+        const deskResponse = await axios.get(
+          `/api/reservations/employeeHasReservationThisWeek/${employeeId}`,
+        );
+        setResult(deskResponse.data.data);
+      }
     } catch (error) {
       setError(
         "Impossible de charger les informations de l'employé ou les réservations.",
