@@ -46,6 +46,11 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public UserDTO getEmployeeInfo(long employeeId ) {
+        return userRepository.findById(employeeId)
+                .map(UserDTO::fromUser) // Utilisez la méthode fromUser pour convertir User en UserDTO
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+    }
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
