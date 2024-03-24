@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +27,9 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
-        if (!userService.isAdmin()) { // Utilisation sans Principal directement
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+//        if (!userService.isAdmin()) { // Utilisation sans Principal directement
+//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//        }
         List<UserDTO> users = userService.getUsers();
         return ResponseEntity.ok(users); // Retourne directement la liste des UserDTO
     }
@@ -47,6 +46,11 @@ public class UserController {
         return ResponseEntity.ok(isAdmin); // Retourne le rôle de l'utilisateur
     }
 
+    @GetMapping("findColleague/{employeeId}")
+    public ResponseEntity<UserDTO> findColleague( @PathVariable Long employeeId) {
+        UserDTO userDto = userService.getEmployeeInfo(employeeId);
+        return ResponseEntity.ok(userDto);
+    }
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         logoutService.logout(request, response, authentication);
