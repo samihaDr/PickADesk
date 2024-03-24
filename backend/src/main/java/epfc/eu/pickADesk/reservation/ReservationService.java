@@ -52,6 +52,16 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
+    public List<ReservationDTO> EmployeeHasReservationThisWeek( Long employeeId) {
+        LocalDate start = LocalDate.now();
+        LocalDate end = start.plusDays(6);
+
+        List<Reservation> reservations = this.reservationRepository.findByUserIdAndReservationDateBetween(employeeId,start, end);
+        return reservations.stream()
+                .map(reservationMapper::reservationToReservationDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<ReservationDTO> hasReservationTomorrow() {
         Long userId = this.userService.getUserConnected().getId();
         LocalDate tomorrow = LocalDate.now().plusDays(1);

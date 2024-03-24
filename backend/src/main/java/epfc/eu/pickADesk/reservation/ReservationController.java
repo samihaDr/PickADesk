@@ -94,6 +94,20 @@ public class ReservationController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
+    @GetMapping(value = "/employeeHasReservationThisWeek/{employeeId}")
+    public ApiResponse EmployeeHasReservationThisWeek(@PathVariable Long employeeId) {
+        try {
+            List<ReservationDTO> results = reservationService.EmployeeHasReservationThisWeek(employeeId);
+            if (results.isEmpty()) {
+                return new ApiResponse(false, "No reservations for this week", null);
+            }
+
+            return new ApiResponse(true, "You have reservations for this week", results);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Error checking reservations", e.getMessage());
+        }
+    }
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/hasReservationTomorrow")
     public ApiResponse hasReservationTomorrow() {
         try {
