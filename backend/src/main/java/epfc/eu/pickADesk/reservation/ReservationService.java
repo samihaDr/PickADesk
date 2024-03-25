@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -136,6 +137,13 @@ public class ReservationService {
     public ReservationDTO addReservation(ReservationDTO reservationDTO) {
         Long userId = this.userService.getUserConnected().getId();
         Reservation reservation = reservationMapper.reservationDTOToReservation(reservationDTO);
+        Optional<Reservation> existingReservation = reservationRepository.findByUserIdAndReservationDate(
+                userId,
+                reservation.getReservationDate());
+
+        if (existingReservation.isPresent()) {
+            throw new IllegalStateException("Reservation already exists for this user on the specified date.");
+        }
         validateReservationDate(reservation);
 
         // Associez l'utilisateur connecté et le poste de travail à la réservation
@@ -161,6 +169,9 @@ public class ReservationService {
         }
     }
 
+    public Optional<Reservation> isExistingReservation(Long userId, LocalDate reservationDate) {
+        return reservationRepository.findByUserIdAndReservationDate(userId, reservationDate);
+    }
     public void deleteReservation(Long reservationId) {
         if (reservationId == null) {
             throw new IllegalArgumentException("L'ID de réservation doit être spécifié lors de la suppression.");
