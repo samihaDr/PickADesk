@@ -178,6 +178,7 @@ export default function FindColleague() {
                   <th>Email</th>
                   <th>Zone</th>
                   <th>Seat</th>
+                  <th>Session</th>
                   <th>Date</th>
                 </tr>
               </thead>
@@ -190,6 +191,14 @@ export default function FindColleague() {
                     <td>{employeeInfo.email}</td>
                     <td>{reservation.workStation.zone.name}</td>
                     <td>{reservation.workStation.workPlace}</td>
+                    <th>
+                      {reservation.morning && reservation.afternoon
+                        ? "All day"
+                        : reservation.morning
+                          ? "Morning"
+                          : "Afternoon"}
+                    </th>
+
                     <td>{reservation.reservationDate}</td>
                   </tr>
                 ))}
