@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -121,6 +122,14 @@ public class ReservationController {
             return new ApiResponse(false, "Error checking reservations", e.getMessage());
         }
     }
+    @SecurityRequirement(name = "bearerAuth")
+    @GetMapping(value = "/checkReservation/{userId}/{reservationDate}")
+    public ResponseEntity<Boolean> checkReservation(@PathVariable("userId") Long userId, @PathVariable("reservationDate") LocalDate reservationDate) {
+        boolean exists = reservationService.isExistingReservation(userId, reservationDate).isPresent();
+        return ResponseEntity.ok(exists);
+    }
+
+
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping(value = "/deleteReservation/{reservationId}")
     public ResponseEntity<ApiResponse> deleteReservation(@PathVariable("reservationId") Long reservationId) {
