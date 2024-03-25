@@ -41,10 +41,10 @@ export default function AvailableWorkStations() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("WorkStations in AvailableWorkStations: ", workStations);
-    console.log("SelectedOptions in AVAilableWorkStations : ", selectedOptions);
-  }, [selectedOptions, workStations]);
+  // useEffect(() => {
+  //   console.log("WorkStations in AvailableWorkStations: ", workStations);
+  //   console.log("SelectedOptions in AVAilableWorkStations : ", selectedOptions);
+  // }, [selectedOptions, workStations]);
 
   if (!workStations || !selectedOptions) {
     return <p>Loading data...</p>;
@@ -155,7 +155,6 @@ export default function AvailableWorkStations() {
         </div>
         <h2 style={{ color: "#1f4e5f" }}>Pick a desk</h2>
         <div className="search-result">
-          <h4>Available workStations :</h4>
           {workStationList.length > 0 ? (
             <table className="table">
               <thead>
@@ -186,7 +185,9 @@ export default function AvailableWorkStations() {
               </tbody>
             </table>
           ) : (
-            <p>No workstations available.</p>
+            <div>
+              <strong>No workstations available. </strong>
+            </div>
           )}
         </div>
       </div>
