@@ -8,6 +8,8 @@ import back from "../../assets/images/back.png";
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import { bookWorkStation } from "../../services/BookWorkStation";
+import { format } from "date-fns";
+import { AUTH_TOKEN_KEY } from "../../App";
 
 export default function AvailableWorkStations() {
   const navigate = useNavigate();
@@ -25,6 +27,7 @@ export default function AvailableWorkStations() {
   });
   const [showModal, setShowModal] = useState(false);
   const [selectedStationDetails, setSelectedStationDetails] = useState(null);
+  const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
 
   useEffect(() => {
     async function fetchData() {
@@ -37,14 +40,8 @@ export default function AvailableWorkStations() {
       }
       setLoading(false);
     }
-
     fetchData();
   }, []);
-
-  // useEffect(() => {
-  //   console.log("WorkStations in AvailableWorkStations: ", workStations);
-  //   console.log("SelectedOptions in AVAilableWorkStations : ", selectedOptions);
-  // }, [selectedOptions, workStations]);
 
   if (!workStations || !selectedOptions) {
     return <p>Loading data...</p>;
@@ -81,13 +78,48 @@ export default function AvailableWorkStations() {
     if (afternoon) {
       return "afternoon";
     }
-    return "any"; // ou toute autre valeur par défaut
+    return "any";
   };
   const timePeriodString = getTimePeriod();
-  const handleReservationClick = (stationId) => {
-    fetchWorkStationDetails(stationId);
-    console.log("SelectedReservation : ", stationId);
+  const checkIfReservationCanBeMade = async (stationId, selectedOptions) => {
+    const formattedDate = format(new Date(selectedOptions.date), "yyyy-MM-dd");
+    console.log("ReservationDate : ", formattedDate);
+    try {
+      const response = await axios.get(
+        `/api/reservations/checkReservation/${userInfo.id}/${formattedDate}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        },
+      );
+      // Le backend retourne directement true ou false
+      return response.data;
+    } catch (error) {
+      console.error("Erreur lors de la vérification de la réservation:", error);
+      return false; // Retourner false en cas d'erreur de la requête
+    }
   };
+
+  const handleReservationClick = async (stationId) => {
+    try {
+      const canBook = await checkIfReservationCanBeMade(
+        stationId,
+        selectedOptions,
+      );
+      if (canBook) {
+        alert("A reservation for this user and this date already exists.");
+      } else {
+        fetchWorkStationDetails(stationId);
+      }
+    } catch (error) {
+      console.error(
+        "Erreur lors de la vérification de la réservation: ",
+        error,
+      );
+    }
+  };
+
   const fetchWorkStationDetails = async (stationId) => {
     try {
       const response = await axios.get(`/api/workStations/${stationId}`);
@@ -118,7 +150,6 @@ export default function AvailableWorkStations() {
       navigate("/myReservations");
     } catch (error) {
       console.error("Failed to confirm reservation:", error);
-      // alert("Failed to confirm reservation. Please try again."); // Informer l'utilisateur en cas d'échec
     }
   };
 
@@ -143,13 +174,7 @@ export default function AvailableWorkStations() {
               in <span className="bold-text"> {timePeriodString}</span>.
             </div>
             <button onClick={handleBackClick} className="back-button">
-              <img
-                src={back}
-                alt="back"
-                width="30"
-                height="30"
-                // className="d-inline-block align-text-top"
-              />
+              <img src={back} alt="back" width="30" height="30" />
             </button>
           </div>
         </div>
