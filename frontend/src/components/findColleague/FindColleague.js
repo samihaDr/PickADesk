@@ -12,6 +12,7 @@ export default function FindColleague() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchInitiated, setSearchInitiated] = useState(false);
 
   // Charger la liste des employés au chargement du composant
   useEffect(() => {
@@ -42,16 +43,11 @@ export default function FindColleague() {
       setEmployeeList(sortedData);
       setFilteredEmployeeList(sortedData);
     } catch (error) {
-      setError("Impossible de charger la liste des employés.");
+      setError("Unable to load the list of employees.");
     } finally {
       setLoading(false);
     }
   };
-
-  // Mise à jour pour inclure fetchEmployeeInfoAndDesk
-  useEffect(() => {
-    if (employeeId) fetchEmployeeInfoAndDesk();
-  }, [employeeId, searchPeriod]);
 
   const fetchEmployeeInfoAndDesk = async () => {
     setLoading(true);
@@ -72,20 +68,11 @@ export default function FindColleague() {
         setResult(deskResponse.data.data);
       }
     } catch (error) {
-      setError(
-        "Impossible de charger les informations de l'employé ou les réservations.",
-      );
+      setError("Unable to load employee information or bookings.");
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    // Assurez-vous que l'ID de l'employé et la période de recherche sont définis avant d'appeler l'API
-    if (employeeId && searchPeriod) {
-      fetchEmployeeInfoAndDesk();
-    }
-  }, [employeeId, searchPeriod]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -93,8 +80,8 @@ export default function FindColleague() {
 
   const handleEmployeeSelectionChange = (e) => {
     const selectedId = e.target.value;
-    console.log("Selected Employee ID:", selectedId); // Débogage
     setEmployeeId(selectedId);
+    setSearchInitiated(false);
   };
 
   const handleSearchPeriodChange = (e) => {
@@ -103,10 +90,12 @@ export default function FindColleague() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("EmployeeSelected :", employeeId);
     if (!employeeId || employeeId === "") {
-      alert("Veuillez sélectionner un employé.");
+      alert("Please select an employee.");
+      return;
     }
+    fetchEmployeeInfoAndDesk();
+    setSearchInitiated(true); // Indique qu'une recherche a été lancée
   };
 
   if (loading) return <div>Loading...</div>;
@@ -173,11 +162,9 @@ export default function FindColleague() {
                 <label htmlFor="week">This week</label>
               </div>
               <br />
-              {/*<div className="search">*/}
-              {/*  <button type="submit" className="btn btn-primary">*/}
-              {/*    Search*/}
-              {/*  </button>*/}
-              {/*</div>*/}
+              <button type="submit" className="btn btn-primary">
+                Search
+              </button>
             </form>
           </div>
         </div>
@@ -209,9 +196,11 @@ export default function FindColleague() {
               </tbody>
             </table>
           </div>
-        ) : (
-          <div>Pas de réservation trouvée pour la période sélectionnée.</div>
-        )}
+        ) : searchInitiated && (!result || result.length === 0) ? (
+          <div>
+            <strong>No bookings found for the selected period.</strong>
+          </div>
+        ) : null}
       </div>
     </>
   );
