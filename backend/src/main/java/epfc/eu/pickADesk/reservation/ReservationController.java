@@ -108,6 +108,8 @@ public class ReservationController {
             return new ApiResponse(false, "Error checking reservations", e.getMessage());
         }
     }
+
+
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/hasReservationTomorrow")
     public ApiResponse hasReservationTomorrow() {
@@ -122,10 +124,15 @@ public class ReservationController {
             return new ApiResponse(false, "Error checking reservations", e.getMessage());
         }
     }
-    @SecurityRequirement(name = "bearerAuth")
+
     @GetMapping(value = "/checkReservation/{userId}/{reservationDate}")
-    public ResponseEntity<Boolean> checkReservation(@PathVariable("userId") Long userId, @PathVariable("reservationDate") LocalDate reservationDate) {
-        boolean exists = reservationService.isExistingReservation(userId, reservationDate).isPresent();
+    public ResponseEntity<Boolean> checkReservation(
+            @PathVariable("userId") Long userId,
+            @PathVariable("reservationDate") LocalDate reservationDate,
+            @RequestParam(value = "morning", required = false, defaultValue = "false") Boolean morning,
+            @RequestParam(value = "afternoon", required = false, defaultValue = "false") Boolean afternoon) {
+
+        boolean exists = reservationService.isExistingReservation(userId, reservationDate, morning, afternoon);
         return ResponseEntity.ok(exists);
     }
 

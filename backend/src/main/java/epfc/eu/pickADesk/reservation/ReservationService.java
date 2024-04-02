@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,6 +60,7 @@ public class ReservationService {
                 .map(reservationMapper::reservationToReservationDTO)
                 .collect(Collectors.toList());
     }
+
 
     public List<ReservationDTO> hasReservationTomorrow() {
         Long userId = this.userService.getUserConnected().getId();
@@ -137,22 +136,31 @@ public class ReservationService {
     public ReservationDTO addReservation(ReservationDTO reservationDTO) {
         Long userId = this.userService.getUserConnected().getId();
         Reservation reservation = reservationMapper.reservationDTOToReservation(reservationDTO);
-        Optional<Reservation> existingReservation = reservationRepository.findByUserIdAndReservationDate(
-                userId,
-                reservation.getReservationDate());
 
-        if (existingReservation.isPresent()) {
-            throw new IllegalStateException("Reservation already exists for this user on the specified date.");
+        // Recherche des réservations existantes pour l'utilisateur et la date
+        List<Reservation> existingReservations = reservationRepository.findReservationsForTodayWithFlexibleTiming(userId, reservation.getReservationDate());
+
+        for (Reservation existingReservation : existingReservations) {
+            if ((reservationDTO.getMorning() != null && reservationDTO.getMorning().equals(existingReservation.getMorning()) && reservationDTO.getMorning())
+                    || (reservationDTO.getAfternoon() != null && reservationDTO.getAfternoon().equals(existingReservation.getAfternoon()) && reservationDTO.getAfternoon())) {
+                throw new IllegalStateException("Reservation already exists for this user on the specified date and time slot.");
+            }
         }
+
         validateReservationDate(reservation);
 
         // Associez l'utilisateur connecté et le poste de travail à la réservation
         reservation.setUser(userService.findById(userId).orElseThrow(() -> new RuntimeException("User not found with ID: " + userId)));
         workStationRepository.findById(reservationDTO.getWorkStation().getId()).ifPresent(reservation::setWorkStation);
 
+        // Mettre à jour les créneaux de réservation en fonction de ReservationDTO
+        reservation.setMorning(reservationDTO.getMorning());
+        reservation.setAfternoon(reservationDTO.getAfternoon());
+
         Reservation savedReservation = reservationRepository.save(reservation);
         return reservationMapper.reservationToReservationDTO(savedReservation);
     }
+
 
     public void validateReservationDate(Reservation reservation) {
         LocalDate today = LocalDate.now();
@@ -169,9 +177,31 @@ public class ReservationService {
         }
     }
 
-    public Optional<Reservation> isExistingReservation(Long userId, LocalDate reservationDate) {
-        return reservationRepository.findByUserIdAndReservationDate(userId, reservationDate);
+//    public Optional<Reservation> isExistingReservation(Long userId, LocalDate reservationDate) {
+//        return reservationRepository.findByUserIdAndReservationDate(userId, reservationDate);
+//    }
+
+    public boolean isExistingReservation(Long userId, LocalDate reservationDate, Boolean checkMorning, Boolean checkAfternoon) {
+        // Si vérification pour toute la journée
+        if (checkMorning && checkAfternoon) {
+            // Vérifiez d'abord si une réservation existe pour toute la journée
+            boolean isReservedForWholeDay = reservationRepository.findByUserIdAndReservationDateAndMorningAndAfternoon(userId, reservationDate, true, true).isPresent();
+            // Vérifiez ensuite pour n'importe quelle réservation le matin ou l'après-midi
+            boolean isReservedForAnyPartOfDay = reservationRepository.findByUserIdAndReservationDate(userId, reservationDate)
+                    .stream()
+                    .anyMatch(reservation -> reservation.isMorning() || reservation.isAfternoon());
+            return isReservedForWholeDay || isReservedForAnyPartOfDay;
+        } else if (checkMorning) {
+            // Vérifiez uniquement pour le matin
+            return reservationRepository.findByUserIdAndReservationDateAndMorning(userId, reservationDate, true).isPresent();
+        } else if (checkAfternoon) {
+            // Vérifiez uniquement pour l'après-midi
+            return reservationRepository.findByUserIdAndReservationDateAndAfternoon(userId, reservationDate, true).isPresent();
+        }
+        return false; // Aucune vérification nécessaire si les deux sont faux
     }
+
+
     public void deleteReservation(Long reservationId) {
         if (reservationId == null) {
             throw new IllegalArgumentException("L'ID de réservation doit être spécifié lors de la suppression.");
