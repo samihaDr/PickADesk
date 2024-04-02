@@ -6,6 +6,7 @@ import epfc.eu.pickADesk.workStation.WorkStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
@@ -61,7 +62,18 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
+    public List<ReservationDTO> getReservationsForWeek(Long userId) {
+        LocalDate today = LocalDate.now();
 
+        LocalDate monday = today.with(DayOfWeek.MONDAY);
+
+        LocalDate friday = monday.plusDays(4);
+
+        List<Reservation> reservations = this.reservationRepository.findByUserIdAndReservationDateBetween(userId, monday, friday);
+        return reservations.stream()
+                .map(reservationMapper::reservationToReservationDTO)
+                .collect(Collectors.toList());
+    }
     public List<ReservationDTO> hasReservationTomorrow() {
         Long userId = this.userService.getUserConnected().getId();
         LocalDate tomorrow = LocalDate.now().plusDays(1);
