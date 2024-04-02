@@ -10,6 +10,7 @@ import axios from "axios";
 import { bookWorkStation } from "../../services/BookWorkStation";
 import { format } from "date-fns";
 import { AUTH_TOKEN_KEY } from "../../App";
+import useCalculateRemaining from "../hooks/useCalculateRemaining";
 
 export default function AvailableWorkStations() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function AvailableWorkStations() {
   const [showModal, setShowModal] = useState(false);
   const [selectedStationDetails, setSelectedStationDetails] = useState(null);
   const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
-
+  const calculateRemaining = useCalculateRemaining();
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -82,11 +83,12 @@ export default function AvailableWorkStations() {
   };
   const timePeriodString = getTimePeriod();
   const checkIfReservationCanBeMade = async (stationId, selectedOptions) => {
+    const { morning, afternoon } = selectedOptions.timePeriod;
     const formattedDate = format(new Date(selectedOptions.date), "yyyy-MM-dd");
     console.log("ReservationDate : ", formattedDate);
     try {
       const response = await axios.get(
-        `/api/reservations/checkReservation/${userInfo.id}/${formattedDate}`,
+        `/api/reservations/checkReservation/${userInfo.id}/${formattedDate}?morning=${morning}&afternoon=${afternoon}`,
         {
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -94,6 +96,7 @@ export default function AvailableWorkStations() {
         },
       );
       // Le backend retourne directement true ou false
+      console.log("ReseponseCheck : ", response.data);
       return response.data;
     } catch (error) {
       console.error("Erreur lors de la vérification de la réservation:", error);
@@ -137,6 +140,7 @@ export default function AvailableWorkStations() {
       // Appel à bookWorkStation avec les détails nécessaires
       await bookWorkStation(selectedStationDetails.id, selectedOptions);
       console.log("Reservation added successfully");
+      calculateRemaining(userInfo.id);
 
       // Mettre à jour la liste des postes de travail disponibles
       setWorkStations({

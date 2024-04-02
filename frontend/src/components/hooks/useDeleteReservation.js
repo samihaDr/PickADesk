@@ -2,10 +2,11 @@ import { useContext } from "react";
 import axios from "axios";
 import { GlobalContext } from "../../services/GlobalState";
 import { AUTH_TOKEN_KEY } from "../../App";
+import useCalculateRemaining from "./useCalculateRemaining";
 
 const useDeleteReservation = () => {
-  const { setReservations, reservations } = useContext(GlobalContext);
-
+  const { userInfo, setReservations, reservations } = useContext(GlobalContext);
+  const calculateRemaining = useCalculateRemaining();
   return async (reservationId) => {
     console.log("reservation deteted :", reservationId);
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
@@ -26,6 +27,7 @@ const useDeleteReservation = () => {
         (reservation) => reservation.id !== reservationId,
       );
       setReservations(updatedReservations);
+      await calculateRemaining(userInfo.id);
       console.log("Reservations updated :", reservations);
     } catch (error) {
       console.error("Failed to cancel reservation:", error);
