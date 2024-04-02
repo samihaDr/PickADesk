@@ -31,12 +31,12 @@ export const bookWorkStation = async (stationId, selectedOptions) => {
           },
         },
       );
+
       return response.data;
     } catch (error) {
       console.error("Booking error :", error);
     }
   } else {
-    console.log("No authentication token found.");
     throw new Error("No authentication token found.");
   }
 };
