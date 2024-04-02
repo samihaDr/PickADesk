@@ -8,6 +8,7 @@ const initialState = {
   userInfo: null,
   userPreferences: null,
   weeklyQuota: null,
+  weeklyRemaining: 2.5,
   reservations: [],
   isAuthenticated: !!sessionStorage.getItem(AUTH_TOKEN_KEY),
 };
@@ -38,6 +39,11 @@ const globalReducer = (state, action) => {
       return {
         ...state,
         weeklyQuota: action.payload,
+      };
+    case "SET_REMAINING":
+      return {
+        ...state,
+        weeklyRemaining: action.payload,
       };
     case "SET_AUTHENTICATED":
       return {
@@ -84,6 +90,10 @@ export const GlobalProvider = ({ children }) => {
     sessionStorage.setItem("weeklyQuota", JSON.stringify(quota));
     dispatch({ type: "SET_QUOTA", payload: quota });
   };
+  const setWeeklyRemaining = (remaining) => {
+    sessionStorage.setItem("weeklyRemaining", JSON.stringify(remaining));
+    dispatch({ type: "SET_REMAINING", payload: remaining });
+  };
   const setIsAuthenticated = (isAuthenticated) => {
     dispatch({ type: "SET_AUTHENTICATED", payload: isAuthenticated });
     // Mise à jour du stockage du navigateur pour refléter l'état d'authentification
@@ -128,6 +138,7 @@ export const GlobalProvider = ({ children }) => {
         setUserConnected,
         setUserInfo,
         setWeeklyQuota,
+        setWeeklyRemaining,
         setUserPreferences,
         setIsAuthenticated,
         setReservations,
