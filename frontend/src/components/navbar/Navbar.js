@@ -1,20 +1,31 @@
 import logo from "../../assets/images/logo1.png";
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import "./Navbar.scss";
 import LogoutButton from "../logout/Logout";
 import { Link } from "react-router-dom";
 import { GlobalContext } from "../../services/GlobalState";
+import useCalculateRemaining from "../hooks/useCalculateRemaining";
 
 export default function Navbar() {
   const {
     userConnected,
     weeklyQuota,
+    weeklyRemaining,
     userPreferences,
     isAuthenticated,
     userInfo,
     setUserInfo,
     setUserPreferences,
   } = useContext(GlobalContext);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const calculateRemaining = useCallback(useCalculateRemaining(), []);
+
+  useEffect(() => {
+    if (isAuthenticated && userInfo?.id) {
+      calculateRemaining(userInfo.id);
+    }
+  }, [calculateRemaining, isAuthenticated, userInfo?.id]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -46,10 +57,10 @@ export default function Navbar() {
 
         <div className="quotaInfo">
           <span className="weeklyQuota">
-            {<div> Quota : {weeklyQuota}</div>}
+            {<div> Quota : {weeklyQuota} / week</div>}
           </span>
           <span className="remaining">
-            {<div> Remaining : {weeklyQuota}</div>}
+            {<div> Remaining : {weeklyRemaining}</div>}
           </span>
         </div>
 
