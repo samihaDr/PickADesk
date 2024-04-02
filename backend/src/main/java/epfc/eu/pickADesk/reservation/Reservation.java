@@ -53,7 +53,11 @@ public class Reservation {
 
     private Integer reservationTypeId;
 
-    public LocalDate getDate() {
-        return reservationDate;
+    public boolean isMorning() {
+        return true;
+    }
+
+    public boolean isAfternoon() {
+        return true;
     }
 }
