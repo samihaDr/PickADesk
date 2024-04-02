@@ -23,7 +23,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (isAuthenticated && userInfo?.id) {
-      calculateRemaining(userInfo.id);
+      calculateRemaining(userInfo.id).then((r) => {});
     }
   }, [calculateRemaining, isAuthenticated, userInfo?.id]);
 
@@ -60,7 +60,16 @@ export default function Navbar() {
             {<div> Quota : {weeklyQuota} / week</div>}
           </span>
           <span className="remaining">
-            {<div> Remaining : {weeklyRemaining}</div>}
+            <div className="remaining">
+              <div>
+                {" "}
+                Remaining :
+                <strong className={weeklyRemaining <= 0 ? "negative" : ""}>
+                  {" "}
+                  {weeklyRemaining}{" "}
+                </strong>
+              </div>
+            </div>
           </span>
         </div>
 
