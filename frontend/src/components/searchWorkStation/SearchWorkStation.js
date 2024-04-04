@@ -20,6 +20,7 @@ export default function SearchWorkStation() {
   const { workStations, setWorkStations, setSelectedOptions } =
     useContext(WorkStationContext);
   const [isLoading, setLoading] = useState(true);
+  const [openCollapse, setOpenCollapse] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const { userInfo, userPreferences } = useContext(GlobalContext);
   const [isAnyEquipmentChecked, setIsAnyEquipmentChecked] = useState(false);
@@ -28,7 +29,6 @@ export default function SearchWorkStation() {
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour aujourd'hui à minuit
   let minDate = new Date(today);
-  //let minDate = new Date();
   const oneMonthLater = new Date();
   oneMonthLater.setMonth(today.getMonth() + 1);
 
@@ -81,6 +81,17 @@ export default function SearchWorkStation() {
     }
   }, [userPreferences]);
 
+  // Extrait montrant le gestionnaire d'événements et les boutons modifiés
+  // Gestionnaire pour basculer l'état d'ouverture d'un collapse
+  // Cette fonction bascule l'état d'ouverture pour un collapse donné
+  const toggleCollapse = (collapseId) => {
+    setOpenCollapse(openCollapse === collapseId ? null : collapseId);
+  };
+
+  // Fonction pour déterminer le style d'affichage basé sur l'état
+  const collapseStyle = (collapseId) => ({
+    display: openCollapse === collapseId ? "block" : "none",
+  });
   const validateFormData = () => {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour aujourd'hui à minuit
@@ -112,12 +123,12 @@ export default function SearchWorkStation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("handleSubmit called");
+    setErrorMessage("");
     const validationError = validateFormData();
     if (validationError) {
       setErrorMessage(validationError);
       return;
     }
-    setErrorMessage("");
     setLoading(true);
 
     const formData = {
@@ -146,6 +157,7 @@ export default function SearchWorkStation() {
       navigate("/availableWorkStations");
     } catch (error) {
       console.error("Error submitting form", error);
+      setErrorMessage("An error occurred while submitting the form.");
     } finally {
       setLoading(false);
     }
@@ -259,154 +271,295 @@ export default function SearchWorkStation() {
     <div>
       <div className="main">
         <h2>Make a reservation</h2>
+        <div className="buttons-container">
+          {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
+          <button
+            className="btn btn-info"
+            data-bs-toggle="collapse"
+            data-bs-target="#selectDetails"
+            role="button"
+            onClick={() => toggleCollapse("selectDetails")}
+            aria-expanded={openCollapse === "selectDetails"}
+            aria-controls="selectDetails"
+          >
+            Select details
+          </button>
+          <button
+            className="btn btn-info"
+            role="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#selectFavorite"
+            onClick={() => toggleCollapse("selectFavorite")}
+            aria-expanded={openCollapse === "selectFavorite"}
+            aria-controls="selectFavorite"
+          >
+            Select favorite
+          </button>
+          <button
+            className="btn btn-info"
+            role="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#selectOnPlan"
+            onClick={() => toggleCollapse("selectOnPlan")}
+            aria-expanded={openCollapse === "selectOnPlan"}
+            aria-controls="selectOnPlan"
+          >
+            Select on plan
+          </button>
+        </div>
         <div className="add-reservation-container">
           <div>
             <div className="form-container">
               <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label>Date</label>
-                  <div className="date-timePeriod">
-                    <div className="datepicker-container">
-                      <span className="datepicker-icon">📅</span>
-                      <DatePicker
-                        selected={date}
-                        onChange={(date) => setDate(date)}
-                        dateFormat="yyyy-MM-dd"
-                        minDate={minDate}
-                        maxDate={oneMonthLater}
-                        filterDate={combinedDateFilter}
-                        toggleCalendarOnIconClick
-                        className="form-control"
-                      />
-                    </div>
+                <div className="row">
+                  <div
+                    style={collapseStyle("selectDetails")}
+                    id="selectDetails"
+                  >
+                    <div className="collapse" id="selectDetails">
+                      <div className="card card-body">
+                        <div className="selectDetails">
+                          <div className="mb-3">
+                            <label>Date</label>
+                            <div className="date-timePeriod">
+                              <div className="datepicker-container">
+                                <span className="datepicker-icon">📅</span>
+                                <DatePicker
+                                  selected={date}
+                                  onChange={(date) => setDate(date)}
+                                  dateFormat="yyyy-MM-dd"
+                                  minDate={minDate}
+                                  maxDate={oneMonthLater}
+                                  filterDate={combinedDateFilter}
+                                  toggleCalendarOnIconClick
+                                  className="form-control"
+                                />
+                              </div>
 
-                    <div className="checkbox-container">
-                      <input
-                        type="checkbox"
-                        name="morning"
-                        className="checkbox"
-                        checked={timePeriod.morning}
-                        onChange={handleTimePeriodCheckboxChange}
-                      />
-                      <label className="checkbox-label">Morning</label>
+                              <div className="checkbox-container">
+                                <input
+                                  type="checkbox"
+                                  name="morning"
+                                  className="checkbox"
+                                  checked={timePeriod.morning}
+                                  onChange={handleTimePeriodCheckboxChange}
+                                />
+                                <label className="checkbox-label">
+                                  Morning
+                                </label>
 
-                      <input
-                        type="checkbox"
-                        name="afternoon"
-                        className="checkbox"
-                        checked={timePeriod.afternoon}
-                        onChange={handleTimePeriodCheckboxChange}
-                      />
-                      <label className="checkbox-label">Afternoon</label>
-                    </div>
-                  </div>
-                </div>
-                <div className="mb-3">
-                  <label>Reservation Type</label>
-                  <select
-                    name="reservationTypeId"
-                    value={reservationType}
-                    onChange={(e) => setReservationType(e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Any</option>
-                    {data.reservationTypes.map((type) => (
-                      <option key={type.id} value={type.id}>
-                        {type.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <label>WorkArea Type</label>
-                  <select
-                    value={workArea}
-                    onChange={(e) => setWorkArea(e.target.value)}
-                    className="form-select"
-                    aria-label="Default select example"
-                    name="workAreaId"
-                  >
-                    <option value="">Any</option>
-                    {data.workAreas.map((area) => (
-                      <option key={area.id} value={area.id}>
-                        {area.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <label>Screen</label>
-                  <select
-                    value={screen}
-                    onChange={(e) => setScreen(e.target.value)}
-                    className="form-select"
-                    aria-label="Default select example"
-                    name="screenId"
-                  >
-                    <option value="">Any</option>
-                    {data.screens.map((screen) => (
-                      <option key={screen.id} value={screen.id}>
-                        {screen.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <div className="mb-3">
-                    <label>Equipment</label>
-                    <div className="form-check">
-                      <input
-                        type="checkbox"
-                        checked={isAnyEquipmentChecked}
-                        onChange={handleAnyEquipmentChange}
-                        className="form-check-input"
-                      />{" "}
-                      Any
-                    </div>
-                    {data.equipment.map((equip) => (
-                      <div key={equip.id} className="form-check">
-                        <input
-                          type="checkbox"
-                          value={equip.id}
-                          checked={
-                            !isAnyEquipmentChecked &&
-                            equipment.includes(equip.id)
-                          }
-                          onChange={() => handleEquipmentChange(equip.id)}
-                          className="form-check-input"
-                        />{" "}
-                        {equip.name}
+                                <input
+                                  type="checkbox"
+                                  name="afternoon"
+                                  className="checkbox"
+                                  checked={timePeriod.afternoon}
+                                  onChange={handleTimePeriodCheckboxChange}
+                                />
+                                <label className="checkbox-label">
+                                  Afternoon
+                                </label>
+                              </div>
+                            </div>
+
+                            <div className="mb-3">
+                              <label>Reservation Type</label>
+                              <select
+                                name="reservationTypeId"
+                                value={reservationType}
+                                onChange={(e) =>
+                                  setReservationType(e.target.value)
+                                }
+                                className="form-select"
+                              >
+                                <option value="">Any</option>
+                                {data.reservationTypes.map((type) => (
+                                  <option key={type.id} value={type.id}>
+                                    {type.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="mb-3">
+                              <label>WorkArea Type</label>
+                              <select
+                                value={workArea}
+                                onChange={(e) => setWorkArea(e.target.value)}
+                                className="form-select"
+                                aria-label="Default select example"
+                                name="workAreaId"
+                              >
+                                <option value="">Any</option>
+                                {data.workAreas.map((area) => (
+                                  <option key={area.id} value={area.id}>
+                                    {area.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="mb-3">
+                              <label>Screen</label>
+                              <select
+                                value={screen}
+                                onChange={(e) => setScreen(e.target.value)}
+                                className="form-select"
+                                aria-label="Default select example"
+                                name="screenId"
+                              >
+                                <option value="">Any</option>
+                                {data.screens.map((screen) => (
+                                  <option key={screen.id} value={screen.id}>
+                                    {screen.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <div>
+                              <div className="mb-3">
+                                <label>Equipment</label>
+                                <div className="form-check">
+                                  <input
+                                    type="checkbox"
+                                    checked={isAnyEquipmentChecked}
+                                    onChange={handleAnyEquipmentChange}
+                                    className="form-check-input"
+                                  />{" "}
+                                  Any
+                                </div>
+                                {data.equipment.map((equip) => (
+                                  <div key={equip.id} className="form-check">
+                                    <input
+                                      type="checkbox"
+                                      value={equip.id}
+                                      checked={
+                                        !isAnyEquipmentChecked &&
+                                        equipment.includes(equip.id)
+                                      }
+                                      onChange={() =>
+                                        handleEquipmentChange(equip.id)
+                                      }
+                                      className="form-check-input"
+                                    />{" "}
+                                    {equip.name}
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="mb-3">
+                                <label>Furniture</label>
+                                <div className="form-check">
+                                  <input
+                                    type="checkbox"
+                                    checked={isAnyFurnitureChecked}
+                                    onChange={handleAnyFurnitureChange}
+                                    className="form-check-input"
+                                  />{" "}
+                                  Any
+                                </div>
+                                {data.furniture.map((furn) => (
+                                  <div key={furn.id}>
+                                    <input
+                                      type="checkbox"
+                                      value={furn.id}
+                                      checked={
+                                        !isAnyFurnitureChecked &&
+                                        furniture.includes(furn.id)
+                                      }
+                                      onChange={() =>
+                                        handleFurnitureChange(furn.id)
+                                      }
+                                      className="form-check-input"
+                                    />{" "}
+                                    {furn.name}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                  <div className="mb-3">
-                    <label>Furniture</label>
-                    <div className="form-check">
-                      <input
-                        type="checkbox"
-                        checked={isAnyFurnitureChecked}
-                        onChange={handleAnyFurnitureChange}
-                        className="form-check-input"
-                      />{" "}
-                      Any
                     </div>
-                    {data.furniture.map((furn) => (
-                      <div key={furn.id}>
-                        <input
-                          type="checkbox"
-                          value={furn.id}
-                          checked={
-                            !isAnyFurnitureChecked &&
-                            furniture.includes(furn.id)
-                          }
-                          onChange={() => handleFurnitureChange(furn.id)}
-                          className="form-check-input"
-                        />{" "}
-                        {furn.name}
+                  </div>
+                  <div className="row">
+                    <div
+                      style={collapseStyle("selectFavorite")}
+                      id="selectFavorite"
+                    >
+                      <div className="collapse" id="selectFavorite">
+                        <div className="card card-body">
+                          <div className="selectFavorite">
+                            <div className="mb-3">
+                              <label>Date</label>
+                              <div className="date-timePeriod">
+                                <div className="datepicker-container">
+                                  <span className="datepicker-icon">📅</span>
+                                  <DatePicker
+                                    selected={date}
+                                    onChange={(date) => setDate(date)}
+                                    dateFormat="yyyy-MM-dd"
+                                    minDate={minDate}
+                                    maxDate={oneMonthLater}
+                                    filterDate={combinedDateFilter}
+                                    toggleCalendarOnIconClick
+                                    className="form-control"
+                                  />
+                                </div>
+
+                                <div className="checkbox-container">
+                                  <input
+                                    type="checkbox"
+                                    name="morning"
+                                    className="checkbox"
+                                    checked={timePeriod.morning}
+                                    onChange={handleTimePeriodCheckboxChange}
+                                  />
+                                  <label className="checkbox-label">
+                                    Morning
+                                  </label>
+
+                                  <input
+                                    type="checkbox"
+                                    name="afternoon"
+                                    className="checkbox"
+                                    checked={timePeriod.afternoon}
+                                    onChange={handleTimePeriodCheckboxChange}
+                                  />
+                                  <label className="checkbox-label">
+                                    Afternoon
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                            Some placeholder content for the second collapse
+                            component of this multi-collapse example. This panel
+                            is hidden by default but revealed when the user
+                            activates the relevant trigger.
+                          </div>
+                        </div>
                       </div>
-                    ))}
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div
+                      style={collapseStyle("selectOnPlan")}
+                      id="selectOnPlan"
+                    >
+                      <div className="selectOnPlan">
+                        <div className="collapse" id="selectOnPlan">
+                          <div className="card card-body">
+                            Some placeholder content for the second collapse
+                            component of this multi-collapse example. This panel
+                            is hidden by default but revealed when the user
+                            activates the relevant trigger. Some placeholder
+                            content for the second collapse component of this
+                            multi-collapse example. This panel is hidden by
+                            default but revealed when the user activates the
+                            relevant trigger.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
+
                 <div className="container-submit">
                   <button type="submit" className="btn btn-primary">
                     Search

@@ -21,6 +21,27 @@ h2 {
   max-width: 600px; /* Ajustez selon la largeur désirée */
 }
 
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px; // Ajustez selon vos besoins
+  margin-top: 10px;
+  // Si vous souhaitez que les boutons aient la même taille, vous pouvez également ajouter :
+  .btn {
+    flex: 1; // Cela permet à chaque bouton de prendre une part égale de l'espace disponible
+    margin: 0 10px; // Ajoute un peu d'espace entre les boutons, ajustez selon vos besoins
+  }
+
+  // Pour éviter que les boutons collent aux bords :
+  .btn:first-child {
+    margin-left: 0;
+  }
+
+  .btn:last-child {
+    margin-right: 0;
+  }
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
