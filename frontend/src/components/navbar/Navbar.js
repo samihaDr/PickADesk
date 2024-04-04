@@ -1,5 +1,5 @@
 import logo from "../../assets/images/logo1.png";
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import "./Navbar.scss";
 import LogoutButton from "../logout/Logout";
 import { Link } from "react-router-dom";
@@ -18,6 +18,13 @@ export default function Navbar() {
     setUserPreferences,
   } = useContext(GlobalContext);
 
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    // Charger les favoris du localStorage au montage du composant
+    const loadedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(loadedFavorites);
+  }, []);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const calculateRemaining = useCallback(useCalculateRemaining(), []);
 
@@ -74,6 +81,27 @@ export default function Navbar() {
         </div>
 
         <ul className="nav justify-content-end">
+          <li className="nav-item dropdown">
+            <a
+              className="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Favorites <i className="fas fa-star"></i>
+            </a>
+            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+              {favorites.map((favorite, index) => (
+                <li key={index}>
+                  <a className="dropdown-item" href="#">
+                    {favorite.workPlace}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </li>
           <li className="nav-item">
             <Link
               to="/dashboard"
