@@ -50,6 +50,42 @@ export default function ReservationDetails({
     onHide(); // Ferme la modal après la suppression
     refreshEvents();
   };
+
+  // Fonction pour ajouter le poste aux favoris
+
+  function addToFavorites() {
+    const currentWorkStation = {
+      workPlace: event?.workStation?.workPlace,
+      zone: event?.workStation?.zone.name,
+      workArea: event?.workStation?.workArea.name,
+      screen: event?.workStation?.screen.name,
+      equipments: event?.workStation?.equipments
+        .map((equipment) => equipment.name)
+        .join(", "),
+      furnitures: event?.workStation?.furnitures
+        .map((furniture) => furniture.name)
+        .join(", "),
+    };
+
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    const alreadyInFavorites = favorites.some(
+      (favorite) => favorite.workPlace === currentWorkStation.workPlace,
+    );
+
+    if (!alreadyInFavorites) {
+      if (favorites.length >= 5) {
+        favorites.shift(); // Supprime le premier élément du tableau
+      }
+      favorites.push(currentWorkStation);
+
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      alert("Workstation added to favorites.");
+    } else {
+      alert("This workstation is already in your favorites.");
+    }
+  }
+
   return (
     <>
       <Modal
@@ -100,17 +136,29 @@ export default function ReservationDetails({
           </div>
           <br />
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => onHide()}>
-            Close
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => onDelete(event)}
-            disabled={isReservationPassed}
-          >
-            Delete
-          </Button>
+        <Modal.Footer className="d-flex justify-content-between">
+          <div>
+            <Button variant="info" onClick={() => addToFavorites()}>
+              Add to favorites
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="secondary"
+              onClick={() => onHide()}
+              className="ms-2"
+            >
+              Close
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => onDelete(event)}
+              disabled={isReservationPassed}
+              className="ms-2"
+            >
+              Delete
+            </Button>
+          </div>
         </Modal.Footer>
       </Modal>
       <Modal
