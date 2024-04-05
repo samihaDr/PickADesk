@@ -8,7 +8,7 @@ const localizer = momentLocalizer(moment);
 
 const AgendaEvent = React.memo(({ event }) => (
   <div>
-    <span>WorkPlace n° {event.workPlace}</span>
+    <span>WorkPlace n° {event.workStation.workPlace}</span>
   </div>
 ));
 
