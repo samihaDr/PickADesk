@@ -22,6 +22,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r FROM Reservation r WHERE r.user.id = :userId AND r.reservationDate = :date AND (r.morning = TRUE OR r.afternoon = TRUE)")
     List<Reservation> findReservationsForTodayWithFlexibleTiming(@Param("userId") Long userId, @Param("date") LocalDate date);
 
-
     Optional<Reservation> findByUserIdAndReservationDate(Long userId, LocalDate reservationDate);
+
+    Optional<Reservation> findByWorkStationIdAndReservationDateAndMorning(Long workstationId, LocalDate reservationDate, Boolean morning);
+    Optional<Reservation> findByWorkStationIdAndReservationDateAndAfternoon(Long workstationId, LocalDate reservationDate, Boolean afternoon);
+
 }
