@@ -55,6 +55,7 @@ export default function ReservationDetails({
 
   function addToFavorites() {
     const currentWorkStation = {
+      id: event?.workStation?.id,
       workPlace: event?.workStation?.workPlace,
       zone: event?.workStation?.zone.name,
       workArea: event?.workStation?.workArea.name,
