@@ -151,6 +151,15 @@ public class ReservationController {
 
 
     @SecurityRequirement(name = "bearerAuth")
+    @GetMapping(value = "checkSelectFavoriteIsAvailable/{workStationId}/{reservationDate}")
+    public ResponseEntity<Boolean> checkSelectFavoriteIsAvailable(@PathVariable("workStationId") Long workStationId, @PathVariable("reservationDate") LocalDate reservationDate, @RequestParam(value = "morning", required = false, defaultValue = "false") Boolean morning,
+                                                                  @RequestParam(value = "afternoon", required = false, defaultValue = "false") Boolean afternoon) {
+
+        boolean available = reservationService.isWorkStationUnavailable(workStationId, reservationDate, morning, afternoon);
+        return ResponseEntity.ok(available);
+    }
+
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping(value = "/deleteReservation/{reservationId}")
     public ResponseEntity<ApiResponse> deleteReservation(@PathVariable("reservationId") Long reservationId) {
         try {
