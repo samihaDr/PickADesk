@@ -189,10 +189,6 @@ public class ReservationService {
         }
     }
 
-//    public Optional<Reservation> isExistingReservation(Long userId, LocalDate reservationDate) {
-//        return reservationRepository.findByUserIdAndReservationDate(userId, reservationDate);
-//    }
-
     public boolean isExistingReservation(Long userId, LocalDate reservationDate, Boolean checkMorning, Boolean checkAfternoon) {
         // Si vérification pour toute la journée
         if (checkMorning && checkAfternoon) {
@@ -211,6 +207,25 @@ public class ReservationService {
             return reservationRepository.findByUserIdAndReservationDateAndAfternoon(userId, reservationDate, true).isPresent();
         }
         return false; // Aucune vérification nécessaire si les deux sont faux
+    }
+
+    public boolean isWorkStationUnavailable(Long workStationId, LocalDate reservationDate, Boolean checkMorning, Boolean checkAfternoon) {
+        if (workStationId == null || reservationDate == null) {
+            throw new IllegalArgumentException("WorkStation ID and reservation date must not be null.");
+        }
+        // Cette vérification garantit que l'une des conditions est requise
+        if (!checkMorning && !checkAfternoon) {
+            return false;  // Si aucune période n'est à vérifier, retourner "faux" (disponible)
+        }
+
+        try {
+            boolean morningUnavailable = checkMorning && reservationRepository.findByWorkStationIdAndReservationDateAndMorning(workStationId, reservationDate, true).isPresent();
+            boolean afternoonUnavailable = checkAfternoon && reservationRepository.findByWorkStationIdAndReservationDateAndAfternoon(workStationId, reservationDate, true).isPresent();
+
+            return morningUnavailable || afternoonUnavailable;  // Retourne vrai si l'une ou l'autre période est indisponible
+        } catch (Exception e) {
+            throw new RuntimeException("Error accessing reservation data.", e);
+        }
     }
 
 
