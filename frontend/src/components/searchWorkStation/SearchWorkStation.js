@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./SearchWorkStation.scss";
 import { useNavigate } from "react-router-dom";
 import { WorkStationContext } from "../../services/WorkStationContext";
+import SelectFavorite from "./SelectFavorite";
 
 export default function SearchWorkStation() {
   const [data, setData] = useState({
@@ -81,8 +82,6 @@ export default function SearchWorkStation() {
     }
   }, [userPreferences]);
 
-  // Extrait montrant le gestionnaire d'événements et les boutons modifiés
-  // Gestionnaire pour basculer l'état d'ouverture d'un collapse
   // Cette fonction bascule l'état d'ouverture pour un collapse donné
   const toggleCollapse = (collapseId) => {
     setOpenCollapse(openCollapse === collapseId ? null : collapseId);
@@ -311,56 +310,51 @@ export default function SearchWorkStation() {
           <div>
             <div className="form-container">
               <form onSubmit={handleSubmit}>
-                <div className="row">
-                  <div
-                    style={collapseStyle("selectDetails")}
-                    id="selectDetails"
-                  >
-                    <div className="collapse" id="selectDetails">
-                      <div className="card card-body">
-                        <div className="selectDetails">
-                          <div className="mb-3">
-                            <label>Date</label>
-                            <div className="date-timePeriod">
-                              <div className="datepicker-container">
-                                <span className="datepicker-icon">📅</span>
-                                <DatePicker
-                                  selected={date}
-                                  onChange={(date) => setDate(date)}
-                                  dateFormat="yyyy-MM-dd"
-                                  minDate={minDate}
-                                  maxDate={oneMonthLater}
-                                  filterDate={combinedDateFilter}
-                                  toggleCalendarOnIconClick
-                                  className="form-control"
-                                />
-                              </div>
+                <div className="mb-3">
+                  <label>Date</label>
+                  <div className="date-timePeriod">
+                    <div className="datepicker-container">
+                      <span className="datepicker-icon">📅</span>
+                      <DatePicker
+                        selected={date}
+                        onChange={(date) => setDate(date)}
+                        dateFormat="yyyy-MM-dd"
+                        minDate={minDate}
+                        maxDate={oneMonthLater}
+                        filterDate={combinedDateFilter}
+                        toggleCalendarOnIconClick
+                        className="form-control"
+                      />
+                    </div>
 
-                              <div className="checkbox-container">
-                                <input
-                                  type="checkbox"
-                                  name="morning"
-                                  className="checkbox"
-                                  checked={timePeriod.morning}
-                                  onChange={handleTimePeriodCheckboxChange}
-                                />
-                                <label className="checkbox-label">
-                                  Morning
-                                </label>
+                    <div className="checkbox-container">
+                      <input
+                        type="checkbox"
+                        name="morning"
+                        className="checkbox"
+                        checked={timePeriod.morning}
+                        onChange={handleTimePeriodCheckboxChange}
+                      />
+                      <label className="checkbox-label">Morning</label>
 
-                                <input
-                                  type="checkbox"
-                                  name="afternoon"
-                                  className="checkbox"
-                                  checked={timePeriod.afternoon}
-                                  onChange={handleTimePeriodCheckboxChange}
-                                />
-                                <label className="checkbox-label">
-                                  Afternoon
-                                </label>
-                              </div>
-                            </div>
-
+                      <input
+                        type="checkbox"
+                        name="afternoon"
+                        className="checkbox"
+                        checked={timePeriod.afternoon}
+                        onChange={handleTimePeriodCheckboxChange}
+                      />
+                      <label className="checkbox-label">Afternoon</label>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div
+                      style={collapseStyle("selectDetails")}
+                      id="selectDetails"
+                    >
+                      <div className="collapse" id="selectDetails">
+                        <div className="card card-body">
+                          <div className="selectDetails">
                             <div className="mb-3">
                               <label>Reservation Type</label>
                               <select
@@ -485,54 +479,10 @@ export default function SearchWorkStation() {
                     >
                       <div className="collapse" id="selectFavorite">
                         <div className="card card-body">
-                          <div className="selectFavorite">
-                            <div className="mb-3">
-                              <label>Date</label>
-                              <div className="date-timePeriod">
-                                <div className="datepicker-container">
-                                  <span className="datepicker-icon">📅</span>
-                                  <DatePicker
-                                    selected={date}
-                                    onChange={(date) => setDate(date)}
-                                    dateFormat="yyyy-MM-dd"
-                                    minDate={minDate}
-                                    maxDate={oneMonthLater}
-                                    filterDate={combinedDateFilter}
-                                    toggleCalendarOnIconClick
-                                    className="form-control"
-                                  />
-                                </div>
-
-                                <div className="checkbox-container">
-                                  <input
-                                    type="checkbox"
-                                    name="morning"
-                                    className="checkbox"
-                                    checked={timePeriod.morning}
-                                    onChange={handleTimePeriodCheckboxChange}
-                                  />
-                                  <label className="checkbox-label">
-                                    Morning
-                                  </label>
-
-                                  <input
-                                    type="checkbox"
-                                    name="afternoon"
-                                    className="checkbox"
-                                    checked={timePeriod.afternoon}
-                                    onChange={handleTimePeriodCheckboxChange}
-                                  />
-                                  <label className="checkbox-label">
-                                    Afternoon
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-                            Some placeholder content for the second collapse
-                            component of this multi-collapse example. This panel
-                            is hidden by default but revealed when the user
-                            activates the relevant trigger.
-                          </div>
+                          <SelectFavorite
+                            date={date}
+                            timePeriod={timePeriod}
+                          ></SelectFavorite>
                         </div>
                       </div>
                     </div>
