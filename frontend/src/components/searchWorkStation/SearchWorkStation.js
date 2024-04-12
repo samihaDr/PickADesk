@@ -4,9 +4,7 @@ import { getBookingPreferencesData } from "../../services/GetBookingPreferencesD
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./SearchWorkStation.scss";
-import { useNavigate } from "react-router-dom";
 import { WorkStationContext } from "../../services/WorkStationContext";
-import SelectFavorite from "./SelectFavorite";
 
 export default function SearchWorkStation() {
   const [data, setData] = useState({
@@ -17,11 +15,10 @@ export default function SearchWorkStation() {
     furniture: [],
   });
 
-  const navigate = useNavigate();
   const { workStations, setWorkStations, setSelectedOptions } =
     useContext(WorkStationContext);
   const [isLoading, setLoading] = useState(true);
-  const [openCollapse, setOpenCollapse] = useState(null);
+  // const [openCollapse, setOpenCollapse] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const { userInfo, userPreferences } = useContext(GlobalContext);
   const [isAnyEquipmentChecked, setIsAnyEquipmentChecked] = useState(false);
@@ -82,15 +79,6 @@ export default function SearchWorkStation() {
     }
   }, [userPreferences]);
 
-  // Cette fonction bascule l'état d'ouverture pour un collapse donné
-  const toggleCollapse = (collapseId) => {
-    setOpenCollapse(openCollapse === collapseId ? null : collapseId);
-  };
-
-  // Fonction pour déterminer le style d'affichage basé sur l'état
-  const collapseStyle = (collapseId) => ({
-    display: openCollapse === collapseId ? "block" : "none",
-  });
   const validateFormData = () => {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour aujourd'hui à minuit
@@ -153,7 +141,6 @@ export default function SearchWorkStation() {
         reservationType,
         workArea,
       });
-      navigate("/availableWorkStations");
     } catch (error) {
       console.error("Error submitting form", error);
       setErrorMessage("An error occurred while submitting the form.");
@@ -269,43 +256,6 @@ export default function SearchWorkStation() {
   return (
     <div>
       <div className="main">
-        <h2>Make a reservation</h2>
-        <div className="buttons-container">
-          {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
-          <button
-            className="btn btn-info"
-            data-bs-toggle="collapse"
-            data-bs-target="#selectDetails"
-            role="button"
-            onClick={() => toggleCollapse("selectDetails")}
-            aria-expanded={openCollapse === "selectDetails"}
-            aria-controls="selectDetails"
-          >
-            Select details
-          </button>
-          <button
-            className="btn btn-info"
-            role="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#selectFavorite"
-            onClick={() => toggleCollapse("selectFavorite")}
-            aria-expanded={openCollapse === "selectFavorite"}
-            aria-controls="selectFavorite"
-          >
-            Select favorite
-          </button>
-          <button
-            className="btn btn-info"
-            role="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#selectOnPlan"
-            onClick={() => toggleCollapse("selectOnPlan")}
-            aria-expanded={openCollapse === "selectOnPlan"}
-            aria-controls="selectOnPlan"
-          >
-            Select on plan
-          </button>
-        </div>
         <div className="add-reservation-container">
           <div>
             <div className="form-container">
@@ -347,169 +297,116 @@ export default function SearchWorkStation() {
                       <label className="checkbox-label">Afternoon</label>
                     </div>
                   </div>
-                  <div className="row">
-                    <div
-                      style={collapseStyle("selectDetails")}
-                      id="selectDetails"
-                    >
-                      <div className="collapse" id="selectDetails">
-                        <div className="card card-body">
-                          <div className="selectDetails">
-                            <div className="mb-3">
-                              <label>Reservation Type</label>
-                              <select
-                                name="reservationTypeId"
-                                value={reservationType}
-                                onChange={(e) =>
-                                  setReservationType(e.target.value)
-                                }
-                                className="form-select"
-                              >
-                                <option value="">Any</option>
-                                {data.reservationTypes.map((type) => (
-                                  <option key={type.id} value={type.id}>
-                                    {type.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            <div className="mb-3">
-                              <label>WorkArea Type</label>
-                              <select
-                                value={workArea}
-                                onChange={(e) => setWorkArea(e.target.value)}
-                                className="form-select"
-                                aria-label="Default select example"
-                                name="workAreaId"
-                              >
-                                <option value="">Any</option>
-                                {data.workAreas.map((area) => (
-                                  <option key={area.id} value={area.id}>
-                                    {area.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            <div className="mb-3">
-                              <label>Screen</label>
-                              <select
-                                value={screen}
-                                onChange={(e) => setScreen(e.target.value)}
-                                className="form-select"
-                                aria-label="Default select example"
-                                name="screenId"
-                              >
-                                <option value="">Any</option>
-                                {data.screens.map((screen) => (
-                                  <option key={screen.id} value={screen.id}>
-                                    {screen.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            <div>
-                              <div className="mb-3">
-                                <label>Equipment</label>
-                                <div className="form-check">
-                                  <input
-                                    type="checkbox"
-                                    checked={isAnyEquipmentChecked}
-                                    onChange={handleAnyEquipmentChange}
-                                    className="form-check-input"
-                                  />{" "}
-                                  Any
-                                </div>
-                                {data.equipment.map((equip) => (
-                                  <div key={equip.id} className="form-check">
-                                    <input
-                                      type="checkbox"
-                                      value={equip.id}
-                                      checked={
-                                        !isAnyEquipmentChecked &&
-                                        equipment.includes(equip.id)
-                                      }
-                                      onChange={() =>
-                                        handleEquipmentChange(equip.id)
-                                      }
-                                      className="form-check-input"
-                                    />{" "}
-                                    {equip.name}
-                                  </div>
-                                ))}
-                              </div>
-                              <div className="mb-3">
-                                <label>Furniture</label>
-                                <div className="form-check">
-                                  <input
-                                    type="checkbox"
-                                    checked={isAnyFurnitureChecked}
-                                    onChange={handleAnyFurnitureChange}
-                                    className="form-check-input"
-                                  />{" "}
-                                  Any
-                                </div>
-                                {data.furniture.map((furn) => (
-                                  <div key={furn.id}>
-                                    <input
-                                      type="checkbox"
-                                      value={furn.id}
-                                      checked={
-                                        !isAnyFurnitureChecked &&
-                                        furniture.includes(furn.id)
-                                      }
-                                      onChange={() =>
-                                        handleFurnitureChange(furn.id)
-                                      }
-                                      className="form-check-input"
-                                    />{" "}
-                                    {furn.name}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+
+                  <div className="selectDetails">
+                    <div className="mb-3">
+                      <label>Reservation Type</label>
+                      <select
+                        name="reservationTypeId"
+                        value={reservationType}
+                        onChange={(e) => setReservationType(e.target.value)}
+                        className="form-select"
+                      >
+                        <option value="">Any</option>
+                        {data.reservationTypes.map((type) => (
+                          <option key={type.id} value={type.id}>
+                            {type.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                  </div>
-                  <div className="row">
-                    <div
-                      style={collapseStyle("selectFavorite")}
-                      id="selectFavorite"
-                    >
-                      <div className="collapse" id="selectFavorite">
-                        <div className="card card-body">
-                          <SelectFavorite
-                            date={date}
-                            timePeriod={timePeriod}
-                          ></SelectFavorite>
-                        </div>
-                      </div>
+                    <div className="mb-3">
+                      <label>WorkArea Type</label>
+                      <select
+                        value={workArea}
+                        onChange={(e) => setWorkArea(e.target.value)}
+                        className="form-select"
+                        aria-label="Default select example"
+                        name="workAreaId"
+                      >
+                        <option value="">Any</option>
+                        {data.workAreas.map((area) => (
+                          <option key={area.id} value={area.id}>
+                            {area.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                  </div>
-                  <div className="row">
-                    <div
-                      style={collapseStyle("selectOnPlan")}
-                      id="selectOnPlan"
-                    >
-                      <div className="selectOnPlan">
-                        <div className="collapse" id="selectOnPlan">
-                          <div className="card card-body">
-                            Some placeholder content for the second collapse
-                            component of this multi-collapse example. This panel
-                            is hidden by default but revealed when the user
-                            activates the relevant trigger. Some placeholder
-                            content for the second collapse component of this
-                            multi-collapse example. This panel is hidden by
-                            default but revealed when the user activates the
-                            relevant trigger.
-                          </div>
+                    <div className="mb-3">
+                      <label>Screen</label>
+                      <select
+                        value={screen}
+                        onChange={(e) => setScreen(e.target.value)}
+                        className="form-select"
+                        aria-label="Default select example"
+                        name="screenId"
+                      >
+                        <option value="">Any</option>
+                        {data.screens.map((screen) => (
+                          <option key={screen.id} value={screen.id}>
+                            {screen.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <div className="mb-3">
+                        <label>Equipment</label>
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            checked={isAnyEquipmentChecked}
+                            onChange={handleAnyEquipmentChange}
+                            className="form-check-input"
+                          />{" "}
+                          Any
                         </div>
+                        {data.equipment.map((equip) => (
+                          <div key={equip.id} className="form-check">
+                            <input
+                              type="checkbox"
+                              value={equip.id}
+                              checked={
+                                !isAnyEquipmentChecked &&
+                                equipment.includes(equip.id)
+                              }
+                              onChange={() => handleEquipmentChange(equip.id)}
+                              className="form-check-input"
+                            />{" "}
+                            {equip.name}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mb-3">
+                        <label>Furniture</label>
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            checked={isAnyFurnitureChecked}
+                            onChange={handleAnyFurnitureChange}
+                            className="form-check-input"
+                          />{" "}
+                          Any
+                        </div>
+                        {data.furniture.map((furn) => (
+                          <div key={furn.id}>
+                            <input
+                              type="checkbox"
+                              value={furn.id}
+                              checked={
+                                !isAnyFurnitureChecked &&
+                                furniture.includes(furn.id)
+                              }
+                              onChange={() => handleFurnitureChange(furn.id)}
+                              className="form-check-input"
+                            />{" "}
+                            {furn.name}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
                 </div>
-
                 <div className="container-submit">
                   <button type="submit" className="btn btn-primary">
                     Search
