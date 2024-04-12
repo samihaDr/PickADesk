@@ -22,6 +22,7 @@ import axios from "axios";
 import ReservationDetails from "./components/reservation/ReservationDetails";
 import MyReservations from "./components/myReservations/MyReservations";
 import FindColleague from "./components/findColleague/FindColleague";
+import MakeAReservation from "./components/makeAReservation/MakeAReservation";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 const UserConnected = () => {
@@ -71,6 +72,7 @@ export default function App() {
           <Route path="myReservations" element={<MyReservations />} />
           <Route path="loginPage" element={<LoginPage />} />
           <Route path="findColleague" element={<FindColleague />} />
+          <Route path="makeAReservation" element={<MakeAReservation />} />
           <Route path="*" element={<LoginPage />} />
           <Route
             path="availableWorkStations"
