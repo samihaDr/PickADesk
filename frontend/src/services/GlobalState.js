@@ -10,6 +10,7 @@ const initialState = {
   weeklyQuota: null,
   weeklyRemaining: 2.5,
   reservations: [],
+  favorites: [],
   isAuthenticated: !!sessionStorage.getItem(AUTH_TOKEN_KEY),
 };
 
@@ -49,6 +50,11 @@ const globalReducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: !!action.payload,
+      };
+    case "SET_FAVORITES":
+      return {
+        ...state,
+        favorites: action.payload,
       };
     case "SET_RESERVATIONS":
       return {
@@ -109,6 +115,9 @@ export const GlobalProvider = ({ children }) => {
     dispatch({ type: "SET_RESERVATIONS", payload: reservations });
   };
 
+  const setFavorites = (favorites) => {
+    dispatch({ type: "SET_FAVORITES", payload: favorites });
+  };
   const deleteReservation = (reservationId) => {
     dispatch({ type: "DELETE_RESERVATION", payload: reservationId });
   };
@@ -142,6 +151,7 @@ export const GlobalProvider = ({ children }) => {
         setUserPreferences,
         setIsAuthenticated,
         setReservations,
+        setFavorites,
         deleteReservation,
       }}
     >
