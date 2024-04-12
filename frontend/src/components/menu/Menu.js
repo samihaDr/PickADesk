@@ -28,7 +28,7 @@ export default function Menu() {
           My reservations
         </Link>
         <Link
-          to="/searchWorkStation"
+          to="/makeAReservation"
           className="nav-link active"
           aria-current="page"
         >
