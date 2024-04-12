@@ -3,8 +3,7 @@ import { WorkStationContext } from "../../services/WorkStationContext";
 import { GlobalContext } from "../../services/GlobalState";
 import { getBookingPreferencesData } from "../../services/GetBookingPreferencesData";
 import "./AvailableWorkStations.scss";
-import { useNavigate } from "react-router-dom";
-import back from "../../assets/images/back.png";
+import { Link } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import { bookWorkStation } from "../../services/BookWorkStation";
@@ -13,11 +12,10 @@ import { AUTH_TOKEN_KEY } from "../../App";
 import useCalculateRemaining from "../hooks/useCalculateRemaining";
 
 export default function AvailableWorkStations() {
-  const navigate = useNavigate();
   const { userInfo } = useContext(GlobalContext);
   const { workStations, selectedOptions, setWorkStations } =
     useContext(WorkStationContext);
-  const [isLoading, setLoading] = useState(true);
+  const [setLoading] = useState(true);
   const [data, setData] = useState({
     zones: [],
     reservationTypes: [],
@@ -29,7 +27,12 @@ export default function AvailableWorkStations() {
   const [showModal, setShowModal] = useState(false);
   const [selectedStationDetails, setSelectedStationDetails] = useState(null);
   const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
+  const [favorites, setFavorites] = useState([]);
   const calculateRemaining = useCalculateRemaining();
+
+  useEffect(() => {
+    console.log("Selected Options:", selectedOptions);
+  }, [selectedOptions]);
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -41,8 +44,19 @@ export default function AvailableWorkStations() {
       }
       setLoading(false);
     }
+
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const loadedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(loadedFavorites);
+  }, []);
+
+  // Ajout d'une fonction pour vérifier si un poste est favori
+  const isFavorite = (stationId) => {
+    return favorites.some((fav) => fav.id === stationId);
+  };
 
   if (!workStations || !selectedOptions) {
     return <p>Loading data...</p>;
@@ -55,9 +69,6 @@ export default function AvailableWorkStations() {
     return null;
   }
 
-  const handleBackClick = () => {
-    navigate("/searchWorkStation");
-  };
   // Fonction pour obtenir le nom correspondant à un ID donné dans une catégorie spécifique
   const getNameById = (category, id) => {
     const foundItem = data[category].find((item) => item.id === id);
@@ -68,19 +79,21 @@ export default function AvailableWorkStations() {
     "fr-FR",
   );
   const getTimePeriod = () => {
-    const { morning, afternoon } = selectedOptions.timePeriod;
+    if (!selectedOptions.timePeriod) {
+      return "any";
+    }
 
+    const { morning, afternoon } = selectedOptions.timePeriod;
     if (morning && afternoon) {
       return "morning and afternoon";
-    }
-    if (morning) {
+    } else if (morning) {
       return "morning";
-    }
-    if (afternoon) {
+    } else if (afternoon) {
       return "afternoon";
     }
     return "any";
   };
+
   const timePeriodString = getTimePeriod();
   const checkIfReservationCanBeMade = async (stationId, selectedOptions) => {
     const { morning, afternoon } = selectedOptions.timePeriod;
@@ -140,7 +153,7 @@ export default function AvailableWorkStations() {
       // Appel à bookWorkStation avec les détails nécessaires
       await bookWorkStation(selectedStationDetails.id, selectedOptions);
       console.log("Reservation added successfully");
-      calculateRemaining(userInfo.id);
+      await calculateRemaining(userInfo.id);
 
       // Mettre à jour la liste des postes de travail disponibles
       setWorkStations({
@@ -151,7 +164,6 @@ export default function AvailableWorkStations() {
       });
 
       setShowModal(false); // Fermer la modal après la confirmation
-      navigate("/myReservations");
     } catch (error) {
       console.error("Failed to confirm reservation:", error);
     }
@@ -160,6 +172,21 @@ export default function AvailableWorkStations() {
   return (
     <>
       <div className="main">
+        <div className="buttons-container">
+          <ul className="nav nav-tabs">
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page" to="#">
+                List
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to="#">
+                Select on plan
+              </Link>
+            </li>
+          </ul>
+        </div>
         <div className="search-resume">
           <div className="selected-options-container">
             <div>
@@ -177,9 +204,6 @@ export default function AvailableWorkStations() {
               for this date: <span className="bold-text">{formattedDate}</span>,
               in <span className="bold-text"> {timePeriodString}</span>.
             </div>
-            <button onClick={handleBackClick} className="back-button">
-              <img src={back} alt="back" width="30" height="30" />
-            </button>
           </div>
         </div>
         <h2 style={{ color: "#1f4e5f" }}>Pick a desk</h2>
@@ -197,7 +221,15 @@ export default function AvailableWorkStations() {
               <tbody>
                 {workStationList.map((station) => (
                   <tr key={station.id}>
-                    <td>{station.workPlace}</td>
+                    <td>
+                      {" "}
+                      {station.workPlace}
+                      {isFavorite(station.id) ? (
+                        <span style={{ color: "green", fontSize: "24px" }}>
+                          ★
+                        </span>
+                      ) : null}
+                    </td>
                     <td>{station.zone.name}</td>
                     <td>{station.workArea.name}</td>
                     <td>
@@ -220,6 +252,7 @@ export default function AvailableWorkStations() {
           )}
         </div>
       </div>
+
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Reservation Details</Modal.Title>
