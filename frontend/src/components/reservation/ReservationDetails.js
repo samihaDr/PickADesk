@@ -14,7 +14,7 @@ export default function ReservationDetails({
   onHide,
   refreshEvents,
 }) {
-  const { userInfo } = useContext(GlobalContext);
+  const { userInfo, setFavorites } = useContext(GlobalContext);
   const deleteReservation = useDeleteReservation(); // Utilisation du hook
 
   if (!userInfo) {
@@ -52,7 +52,6 @@ export default function ReservationDetails({
   };
 
   // Fonction pour ajouter le poste aux favoris
-
   function addToFavorites() {
     const currentWorkStation = {
       id: event?.workStation?.id,
@@ -81,6 +80,7 @@ export default function ReservationDetails({
       favorites.push(currentWorkStation);
 
       localStorage.setItem("favorites", JSON.stringify(favorites));
+      setFavorites(favorites);
       alert("Workstation added to favorites.");
     } else {
       alert("This workstation is already in your favorites.");
