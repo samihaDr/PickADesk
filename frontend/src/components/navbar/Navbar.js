@@ -19,18 +19,16 @@ export default function Navbar() {
   } = useContext(GlobalContext);
 
   const [favorites, setFavorites] = useState([]);
-
+  const calculateRemaining = useCallback(useCalculateRemaining(), []);
   useEffect(() => {
     // Charger les favoris du localStorage au montage du composant
     const loadedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
     setFavorites(loadedFavorites);
   }, []);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const calculateRemaining = useCallback(useCalculateRemaining(), []);
 
   useEffect(() => {
     if (isAuthenticated && userInfo?.id) {
-      calculateRemaining(userInfo.id).then((r) => {});
+      calculateRemaining(userInfo.id);
     }
   }, [calculateRemaining, isAuthenticated, userInfo?.id]);
 
