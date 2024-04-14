@@ -18,7 +18,6 @@ export default function SearchWorkStation() {
   const { workStations, setWorkStations, setSelectedOptions } =
     useContext(WorkStationContext);
   const [isLoading, setLoading] = useState(true);
-  // const [openCollapse, setOpenCollapse] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const { userInfo, userPreferences } = useContext(GlobalContext);
   const [isAnyEquipmentChecked, setIsAnyEquipmentChecked] = useState(false);
