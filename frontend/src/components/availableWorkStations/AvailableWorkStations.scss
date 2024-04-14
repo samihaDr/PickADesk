@@ -15,6 +15,27 @@ h2 {
   margin-bottom: 15px;
 }
 
+//.centered-icon {
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//  height: 100px;
+//  width: 100px;
+//  border: 1px solid #ccc;
+//  border-radius: 50%;
+//  //background-color: #f8f9fa;
+//}
+
+.bi {
+  margin-right: 8px; /* Ajoute un peu d'espace à droite de l'icône */
+}
+
+.bi-check-circle-fill {
+  margin-left: 200px;
+  color: green; /* Définit la couleur de l'icône de confirmation à vert */
+  font-size: 5rem; /* Ajuste la taille de l'icône */
+}
+
 .selected-options-container {
   margin-top: 10vh;
   background: white;

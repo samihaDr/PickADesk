@@ -15,7 +15,7 @@ export default function AvailableWorkStations() {
   const { userInfo } = useContext(GlobalContext);
   const { workStations, selectedOptions, setWorkStations } =
     useContext(WorkStationContext);
-  const [setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState({
     zones: [],
     reservationTypes: [],
@@ -33,6 +33,7 @@ export default function AvailableWorkStations() {
   useEffect(() => {
     console.log("Selected Options:", selectedOptions);
   }, [selectedOptions]);
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -95,6 +96,7 @@ export default function AvailableWorkStations() {
   };
 
   const timePeriodString = getTimePeriod();
+
   const checkIfReservationCanBeMade = async (stationId, selectedOptions) => {
     const { morning, afternoon } = selectedOptions.timePeriod;
     const formattedDate = format(new Date(selectedOptions.date), "yyyy-MM-dd");
@@ -118,56 +120,89 @@ export default function AvailableWorkStations() {
   };
 
   const handleReservationClick = async (stationId) => {
+    setLoading(true); // Activer l'indicateur de chargement
+
     try {
       const canBook = await checkIfReservationCanBeMade(
         stationId,
         selectedOptions,
       );
-      if (canBook) {
-        alert("A reservation for this user and this date already exists.");
+      console.log("Can book:", canBook);
+      if (!canBook) {
+        const reservationResult = await addReservation(
+          stationId,
+          selectedOptions,
+        );
+        console.log("Reservation result:", reservationResult);
+        if (reservationResult.success) {
+          await calculateRemaining(userInfo.id);
+          console.log("Remaining recalculated for user:", userInfo.id);
+
+          const details = await fetchWorkStationDetails(stationId);
+          if (details) {
+            setSelectedStationDetails(details);
+            setShowModal(true);
+          } else {
+            alert("Failed to fetch details.");
+          }
+        } else {
+          alert(reservationResult.message); // Utiliser le message d'erreur du service
+        }
       } else {
-        fetchWorkStationDetails(stationId);
+        alert("A reservation already exists.");
+        alert("A reservation already exists for the selected period.");
       }
     } catch (error) {
-      console.error(
-        "Erreur lors de la vérification de la réservation: ",
-        error,
-      );
+      console.error("Error in reservation click process:", error);
+      alert("An error occurred during the booking process.");
     }
+
+    setLoading(false); // Désactiver l'indicateur de chargement
   };
 
   const fetchWorkStationDetails = async (stationId) => {
     try {
       const response = await axios.get(`/api/workStations/${stationId}`);
-      setSelectedStationDetails(response.data);
-      console.log("SelectedStationDetails : ", response.data);
-      setShowModal(true);
+      console.log("Workstation details fetched:", response.data);
+      return response.data; // Return the data so it can be set in state
     } catch (error) {
       console.error("Error fetching workstation details:", error);
+      return null; // Return null if there was an error
     }
   };
 
-  const handleConfirmReservation = async () => {
-    if (!selectedStationDetails) return;
+  const addReservation = async (stationId, options) => {
     try {
-      // Appel à bookWorkStation avec les détails nécessaires
-      await bookWorkStation(selectedStationDetails.id, selectedOptions);
-      console.log("Reservation added successfully");
-      await calculateRemaining(userInfo.id);
-
-      // Mettre à jour la liste des postes de travail disponibles
-      setWorkStations({
-        ...workStations,
-        content: workStations.content.filter(
-          (station) => station.id !== selectedStationDetails.id,
-        ),
-      });
-
-      setShowModal(false); // Fermer la modal après la confirmation
+      const result = await bookWorkStation(stationId, options);
+      if (result && result.success) {
+        // await calculateRemaining(userInfo.id);
+        // console.log("Remaining ");
+        // Mettre à jour la liste des postes de travail disponibles
+        setWorkStations({
+          ...workStations,
+          content: workStations.content.filter(
+            (station) => station.id !== stationId,
+          ),
+        });
+        return { success: true }; // Indicate success
+      } else {
+        return {
+          success: false,
+          message: (result && result.message) || "Failed to add reservation",
+        };
+      }
     } catch (error) {
-      console.error("Failed to confirm reservation:", error);
+      console.error("Failed to add reservation:", error);
+      return {
+        success: false,
+        message: "Booking process encountered an error",
+      };
     }
   };
+
+  function addToCalendar() {
+    console.log("Add to calendar earlier !!");
+  }
 
   return (
     <>
@@ -255,16 +290,37 @@ export default function AvailableWorkStations() {
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Reservation Details</Modal.Title>
+          <Modal.Title>Reservation Confirmed</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedStationDetails && (
+          {selectedStationDetails ? (
             <div>
-              <p>WorkPlace: {selectedStationDetails.workPlace}</p>
-              <p>Zone: {selectedStationDetails.zone.name}</p>
-              <p>AreaWork Type: {selectedStationDetails.workArea.name}</p>
-              <p>Date: {formattedDate}</p>
+              <div className="centered-icon">
+                <i
+                  className="bi bi-check-circle-fill"
+                  style={{ color: "green", fontSize: "4,5rem" }}
+                ></i>
+              </div>
+              <div>
+                <p>
+                  <i className="bi bi-calendar3"></i> Date: {formattedDate}
+                </p>
+                <p>
+                  <i className="bi bi-building"></i> WorkPlace:{" "}
+                  {selectedStationDetails.workPlace}
+                </p>
+                <p>
+                  <i className="bi bi-geo-alt"></i> Zone:{" "}
+                  {selectedStationDetails.zone.name}
+                </p>
+                <p>
+                  <i className="bi bi-layout-text-sidebar-reverse"></i> AreaWork
+                  Type: {selectedStationDetails.workArea.name}
+                </p>
+              </div>
             </div>
+          ) : (
+            <p>Failed to load reservation details.</p>
           )}
         </Modal.Body>
         <Modal.Footer>
@@ -272,9 +328,9 @@ export default function AvailableWorkStations() {
             <Button
               variant="primary"
               className="flex-grow-1 me-5"
-              onClick={handleConfirmReservation}
+              onClick={addToCalendar}
             >
-              Confirm Reservation
+              Add to Calendar
             </Button>
             <Button
               variant="secondary"
