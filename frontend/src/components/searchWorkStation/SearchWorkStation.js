@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./SearchWorkStation.scss";
 import { WorkStationContext } from "../../services/WorkStationContext";
 
-export default function SearchWorkStation() {
+export default function SearchWorkStation({ onFormSend }) {
   const [data, setData] = useState({
     reservationTypes: [],
     workAreas: [],
@@ -140,6 +140,7 @@ export default function SearchWorkStation() {
         reservationType,
         workArea,
       });
+      onFormSend(); // Déclencher la mise à jour d'état dans le parent
     } catch (error) {
       console.error("Error submitting form", error);
       setErrorMessage("An error occurred while submitting the form.");
@@ -255,6 +256,7 @@ export default function SearchWorkStation() {
   return (
     <div>
       <div className="main">
+        <h2>Make your choices</h2>
         <div className="add-reservation-container">
           <div>
             <div className="form-container">
@@ -407,7 +409,7 @@ export default function SearchWorkStation() {
                   </div>
                 </div>
                 <div className="container-submit">
-                  <button type="submit" className="btn btn-primary">
+                  <button onClick={handleSubmit} className="btn btn-primary">
                     Search
                   </button>
                 </div>
