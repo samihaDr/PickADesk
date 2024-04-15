@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import { AUTH_TOKEN_KEY } from "../../App";
 import useCalculateRemaining from "../hooks/useCalculateRemaining";
 
-export default function AvailableWorkStations() {
+export default function AvailableWorkStations({ formSent }) {
   const { userInfo } = useContext(GlobalContext);
   const { workStations, selectedOptions, setWorkStations } =
     useContext(WorkStationContext);
@@ -149,7 +149,6 @@ export default function AvailableWorkStations() {
           alert(reservationResult.message); // Utiliser le message d'erreur du service
         }
       } else {
-        alert("A reservation already exists.");
         alert("A reservation already exists for the selected period.");
       }
     } catch (error) {
@@ -175,8 +174,6 @@ export default function AvailableWorkStations() {
     try {
       const result = await bookWorkStation(stationId, options);
       if (result && result.success) {
-        // await calculateRemaining(userInfo.id);
-        // console.log("Remaining ");
         // Mettre à jour la liste des postes de travail disponibles
         setWorkStations({
           ...workStations,
@@ -202,26 +199,29 @@ export default function AvailableWorkStations() {
 
   function addToCalendar() {
     console.log("Add to calendar earlier !!");
+    window.location.reload();
   }
 
+  function closeModal() {
+    setShowModal(false);
+    window.location.reload();
+  }
+  if (!formSent) {
+    return (
+      <div className="loading-container">
+        <i
+          className="bi bi-hourglass-split"
+          style={{ fontSize: "55px", color: "gray" }}
+        ></i>
+        <p>Waiting for search...</p>
+      </div>
+    );
+  }
   return (
     <>
       <div className="main">
-        <div className="buttons-container">
-          <ul className="nav nav-tabs">
-            <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="#">
-                List
-              </Link>
-            </li>
+        <h2>Pick a desk</h2>
 
-            <li className="nav-item">
-              <Link className="nav-link" to="#">
-                Select on plan
-              </Link>
-            </li>
-          </ul>
-        </div>
         <div className="search-resume">
           <div className="selected-options-container">
             <div>
@@ -241,7 +241,21 @@ export default function AvailableWorkStations() {
             </div>
           </div>
         </div>
-        <h2 style={{ color: "#1f4e5f" }}>Pick a desk</h2>
+        <div className="center-container">
+          <ul className="nav nav-tabs">
+            <li className="nav-item">
+              <Link className="nav-link active" aria-current="page" to="#">
+                List
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to="#">
+                Select on plan
+              </Link>
+            </li>
+          </ul>
+        </div>
         <div className="search-result">
           {workStationList.length > 0 ? (
             <table className="table">
@@ -335,7 +349,7 @@ export default function AvailableWorkStations() {
             <Button
               variant="secondary"
               className="flex-grow-1 me-2"
-              onClick={() => setShowModal(false)}
+              onClick={closeModal}
             >
               Close
             </Button>
