@@ -42,14 +42,20 @@ public class UserController {
 
     @GetMapping("/userRole")
     public ResponseEntity<Boolean> isAdmin() {
-        boolean isAdmin = userService.isAdmin(); // Utilisation sans Principal directement
-        return ResponseEntity.ok(isAdmin); // Retourne le rôle de l'utilisateur
+        boolean isManager = userService.isManager(); // Utilisation sans Principal directement
+        return ResponseEntity.ok(isManager); // Retourne le rôle de l'utilisateur
     }
 
     @GetMapping("findColleague/{employeeId}")
     public ResponseEntity<UserDTO> findColleague( @PathVariable Long employeeId) {
         UserDTO userDto = userService.getEmployeeInfo(employeeId);
         return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("getTeamList/{teamId}")
+    public ResponseEntity<List<UserDTO>> getTeamList(@PathVariable Integer teamId) {
+        List<UserDTO> teamList = userService.getTeamList(teamId);
+        return ResponseEntity.ok(teamList); // Retourne directement la liste des UserDTO
     }
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {

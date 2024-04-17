@@ -28,11 +28,11 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public Boolean isAdmin() {
+    public Boolean isManager() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email)
                 .map(User::getRole)
-                .map(Role.ADMIN::equals)
+                .map(Role.MANAGER::equals)
                 .orElse(false);
     }
 
@@ -70,5 +70,15 @@ public class UserService {
         // Mettez à jour le mot de passe
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user); // Sauvegardez le nouveau mot de passe
+    }
+
+    public List<UserDTO> getTeamList(Integer teamId) {
+        List<User> teamList = userRepository.findUsersByTeamId(teamId);
+        if (teamList.isEmpty()) {
+            throw new IllegalArgumentException("Aucun utilisateur dans la liste");
+        }
+        return teamList.stream()
+                .map(UserDTO::fromUser) // Convertir chaque User en UserDTO
+                .collect(Collectors.toList());
     }
 }
