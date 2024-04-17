@@ -24,8 +24,9 @@ import ReservationDetails from "./components/reservation/ReservationDetails";
 import MyReservations from "./components/myReservations/MyReservations";
 import FindColleague from "./components/findColleague/FindColleague";
 import MakeAReservation from "./components/makeAReservation/MakeAReservation";
-
+import OfficeMap from "./components/officeMap/OfficeMap";
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
+
 const UserConnected = () => {
   const history = useNavigate();
   const { isAuthenticated, userInfo, setUserInfo } = useContext(GlobalContext);
@@ -74,6 +75,7 @@ export default function App() {
           <Route path="loginPage" element={<LoginPage />} />
           <Route path="findColleague" element={<FindColleague />} />
           <Route path="makeAReservation" element={<MakeAReservation />} />
+          <Route path="officeMap" element={<OfficeMap />} />
           <Route path="*" element={<LoginPage />} />
           <Route
             path="availableWorkStations"

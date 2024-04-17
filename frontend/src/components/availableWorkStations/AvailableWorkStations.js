@@ -250,7 +250,7 @@ export default function AvailableWorkStations({ formSent }) {
             </li>
 
             <li className="nav-item">
-              <Link className="nav-link" to="#">
+              <Link className="nav-link" to="/officeMap">
                 Select on plan
               </Link>
             </li>
