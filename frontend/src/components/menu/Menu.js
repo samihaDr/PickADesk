@@ -14,9 +14,8 @@ export default function Menu() {
   return (
     <div className="fixed-menu">
       <nav className="nav flex-column">
-        <span>Your space</span>
+        <h5>My space</h5>
         <br />
-
         <Link to="/dashboard" className="nav-link active" aria-current="page">
           Dashboard
         </Link>
@@ -40,6 +39,15 @@ export default function Menu() {
           aria-current="page"
         >
           Find colleague
+        </Link>
+        <br />
+        <h5>My team</h5>
+        <Link
+          to="/teamSettings"
+          className="nav-link active"
+          aria-current="page"
+        >
+          Team settings
         </Link>
       </nav>
     </div>
