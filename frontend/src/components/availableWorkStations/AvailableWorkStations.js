@@ -30,9 +30,6 @@ export default function AvailableWorkStations({ formSent }) {
   const [favorites, setFavorites] = useState([]);
   const calculateRemaining = useCalculateRemaining();
 
-  useEffect(() => {
-    console.log("Selected Options:", selectedOptions);
-  }, [selectedOptions]);
 
   useEffect(() => {
     async function fetchData() {
@@ -196,7 +193,17 @@ export default function AvailableWorkStations({ formSent }) {
       };
     }
   };
-
+  // const handleNextPage = () => {
+  //   if (currentPage < totalPages - 1) {
+  //     setCurrentPage(currentPage + 1);
+  //   }
+  // };
+  //
+  // const handlePreviousPage = () => {
+  //   if (currentPage > 0) {
+  //     setCurrentPage(currentPage - 1);
+  //   }
+  // };
   function addToCalendar() {
     console.log("Add to calendar earlier !!");
     window.location.reload();
@@ -299,6 +306,11 @@ export default function AvailableWorkStations({ formSent }) {
               <strong>No workstations available. </strong>
             </div>
           )}
+          {/*<div>*/}
+          {/*  <button onClick={onPreviousPage} disabled={currentPage === 0}>Previous</button>*/}
+          {/*  <span> Page {currentPage + 1} of {totalPages} </span>*/}
+          {/*  <button onClick={onNextPage} disabled={currentPage >= totalPages - 1}>Next</button>*/}
+          {/*</div>*/}
         </div>
       </div>
 

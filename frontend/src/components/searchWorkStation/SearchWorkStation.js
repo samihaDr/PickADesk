@@ -51,19 +51,22 @@ export default function SearchWorkStation({ onFormSend }) {
   const [screen, setScreen] = useState("");
   const [equipment, setEquipment] = useState([]);
   const [furniture, setFurniture] = useState([]);
+  // const [currentPage, setCurrentPage] = useState(0);
+  // const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
+    const fetchData = async () => {
       try {
+        setLoading(true);
         const bookingPreferencesData = await getBookingPreferencesData();
         setData(bookingPreferencesData);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching booking preferences:", error);
+        setErrorMessage("Failed to load data.");
+        setLoading(false);
       }
-      setLoading(false);
-    }
-
+    };
     fetchData();
   }, []);
 
@@ -191,12 +194,17 @@ export default function SearchWorkStation({ onFormSend }) {
       }
 
       return await response.json();
+      // setTotalPages(data.totalPages);
+
     } catch (error) {
       console.error("Error fetching data", error);
       throw error;
     }
   };
-
+  // const handlePageChange = (newPage) => {
+  //   setCurrentPage(newPage);
+  //   handleSubmit();
+  // };
   const handleTimePeriodCheckboxChange = (e) => {
     setTimePeriod({
       ...timePeriod,
@@ -239,6 +247,7 @@ export default function SearchWorkStation({ onFormSend }) {
         : [...prev, itemId],
     );
   };
+
 
   if (!userInfo) {
     return null;
@@ -419,6 +428,13 @@ export default function SearchWorkStation({ onFormSend }) {
                   </div>
                 )}
               </form>
+              <div>
+              {/*  {Array.from({ length: totalPages }, (_, index) => (*/}
+              {/*      <button key={index} onClick={() => handlePageChange(index)}>*/}
+              {/*        {index + 1}*/}
+              {/*      </button>*/}
+              {/*  ))}*/}
+              </div>
             </div>
           </div>
         </div>
