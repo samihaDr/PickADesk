@@ -55,7 +55,7 @@ public class UserController {
     @GetMapping("getTeamList/{teamId}")
     public ResponseEntity<List<UserDTO>> getTeamList(@PathVariable Integer teamId) {
         List<UserDTO> teamList = userService.getTeamList(teamId);
-        return ResponseEntity.ok(teamList); // Retourne directement la liste des UserDTO
+        return ResponseEntity.ok(teamList);
     }
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
