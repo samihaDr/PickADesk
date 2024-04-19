@@ -1,0 +1,74 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin-left: 200px;
+  width: calc(100% - 200px);
+
+  .result {
+    margin-top: 20px;
+    margin-left: 150px;
+    margin-right: 150px;
+    width: 70%;
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th, td {
+        text-align: left;
+        padding: 8px;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+
+  .progress-bars {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    div {
+      width: 90%;  // Augmentation de la largeur des barres de progression
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+
+      label {
+        font-size: large;
+        margin-right: 10px; // Espace entre le label et la barre de progression
+        width: 10%; // Fixe la largeur des labels pour un alignement uniforme
+      }
+
+      .progress {
+        background-color: #cecbcb;
+        border-radius: 5px;
+        height: 40px;
+        flex-grow: 1; // Permet à la barre de progresser de prendre tout l'espace disponible
+
+        .progress-bar {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: bold;
+          text-align: center;
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}

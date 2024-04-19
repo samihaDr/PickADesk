@@ -25,6 +25,8 @@ import MyReservations from "./components/myReservations/MyReservations";
 import FindColleague from "./components/findColleague/FindColleague";
 import MakeAReservation from "./components/makeAReservation/MakeAReservation";
 import OfficeMap from "./components/officeMap/OfficeMap";
+import TeamSettings from "./components/myTeam/TeamSettings";
+
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 
 const UserConnected = () => {
@@ -76,6 +78,7 @@ export default function App() {
           <Route path="findColleague" element={<FindColleague />} />
           <Route path="makeAReservation" element={<MakeAReservation />} />
           <Route path="officeMap" element={<OfficeMap />} />
+          <Route path="teamSettings" element={<TeamSettings />} />
           <Route path="*" element={<LoginPage />} />
           <Route
             path="availableWorkStations"
