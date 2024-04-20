@@ -82,7 +82,7 @@ export const GlobalProvider = ({ children }) => {
     dispatch({ type: "SET_USER_CONNECTED", payload: user });
   };
   const setUserInfo = (user) => {
-    sessionStorage.setItem("userInfo", JSON.stringify(user)); // Persister l'utilisateur connecté dans localStorage
+    sessionStorage.setItem("userInfo", JSON.stringify(user)); // Persister l'utilisateur connecté dans sessionStorage
     dispatch({ type: "SET_USER_INFO", payload: user });
   };
   const setUserPreferences = (userPreferences) => {
