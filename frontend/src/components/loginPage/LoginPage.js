@@ -87,6 +87,7 @@ export default function LoginPage() {
         firstname: userData.firstname,
         role: userData.role,
         teamId: userData.teamId,
+        workSchedule: userData.workSchedule,
         locked: userData.locked,
         enabled: userData.enabled,
       };
