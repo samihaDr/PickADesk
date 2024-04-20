@@ -6,7 +6,7 @@
   margin-left: 200px;
   width: calc(100% - 200px);
 
-  .result {
+  .result , .stats{
     margin-top: 20px;
     margin-left: 150px;
     margin-right: 150px;
@@ -16,6 +16,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
+      margin-bottom: 20px;
 
       th, td {
         text-align: left;
@@ -41,7 +42,7 @@
     align-items: center;
 
     div {
-      width: 90%;  // Augmentation de la largeur des barres de progression
+      width: 60%;  // Augmentation de la largeur des barres de progression
       display: flex;
       align-items: center;
       margin: 10px 0;

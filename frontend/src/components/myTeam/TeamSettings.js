@@ -4,21 +4,25 @@ import axios from "axios";
 import { AUTH_TOKEN_KEY } from "../../App";
 import "./TeamSettings.scss"
 export default function TeamSettings() {
-  const { userInfo } = useContext(GlobalContext);
+  const { userInfo, weeklyRemaining, weeklyQuota,  } = useContext(GlobalContext);
   const [teamList, setTeamList] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [teamId, setTeamId] = useState("");
   const [shouldUpdateStatuses, setShouldUpdateStatuses] = useState(false);
+
   const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
 
   useEffect(() => {
-    if (userInfo && userInfo.teamId !== undefined) {
+    if (userInfo) {
       setTeamId(userInfo.teamId);
-      console.log("TeamID : ", teamId);
-      fetchTeamList();
     }
   }, [userInfo]);
+
+  useEffect(() => {
+    console.log("TeamID Updated: ", teamId);
+    fetchTeamList();
+  }, [teamId]);
 
   useEffect(() => {
     const fetchStatuses = async () => {
@@ -103,6 +107,20 @@ export default function TeamSettings() {
   const teleworkingCount = teamList.filter(member => member.workStatus === 'Teleworking').length;
   const inOfficePercent = ((inOfficeCount / totalCount) * 100).toFixed(0);
   const teleworkingPercent = ((teleworkingCount / totalCount) * 100).toFixed(0);
+
+  //Calcul des stats de l'utilisateur connecté
+
+  const teleworkingDays = weeklyQuota - weeklyRemaining;
+  const daysInOffice = getDaysPerWeek(userInfo.workSchedule) - teleworkingDays;
+  function getDaysPerWeek(schedule) {
+    const scheduleDays = {
+      "FULL_TIME": 5,
+      "HALF_TIME": 2.5,
+      "FOUR_FIFTHS": 4
+    };
+    return scheduleDays[schedule] || 0; // Renvoie 0 si la valeur n'est pas trouvée, ce qui pourrait indiquer une erreur de données
+  }
+
   return (
       <div className="main">
         <h2>Team static</h2>
@@ -111,18 +129,16 @@ export default function TeamSettings() {
             <label><strong>In Office </strong></label>
 
             <div className="progress">
-              <div className="progress-bar" role="progressbar" style={{ width: `${inOfficePercent}%`, backgroundColor: '#007bff' }} aria-valuenow="{inOfficePercent}" aria-valuemin="0" aria-valuemax="100">{inOfficePercent}%</div>
+              <div className="progress-bar" role="progressbar" style={{ width: `${inOfficePercent}%`, backgroundColor: '#007bff' }}  aria-valuemin="0" aria-valuemax="100">{inOfficePercent}%</div>
             </div>
           </div>
           <div>
             <label><strong>Teleworking</strong> </label>
             <div className="progress">
-              <div className="progress-bar" role="progressbar" style={{ width: `${teleworkingPercent}%`, backgroundColor: '#28a745' }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{teleworkingPercent}%</div>
+              <div className="progress-bar" role="progressbar" style={{ width: `${teleworkingPercent}%`, backgroundColor: '#28a745' }}  aria-valuemin="0" aria-valuemax="100">{teleworkingPercent}%</div>
             </div>
           </div>
         </div>
-
-
 
         <h2>My team</h2>
         {isLoading ? (
@@ -156,7 +172,37 @@ export default function TeamSettings() {
             </div>
         )}
 
-        {/*<h2>My static</h2>*/}
+        <h2>My static</h2>
+        {isLoading ? (
+            <p>Loading...</p>
+        ) : error ? (
+            <p>{error}</p>
+        ) : (
+            <div className="stats">
+              <table>
+                <thead>
+                <tr>
+                  <th>Firstname</th>
+                  <th>Lastname</th>
+                  <th>Days Worked</th>
+                  <th>Days teleworking</th>
+                  <th>Days in Office</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                      <td>{userInfo.firstname}</td>
+                      <td>{userInfo.lastname}</td>
+                      <td>{getDaysPerWeek(userInfo.workSchedule)} days</td>
+                      <td>{teleworkingDays}</td>
+                      <td>{daysInOffice}</td>
+                    </tr>
+
+                </tbody>
+              </table>
+            </div>
+        )}
       </div>
   );
 }
