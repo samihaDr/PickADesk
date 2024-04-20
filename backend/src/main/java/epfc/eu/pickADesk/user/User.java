@@ -51,6 +51,9 @@ public class User implements UserDetails {
     @NotNull(message = "Team ID is required")
     private Integer teamId;
 
+    @Enumerated(EnumType.STRING)
+    private WorkSchedule workSchedule;
+
     private Boolean locked = false;
     private Boolean enabled = false;
 

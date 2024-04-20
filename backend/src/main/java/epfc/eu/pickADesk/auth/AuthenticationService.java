@@ -8,6 +8,7 @@ import epfc.eu.pickADesk.token.TokenType;
 import epfc.eu.pickADesk.user.Role;
 import epfc.eu.pickADesk.user.User;
 import epfc.eu.pickADesk.user.UserRepository;
+import epfc.eu.pickADesk.user.WorkSchedule;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,6 +42,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .teamId(request.getTeamId())
                 .role(Role.USER)
+                .workSchedule(WorkSchedule.FULL_TIME)
                 .locked(false)
                 .enabled(true)
                 .build();

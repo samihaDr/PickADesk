@@ -2,6 +2,7 @@ package epfc.eu.pickADesk.dto;
 
 import epfc.eu.pickADesk.user.Role;
 import epfc.eu.pickADesk.user.User;
+import epfc.eu.pickADesk.user.WorkSchedule;
 import lombok.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class UserDTO {
     private List<ReservationDTO> reservations;
     private Integer teamId;
     private Role role;
+    private WorkSchedule workSchedule;
     private Boolean locked;
     private Boolean enabled;
 
@@ -40,6 +42,7 @@ public class UserDTO {
                         .collect(Collectors.toList()))
                 .teamId(user.getTeamId())
                 .role(user.getRole())
+                .workSchedule(user.getWorkSchedule())
                 .locked(user.getLocked())
                 .enabled(user.getEnabled())
                 .build();
