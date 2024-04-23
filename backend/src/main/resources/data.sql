@@ -1,20 +1,20 @@
 -- Insert into user table
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Samiha', 'Draa', 'sam@myCompany.com', '$2y$13$fX5AV/NJ5aQqK5nD45.dr.lSc9vwjsqCSulq4ATPwfMJcp2Tq2fKK', 'USER',4,'FULL_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Adam', 'Doum', 'doum@myCompany.com', '$2y$13$SLXpPJGaCAbCvZ4D6vVRE.vPNtqOPp6PreQ3bJDQhF3Q3t/hOlYTe', 'MANAGER',5,'FULL_TIME' ,FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Hicham', 'Doum', 'hich@myCompany.com', '$2y$12$eicso7hJJFeu162LWkvko.qUjSiEloVg0coLbuJ5ozSXSTLSz9wq6', 'USER',5, 'HALF_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Jean', 'Michel', 'michel@myCompany.com', '$2y$12$9RD7TLkmTKy1uySkRFn0oOTsQmYiuF6mB73Xv5xF1wuHmWAFT6l5u', 'MANAGER',4,'FULL_TIME',  FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Lucas', 'Peeters', 'lucas@myCompany.com', '$2y$12$XWMSO1F09b/9M9gbWmvowuaP6nk.ozI5vUjhYaqNwjJPLbOQuFaL6', 'USER', 4, 'HALF_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Emma', 'Janssens', 'emma@myCompany.com', '$2y$12$6X3ist9YGcuEVt8q..kO6enifGUk6fEkIQ6l3OOtyOAX4G7oSKA86', 'USER', 4, 'FOUR_FIFTHS', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Lina', 'Marzouk', 'lina@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'USER', 4, 'FULL_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Karim', 'El Aynaoui', 'karim@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'USER', 4, 'HALF_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Yasmine', 'Bouali', 'yas@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'USER', 6, 'FULL_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Noah', 'Maes', 'noah@myCompany.com', '$2y$13$MNOPQRSTUVWXYZ.abcdefghijklmn.OPQRSTUVWXYZ1234567890AB', 'USER', 5, 'HALF_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Marie', 'Dubois', 'marie@myCompany.com', '$2y$13$QRSTUVWXYZABCDEF.ghijklmnopqr.STUVWXYZabcdefghi1234', 'USER', 6, 'FOUR_FIFTHS', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Arthur', 'Lambert', 'arthur@myCompany.com', '$2y$13$abcdefgHIJKLMNO.pqrstuvwxYZ.ABCDEFGHIJKLMNOPQRStu', 'USER', 7,'FULL_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Alice', 'Renard', 'alice@myCompany.com', '$2y$12$F5fgKturTtTAMGZRryMPiuzyGmMczQdSnJsc5.a1a0hj4.p2LmdgS', 'USER', 7, 'HALF_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Mehdi', 'Fassi', 'mehdi@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'MANAGER', 6, 'FULL_TIME', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Sara', 'Khalfi', 'sara@myCompany.com', '$2y$12$SR.HJr5fzi.BYdjX7ihnmucdX0Qz.XBaJceIeuqlUho1dqGquMzWy', 'USER', 7,'FOUR_FIFTHS', FALSE, TRUE);
-INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, locked, enabled) VALUES ('Omar', 'Jabri', 'omar@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'MANAGER', 7, 'FULL_TIME', FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Samiha', 'Draa', 'sam@myCompany.com', '$2y$13$fX5AV/NJ5aQqK5nD45.dr.lSc9vwjsqCSulq4ATPwfMJcp2Tq2fKK', 'USER',4,'FULL_TIME', 2.5, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Adam', 'Doum', 'doum@myCompany.com', '$2y$13$SLXpPJGaCAbCvZ4D6vVRE.vPNtqOPp6PreQ3bJDQhF3Q3t/hOlYTe', 'MANAGER',5,'FULL_TIME', 2.5 ,FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Hicham', 'Doum', 'hich@myCompany.com', '$2y$12$eicso7hJJFeu162LWkvko.qUjSiEloVg0coLbuJ5ozSXSTLSz9wq6', 'USER',5, 'HALF_TIME', 1.25, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Jean', 'Michel', 'michel@myCompany.com', '$2y$12$9RD7TLkmTKy1uySkRFn0oOTsQmYiuF6mB73Xv5xF1wuHmWAFT6l5u', 'MANAGER',4,'FULL_TIME', 2.5,  FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Lucas', 'Peeters', 'lucas@myCompany.com', '$2y$12$XWMSO1F09b/9M9gbWmvowuaP6nk.ozI5vUjhYaqNwjJPLbOQuFaL6', 'USER', 4, 'HALF_TIME', 1.25, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Emma', 'Janssens', 'emma@myCompany.com', '$2y$12$6X3ist9YGcuEVt8q..kO6enifGUk6fEkIQ6l3OOtyOAX4G7oSKA86', 'USER', 4, 'FOUR_FIFTHS', 2, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Lina', 'Marzouk', 'lina@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'USER', 4, 'FULL_TIME', 2.5, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Karim', 'El Aynaoui', 'karim@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'USER', 4, 'HALF_TIME', 1.25, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Yasmine', 'Bouali', 'yas@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'USER', 6, 'FULL_TIME', 2.5, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Noah', 'Maes', 'noah@myCompany.com', '$2y$13$MNOPQRSTUVWXYZ.abcdefghijklmn.OPQRSTUVWXYZ1234567890AB', 'USER', 5, 'HALF_TIME', 1.25, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Marie', 'Dubois', 'marie@myCompany.com', '$2y$13$QRSTUVWXYZABCDEF.ghijklmnopqr.STUVWXYZabcdefghi1234', 'USER', 6, 'FOUR_FIFTHS', 2,  FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Arthur', 'Lambert', 'arthur@myCompany.com', '$2y$13$abcdefgHIJKLMNO.pqrstuvwxYZ.ABCDEFGHIJKLMNOPQRStu', 'USER', 7,'FULL_TIME',2.5,  FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Alice', 'Renard', 'alice@myCompany.com', '$2y$12$F5fgKturTtTAMGZRryMPiuzyGmMczQdSnJsc5.a1a0hj4.p2LmdgS', 'USER', 7, 'HALF_TIME', 1.25, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Mehdi', 'Fassi', 'mehdi@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'MANAGER', 6, 'FULL_TIME', 2.5, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Sara', 'Khalfi', 'sara@myCompany.com', '$2y$12$SR.HJr5fzi.BYdjX7ihnmucdX0Qz.XBaJceIeuqlUho1dqGquMzWy', 'USER', 7,'FOUR_FIFTHS', 2, FALSE, TRUE);
+INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Omar', 'Jabri', 'omar@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'MANAGER', 7, 'FULL_TIME',2.5, FALSE, TRUE);
 
 -- Insert into reservation table
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-26',true ,true, 1, 1, 1);
@@ -24,12 +24,12 @@ INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, 
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-17',false, true, 3, 1, 2);
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-16',true, false, 2, 1, 20);
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-19', true, false, 3, 3, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-27', false, true, 4, 13, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-28', true, true, 5, 5, 1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-22', false, true, 4, 4, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-23', true, true, 5, 4, 1);
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-05-02', true, false, 6, 13, 3);
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-19', false, true, 7, 7, 2);
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-30', true, true, 8, 13, 1);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-30', true, false, 9, 9, 3);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-22', true, false, 9, 8, 3);
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-05-06', false, true, 10, 10, 2);
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-29', false, true, 10, 13, 2);
 INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-30', false, true, 10, 1, 2);
@@ -50,8 +50,8 @@ INSERT INTO city (name, country_id) VALUES ('Dusseldorf', 4);
 
 -- Insert into office table
 INSERT INTO office (name, city_id) VALUES ('Bd Adolph Max n° 130 1000 Bruxelles', 1);
-INSERT INTO office (name, city_id) VALUES ('Rue Blabla n° 50 1080 Molenbeek', 1);
-INSERT INTO office (name, city_id) VALUES ('Amerikalei n° 13 2000 antwerp', 2);
+INSERT INTO office (name, city_id) VALUES ('Rue Blabla n°50 1080 Molenbeek', 1);
+INSERT INTO office (name, city_id) VALUES ('Amerikalei n°13 2000 antwerp', 2);
 INSERT INTO office (name, city_id) VALUES ('Bd de la defence n°152 92400 Courbevoie', 3);
 INSERT INTO office (name, city_id) VALUES ('Bd de la Jeunesse n°15', 4);
 INSERT INTO office (name, city_id) VALUES ('Rue Haute n°109', 5);
@@ -81,12 +81,12 @@ INSERT INTO department (name) VALUES ('HR');
 INSERT INTO department (name) VALUES ('IT');
 
 -- Insert into team table
-INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_Min) VALUES ('Equip1', 1, 2.5, 2.5, 1);
-INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_Min) VALUES ('Equip2', 2, 2, 2.5, 1);
-INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_Min) VALUES ('DevTeam',3, 2.5, 2.5, 1);
-INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_Min) VALUES ('DevOpsTeam', 3, 2.5, 2.5, 1);
-INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_Min) VALUES ('TestTeam', 3, 2.5, 2.5, 1);
-INSERT INTO team (name, department_id, member_Quota, team_Quota_Max, team_Quota_Min) VALUES ('DataTeam', 3, 2, 2.5, 1);
+INSERT INTO team (name, department_id, team_Quota_Max, team_Quota_Min) VALUES ('Equip1', 1, 2.5, 1);
+INSERT INTO team (name, department_id, team_Quota_Max, team_Quota_Min) VALUES ('Equip2', 2, 2.5, 1);
+INSERT INTO team (name, department_id, team_Quota_Max, team_Quota_Min) VALUES ('DevTeam',3, 2.5, 1);
+INSERT INTO team (name, department_id, team_Quota_Max, team_Quota_Min) VALUES ('DevOpsTeam', 3, 2.5, 1);
+INSERT INTO team (name, department_id, team_Quota_Max, team_Quota_Min) VALUES ('TestTeam', 3, 2.5, 1);
+INSERT INTO team (name, department_id, team_Quota_Max, team_Quota_Min) VALUES ('DataTeam', 3, 2.5, 1);
 
 -- Insert into reservation_type table
 INSERT INTO reservation_type (name) VALUES ('Individual space');
