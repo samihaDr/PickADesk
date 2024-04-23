@@ -6,6 +6,11 @@
   margin-left: 200px;
   width: calc(100% - 200px);
 
+  h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-large);
+    margin-top:  var(--spacing-large);
+  }
   .result , .stats{
     margin-top: 20px;
     margin-left: 150px;
