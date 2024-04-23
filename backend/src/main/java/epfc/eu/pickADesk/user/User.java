@@ -54,6 +54,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private WorkSchedule workSchedule;
 
+    public double memberQuota;
+
     private Boolean locked = false;
     private Boolean enabled = false;
 

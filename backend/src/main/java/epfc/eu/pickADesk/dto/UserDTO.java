@@ -22,6 +22,7 @@ public class UserDTO {
     private Integer teamId;
     private Role role;
     private WorkSchedule workSchedule;
+    private Double memberQuota;
     private Boolean locked;
     private Boolean enabled;
 
@@ -43,6 +44,7 @@ public class UserDTO {
                 .teamId(user.getTeamId())
                 .role(user.getRole())
                 .workSchedule(user.getWorkSchedule())
+                .memberQuota(user.getMemberQuota())
                 .locked(user.getLocked())
                 .enabled(user.getEnabled())
                 .build();
