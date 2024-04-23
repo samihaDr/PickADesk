@@ -21,7 +21,7 @@ public class Team {
     @JoinColumn(name = "department_id") // Cette colonne stocke la clé étrangère pour le team associé à cet utilisateur.
     @JsonBackReference
     private Department department;
-    public double memberQuota;
+
     private double teamQuotaMax;
     private double teamQuotaMin;
 
