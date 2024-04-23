@@ -13,7 +13,6 @@ export default function LoginPage() {
     setUserConnected,
     setUserInfo,
     setIsAuthenticated,
-    setWeeklyQuota,
     setUserPreferences,
   } = useContext(GlobalContext);
   const navigate = useNavigate();
@@ -45,12 +44,12 @@ export default function LoginPage() {
     return userPreferencesResponse.data;
   };
 
-  const getTeamInfo = async (teamId) => {
-    const teamInfoResponse = await axios.get(
-      `/api/teams/getTeamById/${teamId}`,
-    );
-    return teamInfoResponse.data;
-  };
+  // const getTeamInfo = async (teamId) => {
+  //   const teamInfoResponse = await axios.get(
+  //     `/api/teams/getTeamById/${teamId}`,
+  //   );
+  //   return teamInfoResponse.data;
+  // };
 
   const handleAuthenticationError = (error) => {
     if (error.response) {
@@ -88,6 +87,7 @@ export default function LoginPage() {
         role: userData.role,
         teamId: userData.teamId,
         workSchedule: userData.workSchedule,
+        memberQuota: userData.memberQuota,
         locked: userData.locked,
         enabled: userData.enabled,
       };
@@ -97,8 +97,8 @@ export default function LoginPage() {
       const userPreferencesData = await getUserPreferences(userData.id);
       setUserPreferences(userPreferencesData);
 
-      const teamInfoData = await getTeamInfo(userData.teamId);
-      setWeeklyQuota(`${teamInfoData.memberQuota}`);
+      // const teamInfoData = await getTeamInfo(userData.teamId);
+      //  setWeeklyQuota(`${teamInfoData.memberQuota}`);
 
       navigate("/dashboard");
     } catch (error) {

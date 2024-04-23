@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import {useContext, useEffect} from "react";
 import { GlobalContext } from "../../services/GlobalState";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
@@ -12,8 +12,11 @@ const LogoutButton = () => {
     setUserPreferences,
     setIsAuthenticated,
     setUserInfo,
-    setWeeklyQuota,
+    // setWeeklyQuota,
   } = useContext(GlobalContext);
+  useEffect(() => {
+    console.log("Je suis dans Logout");
+  }, []);
   const logout = async () => {
     try {
       const authToken = sessionStorage.getItem(AUTH_TOKEN_KEY);
@@ -26,9 +29,9 @@ const LogoutButton = () => {
         setUserPreferences([]);
         setUserConnected(null);
         setUserInfo([]);
-        setWeeklyQuota(null);
+        // setWeeklyQuota(null);
         sessionStorage.removeItem(AUTH_TOKEN_KEY);
-        sessionStorage.removeItem("weeklyQuota");
+        // sessionStorage.removeItem("weeklyQuota");
         sessionStorage.removeItem("userInfo");
         sessionStorage.removeItem("userPreferences");
         sessionStorage.removeItem("isAuthenticated");
