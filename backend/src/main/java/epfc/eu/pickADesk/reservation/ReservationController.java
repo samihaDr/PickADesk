@@ -2,6 +2,7 @@ package epfc.eu.pickADesk.reservation;
 
 import epfc.eu.pickADesk.dto.ReservationDTO;
 import epfc.eu.pickADesk.utils.ApiResponse;
+import epfc.eu.pickADesk.utils.WeekReservationsResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,33 +95,34 @@ public class ReservationController {
         }
     }
 
-    @SecurityRequirement(name = "bearerAuth")
-    @GetMapping(value = "/employeeHasReservationThisWeek/{employeeId}")
-    public ApiResponse EmployeeHasReservationThisWeek(@PathVariable Long employeeId) {
-        try {
-            List<ReservationDTO> results = reservationService.EmployeeHasReservationThisWeek(employeeId);
-            if (results.isEmpty()) {
-                return new ApiResponse(false, "No reservations for this week", null);
-            }
-
-            return new ApiResponse(true, "You have reservations for this week", results);
-        } catch (Exception e) {
-            return new ApiResponse(false, "Error checking reservations", e.getMessage());
-        }
-    }
+//    @SecurityRequirement(name = "bearerAuth")
+//    @GetMapping(value = "/employeeHasReservationThisWeek/{employeeId}")
+//    public ApiResponse EmployeeHasReservationThisWeek(@PathVariable Long employeeId) {
+//        try {
+//            List<ReservationDTO> results = reservationService.EmployeeHasReservationThisWeek(employeeId);
+//            if (results.isEmpty()) {
+//                return new ApiResponse(false, "No reservations for this week", null);
+//            }
+//
+//            return new ApiResponse(true, "You have reservations for this week", results);
+//        } catch (Exception e) {
+//            return new ApiResponse(false, "Error checking reservations", e.getMessage());
+//        }
+//    }
 
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/getReservationsForWeek/{userId}")
-    public ApiResponse getReservationsForWeek(@PathVariable Long userId) {
+    public WeekReservationsResponse getReservationsForWeek(@PathVariable Long userId) {
         try {
             List<ReservationDTO> results = reservationService.getReservationsForWeek(userId);
             if (results.isEmpty()) {
-                return new ApiResponse(false, "No reservations for this week", null);
+                return new WeekReservationsResponse(null, 0.0, false, "No reservations for this week");
             }
 
-            return new ApiResponse(true, "You have reservations for this week", results);
+            double memberQuota = reservationService.getMemberQuota(userId);
+            return new WeekReservationsResponse(results, memberQuota, true, "You have reservations for this week");
         } catch (Exception e) {
-            return new ApiResponse(false, "Error checking reservations", e.getMessage());
+            return new WeekReservationsResponse(null, 0.0, false, "Error checking reservations: " + e.getMessage());
         }
     }
     @SecurityRequirement(name = "bearerAuth")
