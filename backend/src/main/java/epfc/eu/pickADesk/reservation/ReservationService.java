@@ -1,6 +1,8 @@
 package epfc.eu.pickADesk.reservation;
 
 import epfc.eu.pickADesk.dto.ReservationDTO;
+import epfc.eu.pickADesk.exceptions.UserNotFoundException;
+import epfc.eu.pickADesk.user.UserRepository;
 import epfc.eu.pickADesk.user.UserService;
 import epfc.eu.pickADesk.workStation.WorkStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +18,15 @@ import java.util.stream.Collectors;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
     private final ReservationMapper reservationMapper;
     private final WorkStationRepository workStationRepository;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, UserService userService, ReservationMapper reservationMapper, WorkStationRepository workStationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, UserService userService,UserRepository userRepository, ReservationMapper reservationMapper, WorkStationRepository workStationRepository) {
         this.reservationRepository = reservationRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
         this.reservationMapper = reservationMapper;
         this.workStationRepository = workStationRepository;
     }
@@ -52,27 +56,30 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    public List<ReservationDTO> EmployeeHasReservationThisWeek( Long employeeId) {
-        LocalDate start = LocalDate.now();
-        LocalDate end = start.plusDays(6);
-
-        List<Reservation> reservations = this.reservationRepository.findByUserIdAndReservationDateBetween(employeeId,start, end);
-        return reservations.stream()
-                .map(reservationMapper::reservationToReservationDTO)
-                .collect(Collectors.toList());
-    }
+//    public List<ReservationDTO> EmployeeHasReservationThisWeek( Long employeeId) {
+//        LocalDate start = LocalDate.now();
+//        LocalDate end = start.plusDays(6);
+//
+//        List<Reservation> reservations = this.reservationRepository.findByUserIdAndReservationDateBetween(employeeId,start, end);
+//        return reservations.stream()
+//                .map(reservationMapper::reservationToReservationDTO)
+//                .collect(Collectors.toList());
+//    }
 
     public List<ReservationDTO> getReservationsForWeek(Long userId) {
         LocalDate today = LocalDate.now();
-
         LocalDate monday = today.with(DayOfWeek.MONDAY);
-
         LocalDate friday = monday.plusDays(4);
 
         List<Reservation> reservations = this.reservationRepository.findByUserIdAndReservationDateBetween(userId, monday, friday);
+
         return reservations.stream()
                 .map(reservationMapper::reservationToReservationDTO)
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    public double getMemberQuota(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found")).getMemberQuota();
     }
     public List<ReservationDTO> hasReservationTomorrow() {
         Long userId = this.userService.getUserConnected().getId();
