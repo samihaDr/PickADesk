@@ -7,7 +7,6 @@ const initialState = {
   userConnected: null,
   userInfo: null,
   userPreferences: null,
-  weeklyQuota: null,
   weeklyRemaining: 2.5,
   reservations: [],
   favorites: [],
@@ -35,11 +34,6 @@ const globalReducer = (state, action) => {
       return {
         ...state,
         userPreferences: action.payload,
-      };
-    case "SET_QUOTA":
-      return {
-        ...state,
-        weeklyQuota: action.payload,
       };
     case "SET_REMAINING":
       return {
@@ -92,10 +86,6 @@ export const GlobalProvider = ({ children }) => {
       payload: userPreferences,
     });
   };
-  const setWeeklyQuota = (quota) => {
-    sessionStorage.setItem("weeklyQuota", JSON.stringify(quota));
-    dispatch({ type: "SET_QUOTA", payload: quota });
-  };
   const setWeeklyRemaining = (remaining) => {
     sessionStorage.setItem("weeklyRemaining", JSON.stringify(remaining));
     dispatch({ type: "SET_REMAINING", payload: remaining });
@@ -133,11 +123,7 @@ export const GlobalProvider = ({ children }) => {
       const userPreferences = JSON.parse(storedUserPreferences);
       dispatch({ type: "SET_USER_PREFERENCES", payload: userPreferences });
     }
-    const storedQuota = sessionStorage.getItem("weeklyQuota");
-    if (storedQuota) {
-      const quota = JSON.parse(storedQuota);
-      dispatch({ type: "SET_QUOTA", payload: quota });
-    }
+
   }, []);
 
   return (
@@ -146,7 +132,6 @@ export const GlobalProvider = ({ children }) => {
         ...state,
         setUserConnected,
         setUserInfo,
-        setWeeklyQuota,
         setWeeklyRemaining,
         setUserPreferences,
         setIsAuthenticated,

@@ -9,7 +9,6 @@ import useCalculateRemaining from "../hooks/useCalculateRemaining";
 export default function Navbar() {
   const {
     userConnected,
-    weeklyQuota,
     weeklyRemaining,
     userPreferences,
     isAuthenticated,
@@ -36,7 +35,7 @@ export default function Navbar() {
     if (!isAuthenticated) {
       return null;
     }
-  }, [userConnected, weeklyQuota, isAuthenticated, userInfo]);
+  }, [userConnected, isAuthenticated, userInfo]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light fixed-top">
@@ -62,7 +61,7 @@ export default function Navbar() {
 
         <div className="quotaInfo">
           <span className="weeklyQuota">
-            {<div> Quota : {weeklyQuota} / week</div>}
+            {<div> Quota : {userInfo.memberQuota} / week</div>}
           </span>
           <span className="remaining">
             <div className="remaining">
