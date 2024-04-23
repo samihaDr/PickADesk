@@ -3,7 +3,6 @@ import { GlobalContext } from "../../services/GlobalState";
 import { AUTH_TOKEN_KEY } from "../../App";
 import axios from "axios";
 
-const QUOTA = 2.5;
 
 const useCalculateRemaining = () => {
   const { setWeeklyRemaining } = useContext(GlobalContext);
@@ -23,15 +22,18 @@ const useCalculateRemaining = () => {
             headers: { Authorization: `Bearer ${jwt}` },
           },
         );
+        console.log("UseCalculateRemaining : ", response.data.reservations);
         let totalDaysReserved = 0;
-        response.data.data.forEach((reservation) => {
+        response.data.reservations.forEach((reservation) => {
           if (reservation.morning && reservation.afternoon) {
             totalDaysReserved += 1;
           } else if (reservation.morning || reservation.afternoon) {
             totalDaysReserved += 0.5;
           }
         });
-        const newRemaining = QUOTA - totalDaysReserved;
+        const memberQuota = response.data.memberQuota;
+        console.log("MemberQuota : ", memberQuota);
+        const newRemaining = memberQuota - totalDaysReserved;
         setWeeklyRemaining(newRemaining);
       } catch (error) {
         console.error("Failed to fetch reservations:", error);
