@@ -7,7 +7,7 @@ const initialState = {
   userConnected: null,
   userInfo: null,
   userPreferences: null,
-  weeklyRemaining: 2.5,
+  weeklyRemaining: null,
   reservations: [],
   favorites: [],
   isAuthenticated: !!sessionStorage.getItem(AUTH_TOKEN_KEY),
