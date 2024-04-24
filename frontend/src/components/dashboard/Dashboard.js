@@ -74,7 +74,7 @@ export default function Dashboard() {
       );
       setShowModal(true);
     } else {
-      navigate("/searchWorkStation");
+      navigate("/makeAReservation");
     }
   };
 
