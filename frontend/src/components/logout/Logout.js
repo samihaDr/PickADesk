@@ -11,6 +11,7 @@ const LogoutButton = () => {
     setUserConnected,
     setUserPreferences,
     setIsAuthenticated,
+    setWeeklyRemaining,
     setUserInfo,
 
   } = useContext(GlobalContext);
@@ -28,12 +29,15 @@ const LogoutButton = () => {
         setIsAuthenticated(false);
         setUserPreferences([]);
         setUserConnected(null);
+        setWeeklyRemaining(null);
         setUserInfo([]);
+
 
         sessionStorage.removeItem(AUTH_TOKEN_KEY);
         sessionStorage.removeItem("userInfo");
         sessionStorage.removeItem("userPreferences");
         sessionStorage.removeItem("isAuthenticated");
+        sessionStorage.removeItem("weeklyRemaining");
 
         // Redirection et rechargement de la page
         navigate("/login", { replace: true });
