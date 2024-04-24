@@ -12,7 +12,7 @@ const LogoutButton = () => {
     setUserPreferences,
     setIsAuthenticated,
     setUserInfo,
-    // setWeeklyQuota,
+
   } = useContext(GlobalContext);
   useEffect(() => {
     console.log("Je suis dans Logout");
@@ -29,9 +29,8 @@ const LogoutButton = () => {
         setUserPreferences([]);
         setUserConnected(null);
         setUserInfo([]);
-        // setWeeklyQuota(null);
+
         sessionStorage.removeItem(AUTH_TOKEN_KEY);
-        // sessionStorage.removeItem("weeklyQuota");
         sessionStorage.removeItem("userInfo");
         sessionStorage.removeItem("userPreferences");
         sessionStorage.removeItem("isAuthenticated");
