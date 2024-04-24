@@ -1,14 +1,13 @@
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
 import {GlobalContext} from "../../services/GlobalState";
 import axios from "axios";
 import {AUTH_TOKEN_KEY} from "../../App";
 import "./TeamSettings.scss"
+import {useTeamList} from "../hooks/useTeamList";
 
 export default function TeamSettings() {
-    let {userInfo} = useContext(GlobalContext);
-    const [teamList, setTeamList] = useState([]);
-    const [isLoading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    const {userInfo} = useContext(GlobalContext);
+    const { teamList, setTeamList, fetchTeamList, isLoading, error } = useTeamList();
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
 
     useEffect(() => {
@@ -17,24 +16,6 @@ export default function TeamSettings() {
         }
     }, [userInfo]);
 
-    async function fetchTeamList(teamId) {
-        setLoading(true);
-        try {
-            const response = await axios.get(`/api/users/getTeamList/${teamId}`, {
-                headers: {Authorization: `Bearer ${jwt}`},
-            });
-            if (Array.isArray(response.data)) {
-                updateMembersWithDetails(response.data);
-            } else {
-                throw new Error("Data is not an array");
-            }
-        } catch (error) {
-            console.error("Fetch team list error:", error);
-            setError("Unable to load the list of employees: " + error.message);
-        } finally {
-            setLoading(false);
-        }
-    }
 
     async function updateMembersWithDetails(members) {
         const membersWithDetails = await Promise.all(members.map(async member => {
@@ -52,7 +33,11 @@ export default function TeamSettings() {
         }));
         setTeamList(membersWithDetails);
     }
-
+    useEffect(() => {
+        if (teamList.length > 0) {
+            updateMembersWithDetails(teamList);
+        }
+    }, [teamList]);
     async function checkColleagueAvailability(employeeId) {
         try {
             const url = `/api/reservations/employeeHasReservationToday/${employeeId}`;
