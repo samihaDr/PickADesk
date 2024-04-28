@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/userRole")
-    public ResponseEntity<Boolean> isAdmin() {
+    public ResponseEntity<Boolean> isManager() {
         boolean isManager = userService.isManager(); // Utilisation sans Principal directement
         return ResponseEntity.ok(isManager); // Retourne le rôle de l'utilisateur
     }
