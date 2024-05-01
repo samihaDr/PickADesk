@@ -6,7 +6,7 @@ import "./TeamSettings.scss"
 import {useTeamList} from "../hooks/useTeamList";
 
 export default function TeamSettings() {
-    const {userInfo} = useContext(GlobalContext);
+    const {userInfo = {}} = useContext(GlobalContext);
     const { teamList, setTeamList, fetchTeamList, isLoading, error } = useTeamList();
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
 
@@ -31,8 +31,13 @@ export default function TeamSettings() {
                 daysInOffice: daysWorked - weeklyReservations
             };
         }));
-        setTeamList(membersWithDetails);
+
+        // Comparaison simple des objets JSON avant mise à jour
+        if (JSON.stringify(membersWithDetails) !== JSON.stringify(teamList)) {
+            setTeamList(membersWithDetails);
+        }
     }
+
     useEffect(() => {
         if (teamList.length > 0) {
             updateMembersWithDetails(teamList);
@@ -107,7 +112,7 @@ export default function TeamSettings() {
         return teamList.find(member => member.id === userInfo.id);
     }
 
-    const isManager = userInfo.role === "MANAGER";
+    const isManager = userInfo?.role === "MANAGER";
 
     return (
         <div className="main">
