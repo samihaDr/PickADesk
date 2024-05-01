@@ -11,20 +11,22 @@ export function useTeamList() {
         setLoading(true);
         try {
             const response = await axios.get(`/api/users/getTeamList/${teamId}`, {
-                headers: { Authorization: `Bearer ${jwt}` },
+                headers: {Authorization: `Bearer ${jwt}`},
             });
             if (Array.isArray(response.data)) {
                 setTeamList(response.data);
+                setLoading(false);
+                return response.data;  // Retourner les données pour une utilisation immédiate
             } else {
                 throw new Error("Data is not an array");
             }
         } catch (error) {
             console.error("Fetch team list error:", error);
             setError("Unable to load the list of employees: " + error.message);
-        } finally {
             setLoading(false);
+            return [];  // Retourner un tableau vide en cas d'erreur
         }
     }
 
-    return { teamList, setTeamList, fetchTeamList, isLoading, error };
+    return {teamList, setTeamList,isLoading, error, fetchTeamList};
 }
