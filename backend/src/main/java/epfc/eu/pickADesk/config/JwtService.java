@@ -5,14 +5,17 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -28,17 +31,21 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    //Method generates token with only userDetails
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
-
-    //method generates token with extraClaims and userDetails
+   //method generates token with extraClaims and userDetails
     public String generateToken(Map<String, Object> extraClaims,
                                 UserDetails userDetails) {
         return buildToken(extraClaims, userDetails, JWT_EXPIRATION);
     }
 
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        // Extract roles and add to claims
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        claims.put("roles", roles);
+        return buildToken(claims, userDetails, JWT_EXPIRATION);
+    }
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
         return Jwts
                 .builder()
@@ -76,5 +83,10 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public List<?> getRolesFromToken(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("roles", List.class); // Assurez-vous que la clé "roles" est correcte
     }
 }
