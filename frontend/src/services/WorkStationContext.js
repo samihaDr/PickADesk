@@ -14,7 +14,9 @@ export const WorkStationProvider = ({ children }) => {
     // equipment: [],
     // furniture: [],
   });
-
+    const [isGroupBooking, setIsGroupBooking] = useState(false);
+    const [teamMembers, setTeamMembers ] = useState([]);
+    const [selectedStations, setSelectedStations ] = useState([]);
   return (
     <WorkStationContext.Provider
       value={{
@@ -22,6 +24,12 @@ export const WorkStationProvider = ({ children }) => {
         setWorkStations,
         selectedOptions,
         setSelectedOptions,
+        isGroupBooking,
+        setIsGroupBooking,
+        teamMembers,
+        setTeamMembers,
+        selectedStations,
+        setSelectedStations
       }}
     >
       {children}
