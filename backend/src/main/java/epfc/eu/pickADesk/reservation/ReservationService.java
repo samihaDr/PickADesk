@@ -2,16 +2,21 @@ package epfc.eu.pickADesk.reservation;
 
 import epfc.eu.pickADesk.dto.ReservationDTO;
 import epfc.eu.pickADesk.exceptions.UserNotFoundException;
+import epfc.eu.pickADesk.user.User;
 import epfc.eu.pickADesk.user.UserRepository;
 import epfc.eu.pickADesk.user.UserService;
 import epfc.eu.pickADesk.workStation.WorkStationRepository;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +28,7 @@ public class ReservationService {
     private final WorkStationRepository workStationRepository;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, UserService userService,UserRepository userRepository, ReservationMapper reservationMapper, WorkStationRepository workStationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, UserService userService, UserRepository userRepository, ReservationMapper reservationMapper, WorkStationRepository workStationRepository) {
         this.reservationRepository = reservationRepository;
         this.userService = userService;
         this.userRepository = userRepository;
@@ -47,7 +52,7 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    public List<ReservationDTO> EmployeeHasReservationToday( Long employeeId) {
+    public List<ReservationDTO> EmployeeHasReservationToday(Long employeeId) {
         LocalDate today = LocalDate.now();
 
         List<Reservation> reservations = this.reservationRepository.findReservationsForTodayWithFlexibleTiming(employeeId, today);
@@ -56,11 +61,11 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    public List<ReservationDTO> EmployeeHasReservationThisWeek( Long employeeId) {
+    public List<ReservationDTO> EmployeeHasReservationThisWeek(Long employeeId) {
         LocalDate start = LocalDate.now();
         LocalDate end = start.plusDays(6);
 
-        List<Reservation> reservations = this.reservationRepository.findByUserIdAndReservationDateBetween(employeeId,start, end);
+        List<Reservation> reservations = this.reservationRepository.findByUserIdAndReservationDateBetween(employeeId, start, end);
         return reservations.stream()
                 .map(reservationMapper::reservationToReservationDTO)
                 .collect(Collectors.toList());
@@ -81,6 +86,7 @@ public class ReservationService {
     public double getMemberQuota(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found")).getMemberQuota();
     }
+
     public List<ReservationDTO> hasReservationTomorrow() {
         Long userId = this.userService.getUserConnected().getId();
         LocalDate tomorrow = LocalDate.now().plusDays(1);
@@ -152,11 +158,10 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    public ReservationDTO addReservation(ReservationDTO reservationDTO) {
+    public List<ReservationDTO> addIndividualReservation(ReservationDTO reservationDTO) {
+        List<ReservationDTO> results = new ArrayList<>();
         Long userId = this.userService.getUserConnected().getId();
         Reservation reservation = reservationMapper.reservationDTOToReservation(reservationDTO);
-
-        // Recherche des réservations existantes pour l'utilisateur et la date
         List<Reservation> existingReservations = reservationRepository.findReservationsForTodayWithFlexibleTiming(userId, reservation.getReservationDate());
 
         for (Reservation existingReservation : existingReservations) {
@@ -167,19 +172,41 @@ public class ReservationService {
         }
 
         validateReservationDate(reservation);
-
-        // Associez l'utilisateur connecté et le poste de travail à la réservation
         reservation.setUser(userService.findById(userId).orElseThrow(() -> new RuntimeException("User not found with ID: " + userId)));
+        reservation.setCreatedBy(userId);
+        reservation.setGroupBooking(reservationDTO.isGroupBooking());
         workStationRepository.findById(reservationDTO.getWorkStation().getId()).ifPresent(reservation::setWorkStation);
-
-        // Mettre à jour les créneaux de réservation en fonction de ReservationDTO
         reservation.setMorning(reservationDTO.getMorning());
         reservation.setAfternoon(reservationDTO.getAfternoon());
-
         Reservation savedReservation = reservationRepository.save(reservation);
-        return reservationMapper.reservationToReservationDTO(savedReservation);
+        results.add(reservationMapper.reservationToReservationDTO(savedReservation));
+        return results;
     }
 
+    @Transactional
+    public List<ReservationDTO> addGroupReservations(List<ReservationDTO> reservationDTOs) {
+
+        Long userId = this.userService.getUserConnected().getId();
+        List<ReservationDTO> results = new ArrayList<>();
+
+        for (ReservationDTO dto : reservationDTOs) {
+            try {
+                User member = userService.findById(dto.getUserId())
+                        .orElseThrow(() -> new RuntimeException("User not found with ID: " + dto.getUserId()));
+                Reservation reservation = reservationMapper.reservationDTOToReservation(dto);
+                reservation.setUser(member);
+                reservation.setCreatedBy(userId);
+                reservation.setGroupBooking(true);
+                workStationRepository.findById(dto.getWorkStation().getId()).ifPresent(reservation::setWorkStation);
+                reservation.setMorning(dto.getMorning());
+                reservation.setAfternoon(dto.getAfternoon());
+                results.add(reservationMapper.reservationToReservationDTO(reservationRepository.save(reservation)));
+            } catch (Exception e) {
+                throw new ServiceException("Error processing reservation", e);
+            }
+        }
+        return results;
+    }
 
     public void validateReservationDate(Reservation reservation) {
         LocalDate today = LocalDate.now();
