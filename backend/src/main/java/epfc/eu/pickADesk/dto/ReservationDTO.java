@@ -1,11 +1,12 @@
 package epfc.eu.pickADesk.dto;
 
 import epfc.eu.pickADesk.reservation.Reservation;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
+
 
 @Data
 @NoArgsConstructor
@@ -18,6 +19,9 @@ public class ReservationDTO {
     private WorkStationDTO workStation;
     private Long userId;
     private Integer reservationTypeId;
+    private boolean isGroupBooking;
+    private Long createdBy;
+
 
     // Méthode pour convertir l'entité en DTO
     public static ReservationDTO fromEntity(Reservation reservation) {
@@ -32,7 +36,12 @@ public class ReservationDTO {
                 reservation.getAfternoon(),
                 reservation.getWorkStation() != null ? WorkStationDTO.fromEntity(reservation.getWorkStation()) : null,
                 reservation.getUser() != null ? reservation.getUser().getId() : null,
-                reservation.getReservationTypeId()
+                reservation.getReservationTypeId(),
+                reservation.isGroupBooking(),
+                reservation.getCreatedBy()
+
         );
     }
+
+
 }

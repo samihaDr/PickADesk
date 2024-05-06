@@ -53,11 +53,16 @@ public class Reservation {
 
     private Integer reservationTypeId;
 
-    public boolean isMorning() {
-        return true;
-    }
+    @Column(name = "created_by")
+    private Long createdBy;
 
+    @Column(name = "is_group_booking")
+    private boolean isGroupBooking;
+
+    public boolean isMorning() {
+        return morning != null && morning;
+    }
     public boolean isAfternoon() {
-        return true;
+        return afternoon != null && afternoon;
     }
 }
