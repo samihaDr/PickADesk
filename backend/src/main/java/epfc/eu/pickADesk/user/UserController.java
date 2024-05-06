@@ -27,9 +27,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getUsers() {
-//        if (!userService.isAdmin()) { // Utilisation sans Principal directement
-//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-//        }
+//
         List<UserDTO> users = userService.getUsers();
         return ResponseEntity.ok(users); // Retourne directement la liste des UserDTO
     }
@@ -65,7 +63,7 @@ public class UserController {
 
     @PatchMapping("/changePassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
-        userService.changePassword(request); // Modification pour ne pas utiliser Principal directement
+        userService.changePassword(request);
         return ResponseEntity.ok().build();
     }
 }
