@@ -4,6 +4,7 @@ import axios from "axios";
 import {AUTH_TOKEN_KEY} from "../../App";
 import "./TeamSettings.scss"
 import {useTeamList} from "../hooks/useTeamList";
+import {endOfWeek, format, startOfWeek} from "date-fns";
 
 export default function TeamSettings() {
     const {userInfo = {}} = useContext(GlobalContext);
@@ -27,8 +28,8 @@ export default function TeamSettings() {
                 ...availability,
                 weeklyReservations,
                 daysWorked,
-                teleworkingDays: weeklyReservations,
-                daysInOffice: daysWorked - weeklyReservations
+                teleworkingDays: daysWorked - weeklyReservations,
+                daysInOffice: weeklyReservations
             };
         }));
 
@@ -113,10 +114,14 @@ export default function TeamSettings() {
     }
 
     const isManager = userInfo?.role === "MANAGER";
-
+    const currentDate = format(new Date(), 'dd/MM/yyyy'); // Date actuelle formatée
+    const startDate = startOfWeek(new Date(), { weekStartsOn: 1 }); // Début de la semaine
+    const endDate = endOfWeek(new Date(), { weekStartsOn: 1 }); // Fin de la semaine
+    const formattedStartDate = format(startDate, 'dd/MM/yyyy'); // Date formatée du début de la semaine
+    const formattedEndDate = format(endDate, 'dd/MM/yyyy'); // Date formatée de la fin de la semaine
     return (
         <div className="main">
-            <h2>My Team</h2>
+            <h2>My Team - <span className="date-span">{currentDate}</span></h2>
             {isLoading ? (
                 <p>Loading...</p>
             ) : error ? (
@@ -147,7 +152,7 @@ export default function TeamSettings() {
                     </table>
                 </div>
             )}
-            <h2>Daily Team Statistics </h2>
+            <h2>Daily Team Statistics - <span className="date-span">{currentDate}</span> </h2>
             <div className="progress-bars">
                 <div>
                     <label><strong> In Office </strong></label>
@@ -173,13 +178,13 @@ export default function TeamSettings() {
 
             {isManager ? (
                 <div className="stats">
-                    <h2> Weekly Team Statistics</h2>
+                    <h2> Weekly Team Statistics  - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>
                     <table>
                         <thead>
                         <tr>
                             <th>Firstname</th>
                             <th>Lastname</th>
-                            <th>Days Worked</th>
+                            <th>Work Plan</th>
                             <th>Days Teleworking</th>
                             <th>Days In Office</th>
                         </tr>
@@ -192,6 +197,7 @@ export default function TeamSettings() {
                                 <td>{getDaysPerWeek(member.workSchedule)} days</td>
                                 <td>{member.teleworkingDays}</td>
                                 <td>{member.daysInOffice}</td>
+
                             </tr>
                         ))}
                         </tbody>
@@ -199,12 +205,12 @@ export default function TeamSettings() {
                 </div>
             ) : (
                 <div className="stats">
-                    <h2>My Personal Statistics</h2>
+                    <h2>My Personal Statistics - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>
                     {getPersonalStats() ? (
                         <table>
                             <thead>
                             <tr>
-                                <th>Days Worked</th>
+                                <th>Work Plan</th>
                                 <th>Days Teleworking</th>
                                 <th>Days In Office</th>
                             </tr>

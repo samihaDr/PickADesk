@@ -11,6 +11,13 @@
     margin-bottom: var(--spacing-large);
     margin-top:  var(--spacing-large);
   }
+  .date-span {
+    font-size: 25px;    /* Rendre la police plus petite que celle du titre */
+    color: gray;           /* Optionnel: changer la couleur pour différencier la date */
+    margin-left: 10px;     /* Ajouter un peu d'espace entre le titre et la date */
+    margin-bottom: var(--spacing-large);
+    margin-top:  var(--spacing-large);
+  }
   .result , .stats{
     margin-top: 20px;
     margin-left: 150px;
