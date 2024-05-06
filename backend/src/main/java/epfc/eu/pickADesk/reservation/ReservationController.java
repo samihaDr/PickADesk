@@ -6,6 +6,7 @@ import epfc.eu.pickADesk.utils.WeekReservationsResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping(value="/getReservation/{reservationId}")
+    @GetMapping(value = "/getReservation/{reservationId}")
     public ResponseEntity<ApiResponse> getReservation(@PathVariable Long reservationId) {
         try {
             ReservationDTO reservationDTO = reservationService.findReservationById(reservationId);
@@ -39,6 +40,7 @@ public class ReservationController {
             return ResponseEntity.ok(new ApiResponse(false, "An error occurred: " + e.getMessage(), null));
         }
     }
+
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/myReservations")
     public ResponseEntity<List<ReservationDTO>> getReservations(@RequestParam String filter) {
@@ -59,12 +61,27 @@ public class ReservationController {
         List<ReservationDTO> pastReservations = reservationService.findNextMonthReservations();
         return ResponseEntity.ok(pastReservations);
     }
+
     @SecurityRequirement(name = "bearerAuth")
-    @PostMapping(value = "/addReservation")
-    public ResponseEntity<ReservationDTO> addReservation(@RequestBody @Validated ReservationDTO reservationDTO) {
-        ReservationDTO addedReservation = reservationService.addReservation(reservationDTO);
+    @PostMapping(value = "/addIndividualReservation")
+    public ResponseEntity<List<ReservationDTO>> addReservation(@RequestBody @Validated ReservationDTO reservationDTO) {
+        List<ReservationDTO> addedReservation = reservationService.addIndividualReservation(reservationDTO);
         return ResponseEntity.ok(addedReservation);
     }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @PostMapping(value = "/addGroupReservation")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<?> addGroupReservation(@RequestBody @Validated List<ReservationDTO> reservationDTOs) {
+        try {
+            List<ReservationDTO> results = reservationService.addGroupReservations(reservationDTOs);
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            String errorResponse = ("Failed to add group reservations");
+            return ResponseEntity.internalServerError().body(errorResponse);
+        }
+    }
+
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/hasReservationToday")
     public ApiResponse hasReservationToday() {
@@ -125,6 +142,7 @@ public class ReservationController {
             return new WeekReservationsResponse(null, 0.0, false, "Error checking reservations: " + e.getMessage());
         }
     }
+
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/hasReservationTomorrow")
     public ApiResponse hasReservationTomorrow() {
