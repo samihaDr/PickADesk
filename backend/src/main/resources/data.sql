@@ -17,22 +17,22 @@ INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_sch
 INSERT INTO user ( firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Omar', 'Jabri', 'omar@myCompany.com', '$2y$13$XXYYZZAABBCCDD.EEFfghijkLMNOPQRST.UVWxyz12345678', 'MANAGER', 7, 'FULL_TIME',2.5, FALSE, TRUE);
 
 -- Insert into reservation table
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-26',true ,true, 1, 1, 1);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-22',true, true, 2, 2, 1);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-25', false, true, 3, 2, 3);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-19',true, true, 1, 6, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-24',false, true, 3, 1, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-16',true, false, 2, 1, 20);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-19', true, false, 3, 3, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-24', false, true, 4, 4, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-23', true, true, 5, 4, 1);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-05-02', true, false, 6, 13, 3);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-19', false, true, 7, 7, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-30', true, true, 8, 9, 1);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-24', true, false, 9, 8, 3);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-05-06', false, true, 10, 10, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-29', false, true, 10, 13, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id) VALUES ('2024-04-30', false, true, 10, 1, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-05-03',true ,true, 1, 1, 1, false, 1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-22',true, true, 2, 2, 1, false, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-25', false, true, 3, 2, 3, false, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-19',true, true, 1, 6, 2, false, 6);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-24',false, true, 3, 1, 2, false, 1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-16',true, false, 2, 1, 20, false, 1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-19', true, false, 3, 3, 2, false, 3);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-24', false, true, 4, 4, 2, false, 4);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-23', true, true, 5, 4, 1, false, 4);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-05-02', true, false, 6, 13, 3, false, 13);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-19', false, true, 7, 7, 2, false, 7);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-30', true, true, 8, 9, 1, false, 9);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-24', true, false, 9, 8, 3, false, 8);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-05-06', false, true, 10, 10, 2, false, 10);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-29', false, true, 10, 13, 2, false, 13);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, created_by) VALUES ('2024-04-30', false, true, 10, 1, 2, false, 1);
 
 --Insert into country table
 INSERT INTO country (name) VALUES ('Belgium');
