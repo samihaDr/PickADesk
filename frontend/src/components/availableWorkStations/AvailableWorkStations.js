@@ -395,34 +395,48 @@ export default function AvailableWorkStations({formSent}) {
                     <Modal.Title>Reservation Confirmed</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {selectedStationDetails ? (
+                    {isGroupBooking ? (
                         <div>
                             <div className="centered-icon">
-                                <i
-                                    className="bi bi-check-circle-fill"
-                                    style={{color: "green", fontSize: "4,5rem"}}
-                                ></i>
+                                <i className="bi bi-check-circle-fill" style={{color: "green", fontSize: "4.5rem"}}></i>
                             </div>
-                            <div>
-                                <p>
-                                    <i className="bi bi-calendar3"></i> Date: {formattedDate}
-                                </p>
-                                <p>
-                                    <i className="bi bi-building"></i> WorkPlace:{" "}
-                                    {selectedStationDetails.workPlace}
-                                </p>
-                                <p>
-                                    <i className="bi bi-geo-alt"></i> Zone:{" "}
-                                    {selectedStationDetails.zone.name}
-                                </p>
-                                <p>
-                                    <i className="bi bi-layout-text-sidebar-reverse"></i> AreaWork
-                                    Type: {selectedStationDetails.workArea.name}
-                                </p>
-                            </div>
+                            <h4 className="text-success">Reservation Successful!</h4>
+                            <p>You have successfully completed a group reservation for your team.</p>
+                            <p>
+                                <strong>Total Stations Reserved:</strong> {selectedStations.length} for <strong>{teamMembers.length}</strong> team members.
+                            </p>
+                            <p>
+                                <strong>Date:</strong> {formattedDate}
+                            </p>
+                            <p>
+                                <strong>Time Period:</strong> {timePeriodString}
+                            </p>
+                            <p>Please check your email for confirmation details and further instructions.</p>
                         </div>
                     ) : (
-                        <p>Failed to load reservation details.</p>
+                        <div>
+                            <div className="centered-icon">
+                                <i className="bi bi-check-circle-fill" style={{color: "green", fontSize: "4.5rem"}}></i>
+                            </div>
+                            <h4 className="text-success">Reservation Successful!</h4>
+                            <p>Your reservation has been successfully completed.</p>
+                            <p>
+                                <strong>WorkPlace:</strong> {selectedStationDetails ? selectedStationDetails.workPlace : "N/A"}
+                            </p>
+                            <p>
+                                <strong>Zone:</strong> {selectedStationDetails ? selectedStationDetails.zone.name : "N/A"}
+                            </p>
+                            <p>
+                                <strong>AreaWork Type:</strong> {selectedStationDetails ? selectedStationDetails.workArea.name : "N/A"}
+                            </p>
+                            <p>
+                                <strong>Date:</strong> {formattedDate}
+                            </p>
+                            <p>
+                                <strong>Time Period:</strong> {timePeriodString}
+                            </p>
+                            <p>Please check your email for confirmation details.</p>
+                        </div>
                     )}
                 </Modal.Body>
                 <Modal.Footer>
