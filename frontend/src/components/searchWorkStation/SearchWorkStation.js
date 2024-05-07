@@ -20,8 +20,10 @@ export default function SearchWorkStation({onFormSend}) {
     const {workStations, setWorkStations, setSelectedOptions,
         isGroupBooking, setIsGroupBooking,
         teamMembers, setTeamMembers,
-        selectedStations, setSelectedStations
+        selectedStations, setSelectedStations,
+        selectedMembers, setSelectedMembers
         } = useContext(WorkStationContext);
+    // const [selectedMembers, setSelectedMembers] = useState([]); // État pour stocker les membres de l'équipe sélectionnés
     const [isLoading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const { userInfo= {}, userPreferences} = useContext(GlobalContext);
@@ -80,14 +82,16 @@ export default function SearchWorkStation({onFormSend}) {
 
     }, []);
 
-    // useEffect(() => {
-    //     if (isGroupBooking && userInfo.teamId ) {
-    //         fetchTeamList(userInfo.teamId);
-    //     }
-    // }, [isGroupBooking, userInfo.teamId, fetchTeamList]);
+    useEffect(() => {
+        if (isGroupBooking && selectedMembers) {
+            console.log("SelectedMembers : " , selectedMembers);
+        }
+    }, [isGroupBooking, selectedMembers]);
+
     useEffect(() => {
         resetFormToIndividualPreferences();
     }, [userPreferences, isGroupBooking]);
+
     const resetFormToIndividualPreferences = () => {
         if (userPreferences && !isGroupBooking) {
             setZone(userPreferences.zone?.id || "");
@@ -326,6 +330,31 @@ export default function SearchWorkStation({onFormSend}) {
     }
     const isManager = userInfo?.role  === "MANAGER";
 
+    const handleTeamMemberChange = (e) => {
+        const selectedMemberId = e.target.value;
+        if (selectedMembers.includes(selectedMemberId)) {
+            setSelectedMembers(selectedMembers.filter(id => id !== selectedMemberId));
+        } else {
+            setSelectedMembers([...selectedMembers, selectedMemberId]);
+        }
+    };
+
+    const renderTeamMembersDropdown = () => (
+        <select
+            onChange={handleTeamMemberChange}
+            className="form-control"
+            multiple
+            value={selectedMembers} // Assurez-vous de passer l'état actuel pour une sélection correcte
+            size="5"
+            style={{ height: '90px', overflowY: 'auto' }}
+        >
+            {teamList.map(member => (
+                <option key={member.id} value={member.id}>
+                    {member.firstname} {member.lastname} {selectedMembers.includes(member.id.toString()) ? "✓" : ""}
+                </option>
+            ))}
+        </select>
+    );
     if (!userInfo) {
         return null;
     }
@@ -399,18 +428,19 @@ export default function SearchWorkStation({onFormSend}) {
                                             </div>
 
                                             {/* Conditionnellement afficher le champ "Number of Team Members" si isGroupBooking est vrai */}
-                                            {isGroupBooking && (
-                                                <div style={{ flex: '0 1 150px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                    <label>Res number</label>
-                                                    <input
-                                                        type="text"
-                                                        value={teamMembers.length}
-                                                        disabled={true}
-                                                        className="form-control"
-                                                        style={{ width: '50%' }} // L'input utilise toute la largeur du div
-                                                    />
-                                                </div>
-                                            )}
+                                             {isGroupBooking && renderTeamMembersDropdown()}
+                                            {/*(*/}
+                                            {/*    <div style={{ flex: '0 1 150px', display: 'flex', alignItems: 'center', gap: '10px' }}>*/}
+                                            {/*        <label>Res number</label>*/}
+                                            {/*        <input*/}
+                                            {/*            type="text"*/}
+                                            {/*            value={teamMembers.length}*/}
+                                            {/*            disabled={true}*/}
+                                            {/*            className="form-control"*/}
+                                            {/*            style={{ width: '50%' }} // L'input utilise toute la largeur du div*/}
+                                            {/*        />*/}
+                                            {/*    </div>*/}
+                                            {/*)}*/}
                                         </div>
                                     ) : null}
                                 </div>

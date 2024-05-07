@@ -17,9 +17,10 @@ export default function AvailableWorkStations({formSent}) {
         workStations,
         selectedOptions,
         isGroupBooking,
-        teamMembers,
+        //teamMembers,
         selectedStations,
-        setSelectedStations
+        setSelectedStations,
+        selectedMembers
     } =
         useContext(WorkStationContext);
 
@@ -63,9 +64,9 @@ export default function AvailableWorkStations({formSent}) {
     useEffect(() => {
         if (selectedStations.length > 0) {
             console.log("Selected stations updated: ", selectedStations);
-            console.log("Team member IDs in AvailableWork....: ", teamMembers);
+            console.log("Team member IDs in AvailableWork....: ", selectedMembers);
         }
-    }, [selectedStations, teamMembers]);
+    }, [selectedStations, selectedMembers]);
 
     // Ajout d'une fonction pour vérifier si un poste est favori
     const isFavorite = (stationId) => {
@@ -133,8 +134,8 @@ export default function AvailableWorkStations({formSent}) {
     };
 
     const handleGroupReservationSubmit = async () => {
-        if (selectedStations.length !== teamMembers.length) {
-            alert(`Please select exactly ${teamMembers.length} workstations for your group.`);
+        if (selectedStations.length !== selectedMembers.length) {
+            alert(`Please select exactly ${selectedMembers.length} workstations for your group.`);
             return;
         }
 
@@ -146,7 +147,7 @@ export default function AvailableWorkStations({formSent}) {
             morning: selectedOptions.timePeriod.morning,
             afternoon: selectedOptions.timePeriod.afternoon,
             reservationTypeId: selectedOptions.reservationType,
-            userId: teamMembers[index]
+            userId: selectedMembers[index]
         }));
 
         console.log("Sending group reservation details XXXXLLL: ", reservationDetails);
@@ -279,7 +280,7 @@ export default function AvailableWorkStations({formSent}) {
                         {isGroupBooking ? (
                             <div>
                                 You are about to make a group reservation. You need to
-                                book <span className="bold-text">{teamMembers.length} </span> stations.
+                                book <span className="bold-text">{selectedMembers.length} </span> stations.
 
                                 For this date: <span className="bold-text">{formattedDate}</span>,
                                 in <span className="bold-text"> {timePeriodString}</span>.{""}
@@ -383,7 +384,7 @@ export default function AvailableWorkStations({formSent}) {
                     <button
                         className="btn btn-primary"
                         onClick={handleGroupReservationSubmit}
-                        disabled={selectedStations.length !== teamMembers.length}
+                        disabled={selectedStations.length !== selectedMembers.length}
                     >
                         Confirm Group Reservation
                     </button>
@@ -403,7 +404,7 @@ export default function AvailableWorkStations({formSent}) {
                             <h4 className="text-success">Reservation Successful!</h4>
                             <p>You have successfully completed a group reservation for your team.</p>
                             <p>
-                                <strong>Total Stations Reserved:</strong> {selectedStations.length} for <strong>{teamMembers.length}</strong> team members.
+                                <strong>Total Stations Reserved:</strong> {selectedStations.length} for <strong>{selectedMembers.length}</strong> team members.
                             </p>
                             <p>
                                 <strong>Date:</strong> {formattedDate}
