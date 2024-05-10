@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 
 @Data
@@ -20,7 +22,9 @@ public class ReservationDTO {
     private Long userId;
     private Integer reservationTypeId;
     private boolean isGroupBooking;
+    private boolean isColleagueBooking;
     private Long createdBy;
+    private Long colleagueId;
 
 
     // Méthode pour convertir l'entité en DTO
@@ -38,7 +42,9 @@ public class ReservationDTO {
                 reservation.getUser() != null ? reservation.getUser().getId() : null,
                 reservation.getReservationTypeId(),
                 reservation.isGroupBooking(),
-                reservation.getCreatedBy()
+                reservation.isColleagueBooking(),
+                reservation.getCreatedBy(),
+                reservation.getColleagueId().orElse(null)
 
         );
     }

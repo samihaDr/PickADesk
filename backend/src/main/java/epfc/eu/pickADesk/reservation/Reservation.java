@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Data
 @Entity
@@ -59,6 +60,12 @@ public class Reservation {
     @Column(name = "is_group_booking")
     private boolean isGroupBooking;
 
+    @Column(name = "is_colleague_booking")
+    private boolean isColleagueBooking;
+
+    // Assurez-vous de déclarer correctement colleagueId pour utiliser Optional
+    @Transient  // si vous ne souhaitez pas stocker cette valeur dans la DB
+    private Optional<Long> colleagueId = Optional.empty();
     public boolean isMorning() {
         return morning != null && morning;
     }
