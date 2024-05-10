@@ -7,6 +7,7 @@ import "./SearchWorkStation.scss";
 import {WorkStationContext} from "../../services/WorkStationContext";
 import {useTeamList} from "../hooks/useTeamList";
 import {AUTH_TOKEN_KEY} from "../../App";
+import axios from "axios";
 
 export default function SearchWorkStation({onFormSend}) {
     const [data, setData] = useState({
@@ -17,19 +18,22 @@ export default function SearchWorkStation({onFormSend}) {
         furniture: [],
     });
 
-    const {workStations, setWorkStations, setSelectedOptions,
+    const {
+        workStations, setWorkStations, setSelectedOptions,
         isGroupBooking, setIsGroupBooking,
         teamMembers, setTeamMembers,
         selectedStations, setSelectedStations,
-        selectedMembers, setSelectedMembers
-        } = useContext(WorkStationContext);
-    // const [selectedMembers, setSelectedMembers] = useState([]); // État pour stocker les membres de l'équipe sélectionnés
+        selectedMembers, setSelectedMembers,
+        isColleagueBooking, setColleagueBooking,
+        selectedColleague, setSelectedColleague
+    } = useContext(WorkStationContext);
+    const [userList, setUserList] = useState([]);
     const [isLoading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
-    const { userInfo= {}, userPreferences} = useContext(GlobalContext);
+    const {userInfo = {}, userPreferences} = useContext(GlobalContext);
     const [isAnyEquipmentChecked, setIsAnyEquipmentChecked] = useState(false);
     const [isAnyFurnitureChecked, setIsAnyFurnitureChecked] = useState(false);
-    const { teamList,fetchTeamList, isLoading: isTeamListLoading, error: teamListError } = useTeamList();
+    const {teamList, fetchTeamList, isLoading: isTeamListLoading, error: teamListError} = useTeamList();
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
     const [date, setDate] = useState(new Date());
     const today = new Date();
@@ -78,15 +82,23 @@ export default function SearchWorkStation({onFormSend}) {
         };
 
         console.log("IsGroupBooking in SearchWorkStation : ", isGroupBooking);
+        console.log("IsColleagueBooking in SearchWorkStation : ", isColleagueBooking);
         fetchData();
 
     }, []);
 
     useEffect(() => {
-        if (isGroupBooking && selectedMembers) {
-            console.log("SelectedMembers : " , selectedMembers);
+        if (isGroupBooking && selectedMembers){
+            console.log("SelectedMembers : ", selectedMembers);
         }
     }, [isGroupBooking, selectedMembers]);
+
+    useEffect(() => {
+        if (isColleagueBooking && userList){
+            console.log("isColleagueBooking 11111111 : ", isColleagueBooking);
+            console.log("UserList 11111111 : ", userList);
+        }
+    }, [isColleagueBooking, userList]);
 
     useEffect(() => {
         resetFormToIndividualPreferences();
@@ -160,8 +172,10 @@ export default function SearchWorkStation({onFormSend}) {
             equipment,
             furniture,
             isGroupBooking,
+            isColleagueBooking,
             teamMembers,
-            selectedStations
+            selectedStations,
+            selectedColleague
 
         };
 
@@ -178,8 +192,11 @@ export default function SearchWorkStation({onFormSend}) {
                 reservationType,
                 workArea,
                 isGroupBooking,
+                isColleagueBooking,
                 teamMembers,
-                selectedStations
+                selectedStations,
+                selectedColleague,
+
             });
 
             onFormSend(); // Déclencher la mise à jour d'état dans le parent
@@ -202,10 +219,12 @@ export default function SearchWorkStation({onFormSend}) {
             equipment, // Ce sont des listes d'IDs
             furniture, // Ce sont des listes d'IDs
             isGroupBooking,
+            isColleagueBooking,
             teamMembers,
-            selectedStations
+            selectedStations,
+            selectedColleague
         } = formData;
-        console.log("FormData :" , formData);
+        console.log("FormData :", formData);
         const params = new URLSearchParams({
             reservationDate: date.toISOString().split("T")[0], // Convertit la date en format ISO (yyyy-MM-dd)
             morning: timePeriod.morning,
@@ -216,9 +235,11 @@ export default function SearchWorkStation({onFormSend}) {
             screenId: screen || "",
             equipmentIds: equipment.join(",") || "",
             furnitureIds: furniture.join(",") || "",
-            isGroupBooking: isGroupBooking ,
+            isGroupBooking: isGroupBooking,
+            isColleagueBooking: isColleagueBooking,
             teamMembers: teamMembers || [],
             selectedStations: selectedStations || [],
+            selectedColleague: selectedColleague || null,
             page: 0,
             size: 10,
             sortBy: "id",
@@ -301,13 +322,10 @@ export default function SearchWorkStation({onFormSend}) {
         if (isChecked) {
             try {
                 const teamMembersAll = await fetchTeamList(userInfo.teamId, jwt);
-                console.log("TeamMembers : ", teamMembersAll);
                 const ids = teamMembersAll.map(member => member.id);
-                console.log("IDS : " , ids);
-                 setTeamMembers(ids);  // Mettre à jour l'état avec les IDs récupérés
-                console.log("TeamMemberIds 1 : ", teamMembers);
-                // const stationIds = selectedStations.map(station => station.id);
-                // console.log("Selected stations in SearchWorkStatiojs: ", stationIds);
+                setTeamMembers(ids);  // Mettre à jour l'état avec les IDs récupérés
+                const stationIds = selectedStations.map(station => station.id);
+                console.log("Selected stations in SearchWorkStatiojs: ", stationIds);
                 const teamDayId = data.reservationTypes.find(reservationType => reservationType.name === "Team day")?.id || "";
                 // const meetingSpaceId = data.workAreas.find(workArea => workArea.name === "Meeting Space")?.id || "";
 
@@ -328,7 +346,8 @@ export default function SearchWorkStation({onFormSend}) {
         }
         console.log("TeamMemberIds after fetch: ", teamMembers);  // This might still show the old value due to setState being asynchronous
     }
-    const isManager = userInfo?.role  === "MANAGER";
+
+    const isManager = userInfo?.role === "MANAGER";
 
     const handleTeamMemberChange = (e) => {
         const selectedMemberId = e.target.value;
@@ -338,7 +357,37 @@ export default function SearchWorkStation({onFormSend}) {
             setSelectedMembers([...selectedMembers, selectedMemberId]);
         }
     };
+    const fetchEmployeeList = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get("/api/users");
+            const sortedData = response.data.sort((a, b) =>
+                a.email.localeCompare(b.email),
+            );
+            setUserList(sortedData);
 
+        } catch (error) {
+            setErrorMessage("Unable to load the list of employees.");
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleColleagueBookingChange = (e) => {
+        const isChecked = e.target.checked;
+        setColleagueBooking(isChecked);
+        if (isChecked) {
+            const userList = fetchEmployeeList();
+            console.log("UserList474747 : ", userList);
+            console.log("isColleagueBooking 5454646:", isColleagueBooking);
+        } else {
+            // Réinitialiser les valeurs ou ajuster le formulaire pour un mode de réservation standard
+            resetFormToIndividualPreferences();
+        }
+    };
+    const handleColleagueChange = (e) => {
+        setSelectedColleague(e.target.value);
+        console.log("SelectedColleague : " , selectedColleague);
+    };
     const renderTeamMembersDropdown = () => (
         <select
             onChange={handleTeamMemberChange}
@@ -346,11 +395,27 @@ export default function SearchWorkStation({onFormSend}) {
             multiple
             value={selectedMembers} // Assurez-vous de passer l'état actuel pour une sélection correcte
             size="5"
-            style={{ height: '90px', overflowY: 'auto' }}
+            style={{height: '60px', overflowY: 'auto'}}
         >
             {teamList.map(member => (
                 <option key={member.id} value={member.id}>
                     {member.firstname} {member.lastname} {selectedMembers.includes(member.id.toString()) ? "✓" : ""}
+                </option>
+            ))}
+        </select>
+    );
+
+    const renderUserListDropdown = () => (
+        <select
+            onChange={handleColleagueChange}
+            className="form-control"
+            value={selectedColleague} // Assurez-vous de passer l'état actuel pour une sélection correcte
+            // size="2"
+            style={{height: '25px', overflowY: 'auto'}}
+        >
+            {userList.map(user => (
+                <option key={user.id} value={user.id}>
+                    {user.firstname} {user.lastname}
                 </option>
             ))}
         </select>
@@ -413,37 +478,54 @@ export default function SearchWorkStation({onFormSend}) {
                                             <label className="checkbox-label">Afternoon</label>
                                         </div>
                                     </div>
-                                    {/* Ajout d'une option pour sélectionner une réservation de groupe */}
-                                    <div className="group_booking">
-                                    {isManager ? (
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                    {/* Ajout d'une option pour sélectionner une réservation pour un collégue */}
+                                    <div className="colleague_booking">
+
+                                        <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
                                             {/* Conteneur pour le checkbox "Group Booking" et son label */}
-                                            <div style={{ flex: '1', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <div style={{
+                                                flex: '1',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '10px'
+                                            }}>
                                                 <input
                                                     type="checkbox"
-                                                    checked={isGroupBooking}
-                                                    onChange={handleGroupBookingChange}
+                                                    checked={isColleagueBooking}
+                                                    onChange={handleColleagueBookingChange}
                                                 />
-                                                <label>Group Booking</label>
+                                                <label>Book for a colleague</label>
                                             </div>
 
                                             {/* Conditionnellement afficher le champ "Number of Team Members" si isGroupBooking est vrai */}
-                                             {isGroupBooking && renderTeamMembersDropdown()}
-                                            {/*(*/}
-                                            {/*    <div style={{ flex: '0 1 150px', display: 'flex', alignItems: 'center', gap: '10px' }}>*/}
-                                            {/*        <label>Res number</label>*/}
-                                            {/*        <input*/}
-                                            {/*            type="text"*/}
-                                            {/*            value={teamMembers.length}*/}
-                                            {/*            disabled={true}*/}
-                                            {/*            className="form-control"*/}
-                                            {/*            style={{ width: '50%' }} // L'input utilise toute la largeur du div*/}
-                                            {/*        />*/}
-                                            {/*    </div>*/}
-                                            {/*)}*/}
+                                            {isColleagueBooking && renderUserListDropdown()}
                                         </div>
-                                    ) : null}
-                                </div>
+
+                                    </div>
+                                    {/* Ajout d'une option pour sélectionner une réservation de groupe */}
+                                    <div className="group_booking">
+                                        {isManager ? (
+                                            <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+                                                {/* Conteneur pour le checkbox "Group Booking" et son label */}
+                                                <div style={{
+                                                    flex: '1',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '10px'
+                                                }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isGroupBooking}
+                                                        onChange={handleGroupBookingChange}
+                                                    />
+                                                    <label>Group Booking</label>
+                                                </div>
+
+                                                {/* Conditionnellement afficher le champ "Number of Team Members" si isGroupBooking est vrai */}
+                                                {isGroupBooking && renderTeamMembersDropdown()}
+                                            </div>
+                                        ) : null}
+                                    </div>
 
                                     <div className="selectDetails">
                                         <div className="mb-3">
