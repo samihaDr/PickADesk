@@ -18,9 +18,11 @@ export default function AvailableWorkStations({formSent}) {
         selectedOptions,
         isGroupBooking,
         //teamMembers,
+        isColleagueBooking,
         selectedStations,
         setSelectedStations,
-        selectedMembers
+        selectedMembers,
+        selectedColleague
     } =
         useContext(WorkStationContext);
 
@@ -114,10 +116,10 @@ export default function AvailableWorkStations({formSent}) {
     const checkIfReservationCanBeMade = async (stationId, selectedOptions) => {
         const {morning, afternoon} = selectedOptions.timePeriod;
         const formattedDate = format(new Date(selectedOptions.date), "yyyy-MM-dd");
-        console.log("ReservationDate : ", formattedDate);
+        const userId = isColleagueBooking ?selectedColleague : userInfo.id;
         try {
             const response = await axios.get(
-                `/api/reservations/checkReservation/${userInfo.id}/${formattedDate}?morning=${morning}&afternoon=${afternoon}`,
+                `/api/reservations/checkReservation/${userId}/${formattedDate}?morning=${morning}&afternoon=${afternoon}`,
                 {
                     headers: {
                         Authorization: `Bearer ${jwt}`,
@@ -125,7 +127,7 @@ export default function AvailableWorkStations({formSent}) {
                 },
             );
             // Le backend retourne directement true ou false
-            console.log("ReseponseCheck : ", response.data);
+            console.log("ResponseCheck : ", response.data);
             return response.data;
         } catch (error) {
             console.error("Erreur lors de la vérification de la réservation:", error);
@@ -153,7 +155,7 @@ export default function AvailableWorkStations({formSent}) {
         console.log("Sending group reservation details XXXXLLL: ", reservationDetails);
 
         try {
-            const result = await bookWorkStation(reservationDetails, true);
+            const result = await bookWorkStation(reservationDetails, true, false);
             if (result.success) {
                 setShowModal(true);
                 await calculateRemaining(userInfo.id);
@@ -173,7 +175,8 @@ export default function AvailableWorkStations({formSent}) {
 
     const handleReservationClick = async (stationId) => {
         setLoading(true); // Activer l'indicateur de chargement
-
+        console.log("SelectedColleague : " , selectedColleague);
+        console.log("IsColleagueBooking : " , isColleagueBooking);
         try {
             const canBook = await checkIfReservationCanBeMade(
                 stationId,
@@ -181,16 +184,22 @@ export default function AvailableWorkStations({formSent}) {
             );
             console.log("Can book:", canBook);
             if (!canBook) {
-                // Création de l'objet de réservation pour un individu
+                // Création de l'objet de réservation pour un individu ou un collègue
                 const reservationDetails = {
                     workStation: { id: stationId },
                     reservationDate: format(new Date(selectedOptions.date), "yyyy-MM-dd"),
                     morning: selectedOptions.timePeriod.morning,
                     afternoon: selectedOptions.timePeriod.afternoon,
                     reservationTypeId: selectedOptions.reservationType,
+                    colleagueId: selectedColleague,
+                    isColleagueBooking: isColleagueBooking
                 };
+                console.log("Sending reservation details IndividualReservation: ", reservationDetails);
+                console.log("isColleagueBooking after bookWorkStation ", isColleagueBooking);
+                const reservationResult =  isColleagueBooking ? await bookWorkStation(reservationDetails,false, true):
+                await bookWorkStation(reservationDetails,false, false);
+                console.log("SelectedColleague after bookWorkStation ", reservationDetails.colleagueId);
 
-                const reservationResult = await bookWorkStation(reservationDetails, false);
                 console.log("Reservation result:", reservationResult);
                 if (reservationResult.success) {
                     await calculateRemaining(userInfo.id);
