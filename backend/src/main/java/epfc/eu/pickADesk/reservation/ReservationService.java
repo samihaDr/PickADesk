@@ -160,8 +160,18 @@ public class ReservationService {
 
     public List<ReservationDTO> addIndividualReservation(ReservationDTO reservationDTO) {
         List<ReservationDTO> results = new ArrayList<>();
-        Long userId = this.userService.getUserConnected().getId();
+        Long userId;
+
+        if (reservationDTO.getColleagueId() != null) {
+            userId = reservationDTO.getColleagueId();
+            reservationDTO.setColleagueBooking(true);
+        } else {
+            userId = this.userService.getUserConnected().getId();
+            reservationDTO.setColleagueBooking(false);
+        }
+
         Reservation reservation = reservationMapper.reservationDTOToReservation(reservationDTO);
+
         List<Reservation> existingReservations = reservationRepository.findReservationsForTodayWithFlexibleTiming(userId, reservation.getReservationDate());
 
         for (Reservation existingReservation : existingReservations) {
@@ -173,8 +183,9 @@ public class ReservationService {
 
         validateReservationDate(reservation);
         reservation.setUser(userService.findById(userId).orElseThrow(() -> new RuntimeException("User not found with ID: " + userId)));
-        reservation.setCreatedBy(userId);
+        reservation.setCreatedBy(this.userService.getUserConnected().getId());
         reservation.setGroupBooking(reservationDTO.isGroupBooking());
+        reservation.setColleagueBooking(reservationDTO.isColleagueBooking());
         workStationRepository.findById(reservationDTO.getWorkStation().getId()).ifPresent(reservation::setWorkStation);
         reservation.setMorning(reservationDTO.getMorning());
         reservation.setAfternoon(reservationDTO.getAfternoon());
