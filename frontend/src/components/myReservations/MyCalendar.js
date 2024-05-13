@@ -6,11 +6,7 @@ import ReservationDetails from "../reservation/ReservationDetails";
 
 const localizer = momentLocalizer(moment);
 
-const AgendaEvent = React.memo(({ event }) => (
-  <div>
-    <span>WorkPlace n° {event.workStation.workPlace}</span>
-  </div>
-));
+
 
 const getEventStyle = (event) => {
   const eventStart = moment(event.start);
@@ -40,7 +36,14 @@ const getEventStyle = (event) => {
     border: "none",
   };
 };
-
+function MyEvent({ event }) {
+  return (
+      <div>
+        <img src={event.icon} alt={event.alt} style={{ height: 30, width: 30 }} />
+        Seat n°: {event.workStation.workPlace}
+      </div>
+  );
+}
 function MyCalendar({ events, refreshEvents }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showModal, setShowModal] = useState(false);
@@ -70,7 +73,7 @@ function MyCalendar({ events, refreshEvents }) {
 
   return (
     <>
-      <div style={{ height: "600px", width: "900px" }}>
+      <div style={{ height: "600px", width: "1000px" }}>
         <Calendar
           localizer={localizer}
           events={events}
@@ -86,8 +89,9 @@ function MyCalendar({ events, refreshEvents }) {
           onSelectEvent={handleEventSelect}
           components={{
             agenda: {
-              event: AgendaEvent,
+              event: MyEvent,
             },
+            event: MyEvent
           }}
         />
       </div>
