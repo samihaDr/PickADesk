@@ -11,20 +11,18 @@ import java.util.Optional;
 
 @Mapper(componentModel = "spring", uses = ReservationMapper.class)
 public interface UserMapper {
-//    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-   // UserDTO userToUserDTO(Optional<User> user);
-
+//    @Mapping(target = "password", ignore = true)
     UserDTO userToUserDTO(Optional<User> user);
 
-    @Mapping(target = "password", ignore = true) // Assurez-vous que le mot de passe n'est pas inclus
-    UserDTO userToUserDTO(User user);
-
-    @Mapping(target = "id", source = "id") // N'ignorez pas l'id si vous voulez supporter les mises à jour
+    @Mapping(target = "id", ignore = true)
     User userDTOToUser(UserDTO userDTO);
 
+    UserDTO userToUserDTO(User user);
     List<UserDTO> userListToUserDTOList(List<User> userList);
-
+//    default UserDTO map(User value) {
+//        return userToUserDTO(Optional.ofNullable(value));
+//    }
 
 }
-
