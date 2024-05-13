@@ -11,7 +11,7 @@ public class WorkStationDTO {
     private Long id;
     private String workPlace;
     private ZoneDTO zone;
-    private ReservationTypeDTO reservationType;
+//    private ReservationTypeDTO reservationType;
     private WorkAreaDTO workArea;
     private ScreenDTO screen;
     private List<EquipmentDTO> equipments;
