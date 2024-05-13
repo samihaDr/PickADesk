@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 const useCalculateRemaining = () => {
-  const { userInfo, setWeeklyRemaining } = useContext(GlobalContext);
+  const { userInfo, setWeeklyRemaining, setWeeklyBookings} = useContext(GlobalContext);
 
   return useCallback(
     async (userId) => {
@@ -32,10 +32,13 @@ const useCalculateRemaining = () => {
                     totalDaysReserved += 0.5;
                 }
             });
+
+            // console.log("WeeklyBOOKINGS : ", WeeklyBookings);
             const memberQuota = response.data.memberQuota;
             console.log("MemberQuota : ", memberQuota);
             const newRemaining = memberQuota - totalDaysReserved;
             setWeeklyRemaining(newRemaining);
+            setWeeklyBookings(totalDaysReserved);
         } else {
             setWeeklyRemaining(userInfo.memberQuota);
         }

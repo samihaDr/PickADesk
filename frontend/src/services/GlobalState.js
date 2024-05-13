@@ -8,6 +8,7 @@ const initialState = {
   userInfo: null,
   userPreferences: null,
   weeklyRemaining: null,
+  weeklyBookings: null,
   reservations: [],
   favorites: [],
   isAuthenticated: !!sessionStorage.getItem(AUTH_TOKEN_KEY),
@@ -39,6 +40,11 @@ const globalReducer = (state, action) => {
       return {
         ...state,
         weeklyRemaining: action.payload,
+      };
+    case "SET_WEEKLY_BOOKINGS":
+      return {
+        ...state,
+        weeklyBookings: action.payload,
       };
     case "SET_AUTHENTICATED":
       return {
@@ -90,6 +96,10 @@ export const GlobalProvider = ({ children }) => {
     sessionStorage.setItem("weeklyRemaining", JSON.stringify(remaining));
     dispatch({ type: "SET_REMAINING", payload: remaining });
   };
+  const setWeeklyBookings = (weeklyBookings) => {
+    sessionStorage.setItem("weeklyBookings", JSON.stringify(weeklyBookings));
+    dispatch({ type: "SET_WEEKLY_BOOKINGS", payload: weeklyBookings});
+  };
   const setIsAuthenticated = (isAuthenticated) => {
     dispatch({ type: "SET_AUTHENTICATED", payload: isAuthenticated });
     // Mise à jour du stockage du navigateur pour refléter l'état d'authentification
@@ -133,6 +143,7 @@ export const GlobalProvider = ({ children }) => {
         setUserConnected,
         setUserInfo,
         setWeeklyRemaining,
+        setWeeklyBookings,
         setUserPreferences,
         setIsAuthenticated,
         setReservations,
