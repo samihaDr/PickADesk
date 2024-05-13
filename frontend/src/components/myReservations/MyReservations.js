@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import MyCalendar from "./MyCalendar";
+import harmoniousIcon from "../../assets/icons/harmoniousIcon.png";
+import userIcon from "../../assets/icons/userIcon.png";
 
 function Reservations() {
     const [events, setEvents] = useState([]);
@@ -33,29 +35,34 @@ function Reservations() {
     function convertReservationsToEvents(reservations) {
         return reservations.flatMap((reservation) => {
             const {start, end} = calculateEventTimes(reservation);
-            let reservationTypeName = "";
+            let icon, alt;
 
             switch (reservation.reservationTypeId) {
                 case 1:
-                    reservationTypeName = "Individual space";
+                    icon = userIcon;
+                    alt = "individual space";
                     break;
                 case 2:
-                    reservationTypeName = "Collaborative space";
+                    icon = userIcon;
+                    alt = "collaborative space";
                     break;
                 case 3:
-                    reservationTypeName = "Team day";
+                    icon = harmoniousIcon;
+                    alt = "team day";
                     break;
                 default:
-                    reservationTypeName = "unspecified";
+                    icon = ""; // ou une icône par défaut
+                    alt = "unspecified";
             }
             return {
-                title: `${reservationTypeName}  Seat n°: ${reservation.workStation.workPlace}`,
                 ...reservation,
+                icon,
+                alt,
+                title: `Seat n°: ${reservation.workStation.workPlace}`,
                 start,
                 end,
                 allDay: false,
                 resource: reservation.id,
-
             };
         });
     }
