@@ -40,6 +40,21 @@ export default function ReservationDetails({
       : "#1f4e5f",
   };
 
+  let reservationTypeName = "";
+
+  switch (event?.reservationTypeId) {
+    case 1:
+      reservationTypeName = "Individual space";
+      break;
+    case 2:
+      reservationTypeName = "Collaborative space";
+      break;
+    case 3:
+      reservationTypeName = "Team day";
+      break;
+    default:
+      reservationTypeName = "unspecified";
+  }
   // Fonction pour annuler la réservation
   const confirmCancelReservation = async () => {
     if (isReservationPassed) {
@@ -105,6 +120,9 @@ export default function ReservationDetails({
           <div className="reservation-details">
             <div className="item">
               <strong>ReservationDate :</strong> {formattedDate}
+            </div>
+            <div className="item">
+              <strong>Reservation Type:</strong> {reservationTypeName}
             </div>
             <div className="item">
               <strong>Session :</strong> {event?.morning ? "Morning" : ""}{" "}
