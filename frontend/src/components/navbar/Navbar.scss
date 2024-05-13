@@ -48,17 +48,53 @@
     .quotaInfo {
       display: flex;
       align-items: center;
+      justify-content: space-around; // Cette propriété permet de répartir les icônes uniformément
+      width: 10%; // Assurez-vous que l'espace est utilisé sur toute la largeur
 
-      span {
-        margin-left: 1rem; // Espacement entre les infos de quota
+      .iconContainer {
+        display: flex;
+        flex-direction: column; // Alignement vertical des icônes avec le texte en dessous
+        align-items: center; // Centre les éléments horizontalement
+        text-align: center; // Assure que le texte est centré sous l'icône
+
+        img {
+          width: 34px;
+          height: 34px;
+          margin-bottom: 5px; // Un petit espace entre l'icône et le texte
+        }
+        .tooltipText {
+          transform: translateX(-50%);
+          visibility: hidden;
+          width: 120px;
+          background-color: #f4e7d3;
+          color: #1f4e5f;
+          text-align: center;
+          border-radius: 6px;
+          padding: 5px 0;
+          position: absolute;
+          z-index: 1;
+          bottom: 100%;
+          left: 50%;
+          margin-left: -60px; // Pour centrer le tooltip
+          opacity: 0;
+          transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        &:hover .tooltipText {
+          visibility: visible;
+          opacity: 1;
+        }
 
         div {
-          font-size: 0.9rem; // Taille du texte pour les infos de quota
+          color: #f4e7d3; // Couleur de texte pour les nombres
+          font-size: 1.0rem; // Taille de texte appropriée
         }
+
       }
-    }
-    .negative {
-      color: red;
+
+      .negative {
+        color: #ff6347; // Utiliser une couleur visible pour les valeurs négatives, comme le rouge
+      }
     }
 
     .nav {
