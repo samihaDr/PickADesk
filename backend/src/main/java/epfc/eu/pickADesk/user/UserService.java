@@ -1,6 +1,7 @@
 package epfc.eu.pickADesk.user;
 
 import epfc.eu.pickADesk.dto.UserDTO;
+import epfc.eu.pickADesk.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,18 +15,20 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     public UserDTO getUserConnected() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(email)
-                .map(UserDTO::fromUser) // Utilisez la méthode fromUser pour convertir User en UserDTO
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        return userMapper.userToUserDTO(user);
     }
 
     public Boolean isManager() {
@@ -36,20 +39,26 @@ public class UserService {
                 .orElse(false);
     }
 
+//    public List<UserDTO> getUsers() {
+//        List<User> users = userRepository.findAll();
+//        if (users.isEmpty()) {
+//            throw new IllegalArgumentException("Aucun utilisateur dans la liste");
+//        }
+//        return users.stream()
+//                .map(UserDTO::fromUser) // Convertir chaque User en UserDTO
+//                .collect(Collectors.toList());
+//    }
+
     public List<UserDTO> getUsers() {
         List<User> users = userRepository.findAll();
-        if (users.isEmpty()) {
-            throw new IllegalArgumentException("Aucun utilisateur dans la liste");
-        }
-        return users.stream()
-                .map(UserDTO::fromUser) // Convertir chaque User en UserDTO
-                .collect(Collectors.toList());
+        return userMapper.userListToUserDTOList(users);
     }
 
-    public UserDTO getEmployeeInfo(long employeeId ) {
-        return userRepository.findById(employeeId)
-                .map(UserDTO::fromUser) // Utilisez la méthode fromUser pour convertir User en UserDTO
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+    public UserDTO getEmployeeInfo(long employeeId) {
+        User user = userRepository.findById(employeeId)
+                .orElseThrow(() -> new UserNotFoundException("Employee not found with ID: " + employeeId));
+        return userMapper.userToUserDTO(user);
     }
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
