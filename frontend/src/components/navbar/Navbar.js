@@ -70,12 +70,12 @@ export default function Navbar() {
                     </div>
                     <div className="iconContainer">
                         <img src={workspaceIcon} alt="Total days reserved" />
-                        <div className={weeklyBookings > userInfo.memberQuota ? "negative" : ""}>{weeklyBookings}</div>
+                        <div>{weeklyBookings}</div>
                         <span className="tooltipText">Days reserved for the office</span>
                     </div>
                     <div className="iconContainer">
                         <img src={scaleIcon} alt="Balance" />
-                        <div>{weeklyRemaining}</div>
+                        <div className={weeklyRemaining < 0 ? "negative" : ""}>{weeklyRemaining}</div>
                         <span className="tooltipText">Weekly balance</span>
                     </div>
                 </div>
