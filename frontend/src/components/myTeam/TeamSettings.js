@@ -22,6 +22,7 @@ export default function TeamSettings() {
             const availability = await checkColleagueAvailability(member.id);
             const { totalDaysReserved, reservationsDetails } = await employeeWeeklyReservations(member.id);
             const daysWorked = getDaysPerWeek(member.workSchedule);
+
             console.log(`Member ${member.id} reservations:`, reservationsDetails);
             return {
                 ...member,
@@ -29,7 +30,8 @@ export default function TeamSettings() {
                 weeklyReservations: reservationsDetails,
                 daysWorked,
                 teleworkingDays: daysWorked - totalDaysReserved,
-                daysInOffice: totalDaysReserved
+                daysInOffice: totalDaysReserved,
+                balance: member.memberQuota - totalDaysReserved
             };
         }));
         console.log("Updated members with details:", membersWithDetails);
@@ -205,9 +207,12 @@ export default function TeamSettings() {
                             <th>Firstname</th>
                             <th>Lastname</th>
                             <th>Work Plan</th>
-                            {daysOfWeek.map(day => <th key={day}>{day}</th>)}
+                            <th>Allowed Homeworking</th>
                             <th>Days Teleworking</th>
                             <th>Days In Office</th>
+                            <th>Weekly Balance</th>
+                            {daysOfWeek.map(day => <th key={day}>{day}</th>)}
+
                         </tr>
                         </thead>
                         <tbody>
@@ -216,6 +221,10 @@ export default function TeamSettings() {
                                 <td>{member.firstname}</td>
                                 <td>{member.lastname}</td>
                                 <td>{getDaysPerWeek(member.workSchedule)} days</td>
+                                <td>{member.memberQuota} days</td>
+                                <td>{member.teleworkingDays}</td>
+                                <td>{member.daysInOffice}</td>
+                                <td>{member.balance}</td>
                                 {daysOfWeek.map(day => {
                                     const dayInfo = member.weeklyReservations && Array.isArray(member.weeklyReservations)
                                         ? member.weeklyReservations.find(d => d.day === day)
@@ -236,8 +245,7 @@ export default function TeamSettings() {
                                     }
                                     return <td key={day} style={{ backgroundColor: backgroundColor }}>{dayInfo ? dayInfo.status : "Teleworking"}</td>;
                                 })}
-                                <td>{member.teleworkingDays}</td>
-                                <td>{member.daysInOffice}</td>
+
 
                             </tr>
                         ))}
