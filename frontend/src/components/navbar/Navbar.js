@@ -66,12 +66,12 @@ export default function Navbar() {
                     <div className="iconContainer">
                         <img src={homeIcon} alt="Allowed home working" />
                         <div>{userInfo.memberQuota}</div>
-                        <span className="tooltipText">Authorised teleworking days</span>
+                        <span className="tooltipText">Allowed homeworking days</span>
                     </div>
                     <div className="iconContainer">
                         <img src={workspaceIcon} alt="Total days reserved" />
                         <div>{weeklyBookings}</div>
-                        <span className="tooltipText">Days reserved for the office</span>
+                        <span className="tooltipText">Days booked in the office</span>
                     </div>
                     <div className="iconContainer">
                         <img src={scaleIcon} alt="Balance" />

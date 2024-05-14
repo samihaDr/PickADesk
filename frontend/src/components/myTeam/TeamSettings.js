@@ -99,7 +99,7 @@ export default function TeamSettings() {
                         }
                         reservationsDetails.push({
                             day: dayFormatted,
-                            status: fullDay ? "Full Day In Office" : reservation.morning ? "Morning In Office" : "Afternoon In Office",
+                            status: fullDay ? "Full Day" : reservation.morning ? "Morning" : "Afternoon",
                             type: reservationType
                         });
                     }
@@ -208,7 +208,6 @@ export default function TeamSettings() {
                             <th>Lastname</th>
                             <th>Work Plan</th>
                             <th>Allowed Homeworking</th>
-                            <th>Days Teleworking</th>
                             <th>Days In Office</th>
                             <th>Weekly Balance</th>
                             {daysOfWeek.map(day => <th key={day}>{day}</th>)}
@@ -222,7 +221,6 @@ export default function TeamSettings() {
                                 <td>{member.lastname}</td>
                                 <td>{getDaysPerWeek(member.workSchedule)} days</td>
                                 <td>{member.memberQuota} days</td>
-                                <td>{member.teleworkingDays}</td>
                                 <td>{member.daysInOffice}</td>
                                 <td>{member.balance}</td>
                                 {daysOfWeek.map(day => {
@@ -243,7 +241,7 @@ export default function TeamSettings() {
                                                 break;
                                         }
                                     }
-                                    return <td key={day} style={{ backgroundColor: backgroundColor }}>{dayInfo ? dayInfo.status : "Teleworking"}</td>;
+                                    return <td key={day} style={{ backgroundColor: backgroundColor }}>{dayInfo ? dayInfo.status : "Homeworking"}</td>;
                                 })}
 
 
@@ -260,8 +258,8 @@ export default function TeamSettings() {
                             <thead>
                             <tr>
                                 {daysOfWeek.map(day => <th key={day}>{day}</th>)}
-                                <th>Days Teleworking</th>
                                 <th>Days In Office</th>
+                                <th>Weekly Balance</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -285,9 +283,9 @@ export default function TeamSettings() {
                                                 break;
                                         }
                                     }
-                                    return <td key={day} style={{ backgroundColor: backgroundColor }}>{dayInfo ? dayInfo.status : "Teleworking"}</td>;
+                                    return <td key={day} style={{ backgroundColor: backgroundColor }}>{dayInfo ? dayInfo.status : "Homeworking"}</td>;
                                 })}
-                                <td>{getPersonalStats().teleworkingDays}</td>
+                                <td>{getPersonalStats().balance}</td>
                                 <td>{getPersonalStats().daysInOffice}</td>
                             </tr>
                             </tbody>
