@@ -99,4 +99,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public UserQuotaUpdateDTO updateUserQuota(Long userId, UserQuotaUpdateDTO userQuotaUpdateDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setMemberQuota(userQuotaUpdateDTO.getMemberQuota());
+        user = userRepository.save(user);
+         return userMapper.userToUserQuotaUpdateDTO(user);
+
+    }
 }
