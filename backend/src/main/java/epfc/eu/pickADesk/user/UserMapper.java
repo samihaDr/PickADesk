@@ -21,6 +21,14 @@ public interface UserMapper {
     UserDTO userToUserDTO(User user);
     List<UserDTO> userListToUserDTOList(List<User> userList);
 
+    //  mappings for UserQuotaUpdateDTO
+    @Mapping(source = "memberQuota", target = "memberQuota")
+    @Mapping(source = "workSchedule", target = "workSchedule")
+    UserQuotaUpdateDTO userToUserQuotaUpdateDTO(User user);
+
+    @Mapping(target = "memberQuota", source = "memberQuota")
+    @Mapping(target = "workSchedule", source = "workSchedule")
+    User userQuotaUpdateDTOToUser(UserQuotaUpdateDTO userQuotaUpdateDTO);
 
     // mapping for BasicUserDTO
 //    @Mapping(target = "teamId", source = "team.id")
