@@ -1,6 +1,8 @@
 package epfc.eu.pickADesk.user;
 
+import epfc.eu.pickADesk.dto.BasicUserDTO;
 import epfc.eu.pickADesk.dto.UserDTO;
+import epfc.eu.pickADesk.dto.UserQuotaUpdateDTO;
 import epfc.eu.pickADesk.reservation.ReservationMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,16 +15,17 @@ import java.util.Optional;
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-//    @Mapping(target = "password", ignore = true)
     UserDTO userToUserDTO(Optional<User> user);
-
     @Mapping(target = "id", ignore = true)
     User userDTOToUser(UserDTO userDTO);
-
     UserDTO userToUserDTO(User user);
     List<UserDTO> userListToUserDTOList(List<User> userList);
-//    default UserDTO map(User value) {
-//        return userToUserDTO(Optional.ofNullable(value));
-//    }
 
+
+    // mapping for BasicUserDTO
+//    @Mapping(target = "teamId", source = "team.id")
+    BasicUserDTO userToBasicUserDTO(User user);
+
+//    @Mapping(target = "team.id", source = "teamId")
+    User basicUserDTOToUser(BasicUserDTO basicUserDTO);
 }

@@ -1,6 +1,8 @@
 package epfc.eu.pickADesk.user;
 
+import epfc.eu.pickADesk.dto.BasicUserDTO;
 import epfc.eu.pickADesk.dto.UserDTO;
+import epfc.eu.pickADesk.dto.UserQuotaUpdateDTO;
 import epfc.eu.pickADesk.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,9 +51,15 @@ public class UserService {
 //                .collect(Collectors.toList());
 //    }
 
-    public List<UserDTO> getUsers() {
+    public List<BasicUserDTO> getUsers() {
         List<User> users = userRepository.findAll();
-        return userMapper.userListToUserDTOList(users);
+//        return userMapper.userListToUserDTOList(users);
+        if (users.isEmpty()) {
+            throw new IllegalArgumentException("Aucun utilisateur dans la liste");
+        }
+        return users.stream()
+                .map(BasicUserDTO::fromUser) // Convertir chaque User en BasicUserDTO
+                .collect(Collectors.toList());
     }
 
 
@@ -81,13 +89,14 @@ public class UserService {
         userRepository.save(user); // Sauvegardez le nouveau mot de passe
     }
 
-    public List<UserDTO> getTeamList(Integer teamId) {
+    public List<BasicUserDTO> getTeamList(Integer teamId) {
         List<User> teamList = userRepository.findUsersByTeamId(teamId);
         if (teamList.isEmpty()) {
             throw new IllegalArgumentException("Aucun utilisateur dans la liste");
         }
         return teamList.stream()
-                .map(UserDTO::fromUser) // Convertir chaque User en UserDTO
+                .map(BasicUserDTO::fromUser) // Convertir chaque User en UserDTO
                 .collect(Collectors.toList());
     }
+
 }

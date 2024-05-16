@@ -1,11 +1,15 @@
 package epfc.eu.pickADesk.user;
 
+import epfc.eu.pickADesk.dto.BasicUserDTO;
 import epfc.eu.pickADesk.dto.UserDTO;
+import epfc.eu.pickADesk.dto.UserQuotaUpdateDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +30,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getUsers() {
+    public ResponseEntity<List<BasicUserDTO>> getUsers() {
 //
-        List<UserDTO> users = userService.getUsers();
+        List<BasicUserDTO> users = userService.getUsers();
         return ResponseEntity.ok(users); // Retourne directement la liste des UserDTO
     }
 
@@ -51,10 +55,12 @@ public class UserController {
     }
 
     @GetMapping("getTeamList/{teamId}")
-    public ResponseEntity<List<UserDTO>> getTeamList(@PathVariable Integer teamId) {
-        List<UserDTO> teamList = userService.getTeamList(teamId);
+    public ResponseEntity<List<BasicUserDTO>> getTeamList(@PathVariable Integer teamId) {
+        List<BasicUserDTO> teamList = userService.getTeamList(teamId);
         return ResponseEntity.ok(teamList);
     }
+
+
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         logoutService.logout(request, response, authentication);
