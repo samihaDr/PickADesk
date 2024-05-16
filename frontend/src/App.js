@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-
 import { GlobalContext, GlobalProvider } from "./services/GlobalState";
 import LoginPage from "./components/loginPage/LoginPage.js";
 import AddReservation from "./components/reservation/ReservationDetails";
@@ -26,45 +25,29 @@ import FindColleague from "./components/findColleague/FindColleague";
 import MakeAReservation from "./components/makeAReservation/MakeAReservation";
 import OfficeMap from "./components/officeMap/OfficeMap";
 import TeamSettings from "./components/myTeam/TeamSettings";
+import EditMemberParameters from "./components/editParameters/EditMemberParameters";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 
 const UserConnected = () => {
-  const history = useNavigate();
-  const { isAuthenticated, userInfo, setUserInfo } = useContext(GlobalContext);
+  const navigate = useNavigate();
+  const { isAuthenticated, userInfo } = useContext(GlobalContext);
 
   useEffect(() => {
     console.log("UserInfo in App  :", userInfo);
     if (!isAuthenticated) {
-      history("/loginPage");
+      navigate("/loginPage");
     }
-  }, [history, isAuthenticated]);
+  }, [navigate, isAuthenticated]);
+
+  // Accès conditionnel au composant EditMemberParameters
+  const editMemberParametersRoute = userInfo?.role === 'MANAGER' ? (
+      <Route path="editMemberParameters" element={<EditMemberParameters />} />
+  ) : null;
 
   return (
-    <>{userInfo && <Layout userInfo={userInfo} setUserInfo={setUserInfo} />}</>
-  );
-};
-export default function App() {
-  useEffect(() => {
-    axios.interceptors.request.use(
-      function (request) {
-        const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
-        if (token) {
-          request.headers.Authorization = `Bearer ${token}`;
-        }
-        return request;
-      },
-      (error) => {
-        return Promise.reject(error);
-      },
-    );
-  });
-
-  return (
-    <GlobalProvider>
-      <WorkStationProvider>
-        {" "}
-        <UserConnected />
+      <>
+        {userInfo && <Layout userInfo={userInfo} />}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="addReservation" element={<AddReservation />} />
@@ -79,14 +62,36 @@ export default function App() {
           <Route path="makeAReservation" element={<MakeAReservation />} />
           <Route path="officeMap" element={<OfficeMap />} />
           <Route path="teamSettings" element={<TeamSettings />} />
-          <Route path="*" element={<LoginPage />} />
-          <Route
-            path="availableWorkStations"
-            element={<AvailableWorkStations />}
-          />
+          <Route path="availableWorkStations" element={<AvailableWorkStations />} />
           <Route path="reservationDetails" element={<ReservationDetails />} />
+          {editMemberParametersRoute}
+          <Route path="*" element={<LoginPage />} />
         </Routes>
-      </WorkStationProvider>
-    </GlobalProvider>
+      </>
+  );
+};
+
+export default function App() {
+  useEffect(() => {
+    axios.interceptors.request.use(
+        function (request) {
+          const token = sessionStorage.getItem(AUTH_TOKEN_KEY);
+          if (token) {
+            request.headers.Authorization = `Bearer ${token}`;
+          }
+          return request;
+        },
+        (error) => {
+          return Promise.reject(error);
+        }
+    );
+  });
+
+  return (
+      <GlobalProvider>
+        <WorkStationProvider>
+          <UserConnected />
+        </WorkStationProvider>
+      </GlobalProvider>
   );
 }

@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import "./Menu.scss";
 
 export default function Menu() {
-  const { isAuthenticated } = useContext(GlobalContext);
+  const { userInfo,isAuthenticated } = useContext(GlobalContext);
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!userInfo || !isAuthenticated) {
       return null;
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, userInfo]);
 
   return (
     <div className="fixed-menu">
@@ -49,6 +49,15 @@ export default function Menu() {
         >
           Team settings
         </Link>
+        {userInfo && userInfo.role === 'MANAGER' && (
+            <Link
+                to="/editMemberParameters"
+                className="nav-link active"
+                aria-current="page"
+            >
+              Edit member quotas
+            </Link>
+        )}
       </nav>
     </div>
   );
