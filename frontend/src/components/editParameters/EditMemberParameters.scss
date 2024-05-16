@@ -1,0 +1,77 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin-left: 200px;
+  width: calc(100% - 200px);
+
+  h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-large);
+    margin-top: var(--spacing-large);
+  }
+
+  .edit-parameters {
+    margin-top: 20px;
+    margin-left: 150px;
+    margin-right: 150px;
+    width: 70%;
+    overflow-x: auto;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      border: 2px solid #ccc; // Bordure extérieure du tableau
+
+      th, td {
+        text-align: left;
+        padding: 8px;
+        border: 1px solid #ddd; // Bordures des cellules
+      }
+
+      th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+    }
+  }
+  .button-group {
+    display: flex;        // Utiliser flexbox pour aligner les éléments
+    justify-content: space-between; // Espacer uniformément les boutons
+
+    button {
+      flex-grow: 1;       // Permettre aux boutons de grandir et remplir l'espace
+      margin: 5px;        // Ajouter une marge entre les boutons
+    }
+  }
+  .btn-primary, .btn-info {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: white;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  .btn-info {
+    background-color: #5bc0de; // Couleur spécifique pour le bouton Cancel
+
+    &:hover {
+      background-color: #46a6d7;
+    }
+  }
+  .modified-input {
+    background-color: #ffcccc; // Choisissez une couleur qui indique clairement une modification
+  }
+}
