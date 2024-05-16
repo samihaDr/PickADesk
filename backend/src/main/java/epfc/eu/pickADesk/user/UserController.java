@@ -6,7 +6,6 @@ import epfc.eu.pickADesk.dto.UserQuotaUpdateDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,7 +59,12 @@ public class UserController {
         return ResponseEntity.ok(teamList);
     }
 
-
+    @PreAuthorize("hasRole('MANAGER')")
+    @PutMapping("/updateQuota/{userId}")
+    public ResponseEntity<UserQuotaUpdateDTO> updateMemberQuota(@PathVariable Long userId, @RequestBody UserQuotaUpdateDTO userQuotaUpdateDTO) {
+        UserQuotaUpdateDTO updatedUser = userService.updateUserQuota(userId, userQuotaUpdateDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         logoutService.logout(request, response, authentication);
