@@ -1,4 +1,4 @@
-// Dans useTeamList.js
+
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -14,7 +14,11 @@ export function useTeamList() {
                 headers: {Authorization: `Bearer ${jwt}`},
             });
             if (Array.isArray(response.data)) {
-                setTeamList(response.data);
+                const sortedData = response.data.sort((a, b) =>
+                    a.lastname.localeCompare(b.lastname),
+                );
+
+                setTeamList(sortedData);
                 setLoading(false);
                 return response.data;  // Retourner les données pour une utilisation immédiate
             } else {

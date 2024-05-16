@@ -362,7 +362,7 @@ export default function SearchWorkStation({onFormSend}) {
         try {
             const response = await axios.get("/api/users");
             const sortedData = response.data.sort((a, b) =>
-                a.email.localeCompare(b.email),
+                a.firstname.localeCompare(b.firstname),
             );
             setUserList(sortedData);
 

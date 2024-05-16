@@ -12,7 +12,7 @@ export default function TeamSettings() {
 
     useEffect(() => {
         if (userInfo && userInfo.teamId) {
-            fetchTeamList(userInfo.teamId);
+            fetchTeamList(userInfo.teamId, jwt);
         }
     }, [userInfo]);
 
@@ -153,8 +153,8 @@ export default function TeamSettings() {
                     <table>
                         <thead>
                         <tr>
-                            <th>Firstname</th>
                             <th>Lastname</th>
+                            <th>Firstname</th>
                             <th>WorkStatus</th>
                             <th>Session</th>
                             <th>WorkPlace</th>
@@ -163,8 +163,8 @@ export default function TeamSettings() {
                         <tbody>
                         {teamList.map((member, index) => (
                             <tr key={index}>
-                                <td>{member.firstname}</td>
                                 <td>{member.lastname}</td>
+                                <td>{member.firstname}</td>
                                 <td>{member.workStatus}</td>
                                 <td>{member.period}</td>
                                 <td>{member.deskNumber}</td>
@@ -204,8 +204,8 @@ export default function TeamSettings() {
                     <table>
                         <thead>
                         <tr>
-                            <th>Firstname</th>
                             <th>Lastname</th>
+                            <th>Firstname</th>
                             <th>Work Plan</th>
                             <th>Allowed Homeworking</th>
                             <th>Days In Office</th>
@@ -217,8 +217,9 @@ export default function TeamSettings() {
                         <tbody>
                         {teamList.map((member, index) => (
                             <tr key={index}>
-                                <td>{member.firstname}</td>
                                 <td>{member.lastname}</td>
+                                <td>{member.firstname}</td>
+
                                 <td>{getDaysPerWeek(member.workSchedule)} days</td>
                                 <td>{member.memberQuota} days</td>
                                 <td>{member.daysInOffice}</td>

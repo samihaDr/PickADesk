@@ -23,9 +23,9 @@ export default function FindColleague() {
     const timer = setTimeout(() => {
       const filteredAndSorted = employeeList
         .filter((employee) =>
-          employee.email.toLowerCase().includes(searchTerm.toLowerCase()),
+          employee.lastname.toLowerCase().includes(searchTerm.toLowerCase()) || employee.firstname.toLowerCase().includes(searchTerm.toLowerCase()),
         )
-        .sort((a, b) => a.email.localeCompare(b.email));
+        .sort((a, b) => a.lastname.localeCompare(b.lastname));
 
       setFilteredEmployeeList(filteredAndSorted);
     }, 300); // Applique un délai pour améliorer la performance pendant la frappe
@@ -38,7 +38,7 @@ export default function FindColleague() {
     try {
       const response = await axios.get("/api/users");
       const sortedData = response.data.sort((a, b) =>
-        a.email.localeCompare(b.email),
+        a.lastname.localeCompare(b.lastname),
       );
       setEmployeeList(sortedData);
       setFilteredEmployeeList(sortedData);
@@ -135,7 +135,7 @@ export default function FindColleague() {
                   {/*<option value="">Select an employee</option>*/}
                   {filteredEmployeeList.map((employee) => (
                     <option key={employee.id} value={employee.id}>
-                      {employee.email}
+                      {employee.lastname} {employee.firstname}
                     </option>
                   ))}
                 </select>
