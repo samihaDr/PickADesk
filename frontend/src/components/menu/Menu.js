@@ -58,6 +58,15 @@ export default function Menu() {
               Edit member quotas
             </Link>
         )}
+        {userInfo && userInfo.role === 'MANAGER' && (
+            <Link
+                to="/editTeamParameters"
+                className="nav-link active"
+                aria-current="page"
+            >
+              Edit team quotas
+            </Link>
+        )}
       </nav>
     </div>
   );
