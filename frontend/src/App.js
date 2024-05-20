@@ -26,6 +26,7 @@ import MakeAReservation from "./components/makeAReservation/MakeAReservation";
 import OfficeMap from "./components/officeMap/OfficeMap";
 import TeamSettings from "./components/myTeam/TeamSettings";
 import EditMemberParameters from "./components/editParameters/EditMemberParameters";
+import EditTeamParameters from "./components/editParameters/EditTeamParameters";
 
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 
@@ -40,11 +41,15 @@ const UserConnected = () => {
     }
   }, [navigate, isAuthenticated]);
 
-  // Accès conditionnel au composant EditMemberParameters
+  // conditioned access to  EditMemberParameters component
   const editMemberParametersRoute = userInfo?.role === 'MANAGER' ? (
       <Route path="editMemberParameters" element={<EditMemberParameters />} />
   ) : null;
 
+    // conditioned access to  EditTeamParameters component
+    const editTeamParametersRoute = userInfo?.role === 'MANAGER' ? (
+        <Route path="editTeamParameters" element={<EditTeamParameters />} />
+    ) : null;
   return (
       <>
         {userInfo && <Layout userInfo={userInfo} />}
@@ -65,6 +70,7 @@ const UserConnected = () => {
           <Route path="availableWorkStations" element={<AvailableWorkStations />} />
           <Route path="reservationDetails" element={<ReservationDetails />} />
           {editMemberParametersRoute}
+          {editTeamParametersRoute}
           <Route path="*" element={<LoginPage />} />
         </Routes>
       </>
