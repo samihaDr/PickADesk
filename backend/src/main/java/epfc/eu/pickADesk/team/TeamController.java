@@ -1,11 +1,11 @@
 package epfc.eu.pickADesk.team;
 
+import epfc.eu.pickADesk.dto.TeamQuotaUpdateDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/teams")
@@ -24,5 +24,16 @@ public class TeamController {
     @GetMapping("/getTeamById/{teamId}")
     public ResponseEntity<Team> getTeamById(@PathVariable Integer teamId) {
         return new ResponseEntity<>(teamService.getTeamById(teamId), HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllTeams")
+    public ResponseEntity<?> getAllTeams() {
+        return new ResponseEntity<>(teamService.getAllTeams(), HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('MANAGER')")
+    @PutMapping("/updateQuota/{teamId}")
+    public ResponseEntity<TeamQuotaUpdateDTO> updateTeamQuota(@PathVariable Integer teamId, @RequestBody TeamQuotaUpdateDTO teamQuotaUpdateDTO) {
+       TeamQuotaUpdateDTO updatedTeam = teamService.updateTeamQuota(teamId, teamQuotaUpdateDTO);
+       return ResponseEntity.ok(updatedTeam);
     }
 }
