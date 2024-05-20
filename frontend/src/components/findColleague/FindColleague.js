@@ -36,7 +36,7 @@ export default function FindColleague() {
   const fetchEmployeeList = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("/api/users");
+      const response = await axios.get("/api/users/allUsers");
       const sortedData = response.data.sort((a, b) =>
         a.lastname.localeCompare(b.lastname),
       );

@@ -327,10 +327,8 @@ export default function SearchWorkStation({onFormSend}) {
                 const stationIds = selectedStations.map(station => station.id);
                 console.log("Selected stations in SearchWorkStatiojs: ", stationIds);
                 const teamDayId = data.reservationTypes.find(reservationType => reservationType.name === "Team day")?.id || "";
-                // const meetingSpaceId = data.workAreas.find(workArea => workArea.name === "Meeting Space")?.id || "";
 
                 setReservationType(teamDayId);
-                // setWorkArea(meetingSpaceId);
                 setWorkArea("");
                 setScreen("");
                 setEquipment([]);
@@ -360,9 +358,11 @@ export default function SearchWorkStation({onFormSend}) {
     const fetchEmployeeList = async () => {
         setLoading(true);
         try {
-            const response = await axios.get("/api/users");
+            const response = await axios.get(`/api/users/allUsers`, {
+                headers: {Authorization: `Bearer ${jwt}`},
+            });
             const sortedData = response.data.sort((a, b) =>
-                a.firstname.localeCompare(b.firstname),
+                a.lastname.localeCompare(b.lastname),
             );
             setUserList(sortedData);
 
@@ -375,10 +375,8 @@ export default function SearchWorkStation({onFormSend}) {
     const handleColleagueBookingChange = (e) => {
         const isChecked = e.target.checked;
         setColleagueBooking(isChecked);
-        if (isChecked) {
-            const userList = fetchEmployeeList();
-            console.log("UserList474747 : ", userList);
-            console.log("isColleagueBooking 5454646:", isColleagueBooking);
+        if (isChecked){
+            fetchEmployeeList();
         } else {
             // Réinitialiser les valeurs ou ajuster le formulaire pour un mode de réservation standard
             resetFormToIndividualPreferences();
@@ -399,7 +397,7 @@ export default function SearchWorkStation({onFormSend}) {
         >
             {teamList.map(member => (
                 <option key={member.id} value={member.id}>
-                    {member.firstname} {member.lastname} {selectedMembers.includes(member.id.toString()) ? "✓" : ""}
+                    {member.lastname} {member.firstname} {selectedMembers.includes(member.id.toString()) ? "✓" : ""}
                 </option>
             ))}
         </select>
@@ -415,7 +413,7 @@ export default function SearchWorkStation({onFormSend}) {
         >
             {userList.map(user => (
                 <option key={user.id} value={user.id}>
-                    {user.firstname} {user.lastname}
+                    {user.lastname} {user.firstname}
                 </option>
             ))}
         </select>
