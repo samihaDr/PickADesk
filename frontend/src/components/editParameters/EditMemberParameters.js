@@ -7,9 +7,8 @@ import "./EditMemberParameters.scss";
 
 export default function EditMemberParameters() {
     const {userInfo, setUserInfo} = useContext(GlobalContext);
-    const {teamList, setTeamList, fetchTeamList, isLoading, error} = useTeamList();
+    const {teamList, setTeamList, fetchTeamList} = useTeamList();
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
-    const [originalTeamList, setOriginalTeamList] = useState([]);
     const [modifiedIds, setModifiedIds] = useState({});
 
     useEffect(() => {
@@ -17,9 +16,7 @@ export default function EditMemberParameters() {
             fetchTeamList(userInfo.teamId, jwt);
         }
     }, [userInfo, jwt]);
-    useEffect(() => {
-        setOriginalTeamList([...teamList]);
-    }, [teamList]);
+
     const handleQuotaChange = (id, newQuota) => {
         const maxQuota = getDaysPerWeek(teamList.find(member => member.id === id).workSchedule);
         if (newQuota >= 1 && newQuota <= maxQuota) {
@@ -57,7 +54,7 @@ export default function EditMemberParameters() {
         }
     };
     const revertChanges = () => {
-        setTeamList(originalTeamList);
+        fetchTeamList(userInfo.teamId, jwt);
         setModifiedIds({});
     };
 
