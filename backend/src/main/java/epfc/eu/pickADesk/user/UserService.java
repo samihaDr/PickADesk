@@ -41,19 +41,8 @@ public class UserService {
                 .orElse(false);
     }
 
-//    public List<UserDTO> getUsers() {
-//        List<User> users = userRepository.findAll();
-//        if (users.isEmpty()) {
-//            throw new IllegalArgumentException("Aucun utilisateur dans la liste");
-//        }
-//        return users.stream()
-//                .map(UserDTO::fromUser) // Convertir chaque User en UserDTO
-//                .collect(Collectors.toList());
-//    }
-
     public List<BasicUserDTO> getUsers() {
         List<User> users = userRepository.findAll();
-//        return userMapper.userListToUserDTOList(users);
         if (users.isEmpty()) {
             throw new IllegalArgumentException("Aucun utilisateur dans la liste");
         }
@@ -105,6 +94,6 @@ public class UserService {
         user.setMemberQuota(userQuotaUpdateDTO.getMemberQuota());
         user = userRepository.save(user);
          return userMapper.userToUserQuotaUpdateDTO(user);
-
     }
+
 }

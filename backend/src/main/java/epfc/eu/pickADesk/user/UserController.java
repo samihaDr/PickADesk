@@ -28,9 +28,8 @@ public class UserController {
         this.logoutService = logoutService;
     }
 
-    @GetMapping
+    @GetMapping("/allUsers")
     public ResponseEntity<List<BasicUserDTO>> getUsers() {
-//
         List<BasicUserDTO> users = userService.getUsers();
         return ResponseEntity.ok(users); // Retourne directement la liste des UserDTO
     }
@@ -41,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok(userDTO); // Retourne le UserDTO de l'utilisateur connecté
     }
 
-    @GetMapping("/userRole")
+    @GetMapping("/isManager")
     public ResponseEntity<Boolean> isManager() {
         boolean isManager = userService.isManager(); // Utilisation sans Principal directement
         return ResponseEntity.ok(isManager); // Retourne le rôle de l'utilisateur
@@ -76,4 +75,5 @@ public class UserController {
         userService.changePassword(request);
         return ResponseEntity.ok().build();
     }
+
 }
