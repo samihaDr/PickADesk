@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @RestController
@@ -189,5 +190,22 @@ public class ReservationController {
             // En cas d'erreur, renvoyer une réponse avec le message d'erreur
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Error deleting reservation: " + e.getMessage(), null));
         }
+
     }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @PreAuthorize("hasRole('MANAGER')")
+    @DeleteMapping(value = "/deleteGroupReservations/{reservationDate}/{managerId}")
+    public ResponseEntity<ApiResponse> deleteGroupReservations(@PathVariable("reservationDate") String reservationDateString, @PathVariable("managerId") Long managerId) {
+        try {
+            LocalDate reservationDate = LocalDate.parse(reservationDateString);  // Assurez-vous que la date est bien formatée
+            reservationService.deleteManagerGroupReservations(reservationDate, managerId);
+            return ResponseEntity.ok(new ApiResponse(true, "All reservations successfully deleted.", null));
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid date format: " + e.getMessage(), null));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Error deleting reservation: " + e.getMessage(), null));
+        }
+    }
+
 }
