@@ -1,6 +1,7 @@
 package epfc.eu.pickADesk.reservation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -25,6 +26,11 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Optional<Reservation> findByUserIdAndReservationDate(Long userId, LocalDate reservationDate);
 
     Optional<Reservation> findByWorkStationIdAndReservationDateAndMorning(Long workstationId, LocalDate reservationDate, Boolean morning);
+
     Optional<Reservation> findByWorkStationIdAndReservationDateAndAfternoon(Long workstationId, LocalDate reservationDate, Boolean afternoon);
+
+    @Modifying
+    @Query("DELETE FROM Reservation r WHERE r.reservationTypeId = 3 AND r.createdBy = :managerId AND r.reservationDate = :reservationDate AND r.isGroupBooking = true AND r.user.id IN :userIds")
+    void deleteGroupReservationsByManager(@Param("managerId") Long managerId, @Param("reservationDate") LocalDate reservationDate, @Param("userIds") List<Long> userIds);
 
 }
