@@ -283,4 +283,22 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("Aucune réservation ne correspond à cet ID."));
         reservationRepository.delete(reservation);
     }
+    @Transactional
+    public void deleteManagerGroupReservations(LocalDate reservationDate, Long managerId) {
+        User manager = userRepository.findById(managerId)
+                .orElseThrow(() -> new RuntimeException("Manager not found"));
+        Integer teamId = manager.getTeamId();
+
+        List<Long> userIds = userRepository.findUsersByTeamId(teamId).stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
+
+        if (userIds.isEmpty()) {
+            throw new IllegalStateException("No users found in manager's team");
+        }
+
+        reservationRepository.deleteGroupReservationsByManager(managerId, reservationDate, userIds);
+    }
+
+
 }
