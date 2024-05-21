@@ -193,8 +193,8 @@ export default function ReservationDetails({
                         </Button>
                         <Button
                             variant="danger"
-                            onClick={() => isGroupReservation ? confirmDeleteGroupReservation() : confirmCancelReservation()}
-                            disabled={ (!isManager && isGroupReservation) || isReservationPassed }
+                            onClick={() => onDelete(event)}
+                            disabled={(!isManager && isGroupReservation) || isReservationPassed}
                             className="ms-2"
                         >
                             {isGroupReservation ? "Delete All Reservations" : "Delete Reservation"}
@@ -218,8 +218,8 @@ export default function ReservationDetails({
                             variant="primary"
                             className="flex-grow-1 me-5"
                             onClick={() => {
-                                confirmCancelReservation();
-                                setShowConfirmationModal(false); // Fermez la modal après la confirmation
+                                isGroupReservation ? confirmDeleteGroupReservation() : confirmCancelReservation();
+                                setShowConfirmationModal(false);
                             }}
                         >
                             Yes, Cancel It
