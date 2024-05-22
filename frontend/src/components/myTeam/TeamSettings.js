@@ -60,7 +60,7 @@ export default function TeamSettings() {
                 period: response.data.data[0]?.morning ? "Morning" : "Afternoon",
                 deskNumber: response.data.data[0]?.workStation.workPlace
             } : {
-                workStatus: "Teleworking",
+                workStatus: "Homeworking",
                 period: null,
                 deskNumber: null
             };
@@ -117,7 +117,7 @@ export default function TeamSettings() {
     // Calcul des pourcentages
     const totalCount = teamList.length;
     const inOfficeCount = teamList.filter(member => member.workStatus === 'In Office').length;
-    const teleworkingCount = teamList.filter(member => member.workStatus === 'Teleworking').length;
+    const teleworkingCount = teamList.filter(member => member.workStatus === 'Homeworking').length;
     const inOfficePercent = ((inOfficeCount / totalCount) * 100).toFixed(0);
     const teleworkingPercent = ((teleworkingCount / totalCount) * 100).toFixed(0);
 
@@ -192,7 +192,7 @@ export default function TeamSettings() {
                             </div>
                         </div>
                         <div>
-                            <label><strong>Teleworking</strong></label>
+                            <label><strong>Homeworking</strong></label>
                             <div className="progress">
                                 <div className="progress-bar" role="progressbar"
                                      style={{width: `${teleworkingPercent}%`, backgroundColor: '#28a745'}} aria-valuemin="0"

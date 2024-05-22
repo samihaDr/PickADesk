@@ -54,15 +54,15 @@
     align-items: center;
 
     div {
-      width: 60%;  // Augmentation de la largeur des barres de progression
+      width: 70%;  // Augmentation de la largeur des barres de progression
       display: flex;
       align-items: center;
-      margin: 10px 0;
+      margin: 5px 0;
 
       label {
         font-size: large;
-        margin-right: 10px; // Espace entre le label et la barre de progression
-        width: 10%; // Fixe la largeur des labels pour un alignement uniforme
+        margin-right: 25px; // Espace entre le label et la barre de progression
+        width: 8%; // Fixe la largeur des labels pour un alignement uniforme
       }
 
       .progress {

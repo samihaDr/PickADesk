@@ -77,7 +77,7 @@ export default function EditMemberParameters() {
                         <th>Lastname</th>
                         <th>Firstname</th>
                         <th>Work Plan</th>
-                        <th>Quota</th>
+                        <th>Homeworking</th>
                         <th>Action</th>
                     </tr>
                     </thead>
