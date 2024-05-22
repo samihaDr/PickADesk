@@ -3,7 +3,7 @@ import {WorkStationContext} from "../../services/WorkStationContext";
 import {GlobalContext} from "../../services/GlobalState";
 import {getBookingPreferencesData} from "../../services/GetBookingPreferencesData";
 import "./AvailableWorkStations.scss";
-import { Link } from "react-router-dom";
+import OfficeMap from "../officeMap/OfficeMap.js";
 import {Button, Modal} from "react-bootstrap";
 import axios from "axios";
 import {bookWorkStation} from "../../services/BookWorkStation";
@@ -17,7 +17,6 @@ export default function AvailableWorkStations({formSent}) {
         workStations,
         selectedOptions,
         isGroupBooking,
-        //teamMembers,
         isColleagueBooking,
         selectedStations,
         setSelectedStations,
@@ -41,7 +40,7 @@ export default function AvailableWorkStations({formSent}) {
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
     const [favorites, setFavorites] = useState([]);
     const calculateRemaining = useCalculateRemaining();
-
+    const [activeTab, setActiveTab] = useState('result');
 
     useEffect(() => {
         async function fetchData() {
@@ -116,7 +115,7 @@ export default function AvailableWorkStations({formSent}) {
     const checkIfReservationCanBeMade = async (stationId, selectedOptions) => {
         const {morning, afternoon} = selectedOptions.timePeriod;
         const formattedDate = format(new Date(selectedOptions.date), "yyyy-MM-dd");
-        const userId = isColleagueBooking ?selectedColleague : userInfo.id;
+        const userId = isColleagueBooking ? selectedColleague : userInfo.id;
         try {
             const response = await axios.get(
                 `/api/reservations/checkReservation/${userId}/${formattedDate}?morning=${morning}&afternoon=${afternoon}`,
@@ -144,7 +143,7 @@ export default function AvailableWorkStations({formSent}) {
         setLoading(true);
 
         const reservationDetails = selectedStations.map((stationId, index) => ({
-            workStation: { id: stationId },
+            workStation: {id: stationId},
             reservationDate: format(new Date(selectedOptions.date), "yyyy-MM-dd"),
             morning: selectedOptions.timePeriod.morning,
             afternoon: selectedOptions.timePeriod.afternoon,
@@ -175,8 +174,8 @@ export default function AvailableWorkStations({formSent}) {
 
     const handleReservationClick = async (stationId) => {
         setLoading(true); // Activer l'indicateur de chargement
-        console.log("SelectedColleague : " , selectedColleague);
-        console.log("IsColleagueBooking : " , isColleagueBooking);
+        console.log("SelectedColleague : ", selectedColleague);
+        console.log("IsColleagueBooking : ", isColleagueBooking);
         try {
             const canBook = await checkIfReservationCanBeMade(
                 stationId,
@@ -186,7 +185,7 @@ export default function AvailableWorkStations({formSent}) {
             if (!canBook) {
                 // Création de l'objet de réservation pour un individu ou un collègue
                 const reservationDetails = {
-                    workStation: { id: stationId },
+                    workStation: {id: stationId},
                     reservationDate: format(new Date(selectedOptions.date), "yyyy-MM-dd"),
                     morning: selectedOptions.timePeriod.morning,
                     afternoon: selectedOptions.timePeriod.afternoon,
@@ -196,8 +195,8 @@ export default function AvailableWorkStations({formSent}) {
                 };
                 console.log("Sending reservation details IndividualReservation: ", reservationDetails);
                 console.log("isColleagueBooking after bookWorkStation ", isColleagueBooking);
-                const reservationResult =  isColleagueBooking ? await bookWorkStation(reservationDetails,false, true):
-                await bookWorkStation(reservationDetails,false, false);
+                const reservationResult = isColleagueBooking ? await bookWorkStation(reservationDetails, false, true) :
+                    await bookWorkStation(reservationDetails, false, false);
                 console.log("SelectedColleague after bookWorkStation ", reservationDetails.colleagueId);
 
                 console.log("Reservation result:", reservationResult);
@@ -317,78 +316,76 @@ export default function AvailableWorkStations({formSent}) {
                         )}
                     </div>
                 </div>
-                <div className="center-container">
-                    <ul className="nav nav-tabs">
-                        <li className="nav-item">
-                            <Link className="nav-link active" aria-current="page" to="#">
-                                List
-                            </Link>
-                        </li>
 
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/officeMap">
-                                Select on plan
-                            </Link>
-                        </li>
-                    </ul>
+                <div className="tabs">
+                    <button className={activeTab === 'result' ? 'active' : ''}
+                            onClick={() => setActiveTab('result')}>Results
+                    </button>
+                    <button className={activeTab === 'map' ? 'active' : ''} onClick={() => setActiveTab('map')}>Map
+                    </button>
                 </div>
-                <div className="search-result">
-                    {workStationList.length > 0 ? (
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">WorkPlace</th>
-                                <th scope="col">Zone</th>
-                                <th scope="col">AreaWork Type</th>
-                                <th scope="col"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {workStationList.map((station) => (
-                                <tr key={station.id}>
-                                    <td>
-                                        {" "}
-                                        {station.workPlace}
-                                        {isFavorite(station.id) ? (
-                                            <span style={{color: "green", fontSize: "24px"}}>
+                {activeTab === 'result' ? (
+                    <div className="search-result">
+                        {workStationList.length > 0 ? (
+                            <table className="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">WorkPlace</th>
+                                    <th scope="col">Zone</th>
+                                    <th scope="col">AreaWork Type</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {workStationList.map((station) => (
+                                    <tr key={station.id}>
+                                        <td>
+                                            {" "}
+                                            {station.workPlace}
+                                            {isFavorite(station.id) ? (
+                                                <span style={{color: "green", fontSize: "24px"}}>
                           ★
                         </span>
-                                        ) : null}
-                                    </td>
-                                    <td>{station.zone.name}</td>
-                                    <td>{station.workArea.name}</td>
-                                    <td>
-                                        {isGroupBooking ? (
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedStations.includes(station.id)}
-                                                onChange={() => toggleStationSelection(station.id)}
-                                            />
-                                        ) : (
-                                            <button
-                                                className="btn btn-primary"
-                                                onClick={() => handleReservationClick(station.id)}
-                                            >
-                                                Pick this one
-                                            </button>
-                                        )}
-                                    </td>
-                                    {/* Bouton de réservation pour chaque ligne */}
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    ) : (
-                        <div>
-                            <strong>No workstations available. </strong>
-                        </div>
-                    )}
-                    {/*<div>*/}
-                    {/*  <button onClick={onPreviousPage} disabled={currentPage === 0}>Previous</button>*/}
-                    {/*  <span> Page {currentPage + 1} of {totalPages} </span>*/}
-                    {/*  <button onClick={onNextPage} disabled={currentPage >= totalPages - 1}>Next</button>*/}
-                    {/*</div>*/}
-                </div>
+                                            ) : null}
+                                        </td>
+                                        <td>{station.zone.name}</td>
+                                        <td>{station.workArea.name}</td>
+                                        <td>
+                                            {isGroupBooking ? (
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedStations.includes(station.id)}
+                                                    onChange={() => toggleStationSelection(station.id)}
+                                                />
+                                            ) : (
+                                                <button
+                                                    className="btn btn-primary"
+                                                    onClick={() => handleReservationClick(station.id)}
+                                                >
+                                                    Pick this one
+                                                </button>
+                                            )}
+                                        </td>
+                                        {/* Bouton de réservation pour chaque ligne */}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <div>
+                                <strong>No workstations available. </strong>
+                            </div>
+                        )}
+                        {/*<div>*/}
+                        {/*  <button onClick={onPreviousPage} disabled={currentPage === 0}>Previous</button>*/}
+                        {/*  <span> Page {currentPage + 1} of {totalPages} </span>*/}
+                        {/*  <button onClick={onNextPage} disabled={currentPage >= totalPages - 1}>Next</button>*/}
+                        {/*</div>*/}
+                    </div>
+                ) : (
+
+                    <OfficeMap/>
+                )}
                 {isGroupBooking && (
                     <button
                         className="btn btn-primary"
@@ -399,6 +396,7 @@ export default function AvailableWorkStations({formSent}) {
                     </button>
                 )}
             </div>
+
 
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
@@ -413,7 +411,9 @@ export default function AvailableWorkStations({formSent}) {
                             <h4 className="text-success">Reservation Successful!</h4>
                             <p>You have successfully completed a group reservation for your team.</p>
                             <p>
-                                <strong>Total Stations Reserved:</strong> {selectedStations.length} for <strong>{selectedMembers.length}</strong> team members.
+                                <strong>Total Stations
+                                    Reserved:</strong> {selectedStations.length} for <strong>{selectedMembers.length}</strong> team
+                                members.
                             </p>
                             <p>
                                 <strong>Date:</strong> {formattedDate}
@@ -437,7 +437,8 @@ export default function AvailableWorkStations({formSent}) {
                                 <strong>Zone:</strong> {selectedStationDetails ? selectedStationDetails.zone.name : "N/A"}
                             </p>
                             <p>
-                                <strong>AreaWork Type:</strong> {selectedStationDetails ? selectedStationDetails.workArea.name : "N/A"}
+                                <strong>AreaWork
+                                    Type:</strong> {selectedStationDetails ? selectedStationDetails.workArea.name : "N/A"}
                             </p>
                             <p>
                                 <strong>Date:</strong> {formattedDate}
