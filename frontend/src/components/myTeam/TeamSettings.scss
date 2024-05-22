@@ -84,4 +84,20 @@
       }
     }
   }
+
+  .tabs button {
+    padding: 10px;
+    margin-right: 5px;
+    background: #f0f0f0;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .tabs button.active {
+    border-bottom: 2px solid blue;
+    background: #e0e0e0;
+  }
+
 }

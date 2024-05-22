@@ -1,21 +1,23 @@
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {GlobalContext} from "../../services/GlobalState";
 import axios from "axios";
 import {AUTH_TOKEN_KEY} from "../../App";
 import "./TeamSettings.scss"
 import {useTeamList} from "../hooks/useTeamList";
 import {endOfWeek, format, startOfWeek,  isValid, parseISO} from "date-fns";
+
 export default function TeamSettings() {
+
     const {userInfo = {}} = useContext(GlobalContext);
     const {teamList, setTeamList, fetchTeamList, isLoading, error} = useTeamList();
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    const [activeTab, setActiveTab] = useState('daily');  // Gestion de l'onglet actif
 
     useEffect(() => {
         if (userInfo && userInfo.teamId) {
             fetchTeamList(userInfo.teamId, jwt);
         }
     }, [userInfo]);
-
 
     async function updateMembersWithDetails(members) {
         const membersWithDetails = await Promise.all(members.map(async member => {
@@ -87,7 +89,6 @@ export default function TeamSettings() {
                     if (isValid(date)) {
                         const dayFormatted = format(date, 'EEEE');
                         const fullDay = reservation.morning && reservation.afternoon;
-                        // const halfDay = reservation.morning || reservation.afternoon;
                         totalDaysReserved += fullDay ? 1 : 0.5;
                         let reservationType = '';
                         if (reservation.morning && reservation.afternoon) {
@@ -143,158 +144,160 @@ export default function TeamSettings() {
 
     return (
         <div className="main">
-            <h2>My Team - <span className="date-span">{currentDate}</span></h2>
+            <h2>My Team </h2>
+            <div className="tabs">
+                <button className={activeTab === 'daily' ? 'active' : ''} onClick={() => setActiveTab('daily')}>Daily Stats</button>
+                <button className={activeTab === 'weekly' ? 'active' : ''} onClick={() => setActiveTab('weekly')}>Weekly Stats</button>
+            </div>
             {isLoading ? (
                 <p>Loading...</p>
             ) : error ? (
                 <p>{error}</p>
-            ) : (
-                <div className="result">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Lastname</th>
-                            <th>Firstname</th>
-                            <th>WorkStatus</th>
-                            <th>Session</th>
-                            <th>WorkPlace</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {teamList.map((member, index) => (
-                            <tr key={index}>
-                                <td>{member.lastname}</td>
-                                <td>{member.firstname}</td>
-                                <td>{member.workStatus}</td>
-                                <td>{member.period}</td>
-                                <td>{member.deskNumber}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
-            <h2>Daily Team Statistics - <span className="date-span">{currentDate}</span></h2>
-            <div className="progress-bars">
-                <div>
-                    <label><strong> In Office </strong></label>
-
-                    <div className="progress">
-                        <div className="progress-bar" role="progressbar"
-                             style={{width: `${inOfficePercent}%`, backgroundColor: '#007bff'}} aria-valuemin="0"
-                             aria-valuemax="100">{inOfficePercent}%
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <label><strong>Teleworking</strong> </label>
-                    <div className="progress">
-                        <div className="progress-bar" role="progressbar"
-                             style={{width: `${teleworkingPercent}%`, backgroundColor: '#28a745'}} aria-valuemin="0"
-                             aria-valuemax="100">{teleworkingPercent}%
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            {isManager ? (
-                <div className="stats">
-                    <h2> Weekly Team Statistics  - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Lastname</th>
-                            <th>Firstname</th>
-                            <th>Work Plan</th>
-                            <th>Allowed Homeworking</th>
-                            <th>Days In Office</th>
-                            <th>Weekly Balance</th>
-                            {daysOfWeek.map(day => <th key={day}>{day}</th>)}
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {teamList.map((member, index) => (
-                            <tr key={index}>
-                                <td>{member.lastname}</td>
-                                <td>{member.firstname}</td>
-
-                                <td>{getDaysPerWeek(member.workSchedule)} days</td>
-                                <td>{member.memberQuota} days</td>
-                                <td>{member.daysInOffice}</td>
-                                <td>{member.balance}</td>
-                                {daysOfWeek.map(day => {
-                                    const dayInfo = member.weeklyReservations && Array.isArray(member.weeklyReservations)
-                                        ? member.weeklyReservations.find(d => d.day === day)
-                                        : null;
-                                    let backgroundColor = '#FFFFFF'; // Default background
-                                    if (dayInfo) {
-                                        switch (dayInfo.type) {
-                                            case 'fullDay':
-                                                backgroundColor = '#44d095'; // Full day
-                                                break;
-                                            case 'morning':
-                                                backgroundColor = '#ADD8E6'; // Morning only
-                                                break;
-                                            case 'afternoon':
-                                                backgroundColor = '#FFEF4F'; // Afternoon only
-                                                break;
-                                        }
-                                    }
-                                    return <td key={day} style={{ backgroundColor: backgroundColor }}>{dayInfo ? dayInfo.status : "Homeworking"}</td>;
-                                })}
-
-
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            ) : (
-                <div className="stats">
-                    <h2>My Personal Statistics - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>
-                    {getPersonalStats() ? (
+            ) : activeTab === 'daily' ? (
+                <>
+                    <h2>Daily Team Statistics - <span className="date-span">{currentDate}</span></h2>
+                    <div className="result">
                         <table>
                             <thead>
                             <tr>
-                                {daysOfWeek.map(day => <th key={day}>{day}</th>)}
-                                <th>Days In Office</th>
-                                <th>Weekly Balance</th>
+                                <th>Lastname</th>
+                                <th>Firstname</th>
+                                <th>WorkStatus</th>
+                                <th>Session</th>
+                                <th>WorkPlace</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                {/*<td>{getPersonalStats().daysWorked}</td>*/}
-                                {daysOfWeek.map(day => {
-                                    const dayInfo = getPersonalStats().weeklyReservations && Array.isArray(getPersonalStats().weeklyReservations)
-                                        ? getPersonalStats().weeklyReservations.find(d => d.day === day)
-                                        : null;
-                                    let backgroundColor = '#FFFFFF'; // Default background
-                                    if (dayInfo) {
-                                        switch (dayInfo.type) {
-                                            case 'fullDay':
-                                                backgroundColor = '#44d095'; // Full day
-                                                break;
-                                            case 'morning':
-                                                backgroundColor = '#ADD8E6'; // Morning only
-                                                break;
-                                            case 'afternoon':
-                                                backgroundColor = '#FFEF4F'; // Afternoon only
-                                                break;
-                                        }
-                                    }
-                                    return <td key={day} style={{ backgroundColor: backgroundColor }}>{dayInfo ? dayInfo.status : "Homeworking"}</td>;
-                                })}
-                                <td>{getPersonalStats().balance}</td>
-                                <td>{getPersonalStats().daysInOffice}</td>
-                            </tr>
+                            {teamList.map((member, index) => (
+                                <tr key={index}>
+                                    <td>{member.lastname}</td>
+                                    <td>{member.firstname}</td>
+                                    <td>{member.workStatus}</td>
+                                    <td>{member.period}</td>
+                                    <td>{member.deskNumber}</td>
+                                </tr>
+                            ))}
                             </tbody>
                         </table>
+                    </div>
+                    <br/>
+                    <div className="progress-bars">
+                        <div>
+                            <label><strong> In Office </strong></label>
+                            <div className="progress">
+                                <div className="progress-bar" role="progressbar"
+                                     style={{width: `${inOfficePercent}%`, backgroundColor: '#007bff'}} aria-valuemin="0"
+                                     aria-valuemax="100">{inOfficePercent}%
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label><strong>Teleworking</strong></label>
+                            <div className="progress">
+                                <div className="progress-bar" role="progressbar"
+                                     style={{width: `${teleworkingPercent}%`, backgroundColor: '#28a745'}} aria-valuemin="0"
+                                     aria-valuemax="100">{teleworkingPercent}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <>
+                    {isManager ? (
+                        <>
+                            <h2>Weekly Team Statistics - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>
+
+                        <div className="stats">
+
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Lastname</th>
+                                    <th>Firstname</th>
+                                    <th>Work Plan</th>
+                                    <th>Allowed Homeworking</th>
+                                    <th>Days In Office</th>
+                                    <th>Weekly Balance</th>
+                                    {daysOfWeek.map(day => <th key={day}>{day}</th>)}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {teamList.map((member, index) => (
+                                    <tr key={index}>
+                                        <td>{member.lastname}</td>
+                                        <td>{member.firstname}</td>
+                                        <td>{getDaysPerWeek(member.workSchedule)} days</td>
+                                        <td>{member.memberQuota} days</td>
+                                        <td>{member.daysInOffice}</td>
+                                        <td>{member.balance}</td>
+                                        {daysOfWeek.map(day => {
+                                            const dayInfo = member.weeklyReservations && member.weeklyReservations.find(d => d.day === day);
+                                            let backgroundColor = '#FFFFFF'; // Default background
+                                            if (dayInfo) {
+                                                switch (dayInfo.type) {
+                                                    case 'fullDay':
+                                                        backgroundColor = '#44d095'; // Full day
+                                                        break;
+                                                    case 'morning':
+                                                        backgroundColor = '#ADD8E6'; // Morning only
+                                                        break;
+                                                    case 'afternoon':
+                                                        backgroundColor = '#FFEF4F'; // Afternoon only
+                                                        break;
+                                                }
+                                            }
+                                            return <td key={day} style={{ backgroundColor }}>{dayInfo ? dayInfo.status : "Homeworking"}</td>;
+                                        })}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        </>
                     ) : (
-                        <p>No personal statistics available.</p>
+                        <div className="stats">
+                            <h2>My Personal Statistics - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>
+                            {getPersonalStats() ? (
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        {daysOfWeek.map(day => <th key={day}>{day}</th>)}
+                                        <th>Days In Office</th>
+                                        <th>Weekly Balance</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        {daysOfWeek.map(day => {
+                                            const dayInfo = getPersonalStats().weeklyReservations && getPersonalStats().weeklyReservations.find(d => d.day === day);
+                                            let backgroundColor = '#FFFFFF'; // Default background
+                                            if (dayInfo) {
+                                                switch (dayInfo.type) {
+                                                    case 'fullDay':
+                                                        backgroundColor = '#44d095'; // Full day
+                                                        break;
+                                                    case 'morning':
+                                                        backgroundColor = '#ADD8E6'; // Morning only
+                                                        break;
+                                                    case 'afternoon':
+                                                        backgroundColor = '#FFEF4F'; // Afternoon only
+                                                        break;
+                                                }
+                                            }
+                                            return <td key={day} style={{ backgroundColor }}>{dayInfo ? dayInfo.status : "Homeworking"}</td>;
+                                        })}
+                                        <td>{getPersonalStats().balance}</td>
+                                        <td>{getPersonalStats().daysInOffice}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <p>No personal statistics available.</p>
+                            )}
+                        </div>
                     )}
-                </div>
+                </>
             )}
         </div>
     );
