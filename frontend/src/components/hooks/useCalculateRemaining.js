@@ -8,16 +8,16 @@ const useCalculateRemaining = () => {
   const { userInfo, setWeeklyRemaining, setWeeklyBookings} = useContext(GlobalContext);
 
   return useCallback(
-    async (userId) => {
+    async (userId, date = new Date()) => {
       const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
       if (!jwt) {
         console.log("No authentication token found. Please login.");
         return;
       }
-
+      const formattedDate = date.toISOString().slice(0,10);
       try {
         const response = await axios.get(
-          `/api/reservations/getReservationsForWeek/${userId}`,
+          `/api/reservations/getReservationsForWeek/${userId}/${formattedDate}`,
           {
             headers: { Authorization: `Bearer ${jwt}` },
           },
@@ -33,7 +33,7 @@ const useCalculateRemaining = () => {
                 }
             });
 
-            // console.log("WeeklyBOOKINGS : ", WeeklyBookings);
+
             const memberQuota = response.data.memberQuota;
             console.log("MemberQuota : ", memberQuota);
             const newRemaining = memberQuota - totalDaysReserved;
@@ -47,8 +47,9 @@ const useCalculateRemaining = () => {
         console.error("Failed to fetch reservations:", error);
       }
     },
-    [setWeeklyRemaining],
+    [setWeeklyRemaining, setWeeklyBookings, userInfo.memberQuota],
   );
 };
 
 export default useCalculateRemaining;
+
