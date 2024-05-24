@@ -100,4 +100,10 @@
     background: #e0e0e0;
   }
 
+  .icon-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;  // Vous pouvez ajuster la hauteur selon vos besoins
+  }
 }
