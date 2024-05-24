@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AUTH_TOKEN_KEY } from "../App";
 
-export const bookWorkStation = async (reservationDetails, isGroupBooking, isColleagueBooking) => {
+export const bookWorkStation = async (reservationDetails, isGroupBooking) => {
   const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
   if (!jwt) {
     console.error("No authentication token found.");
@@ -9,7 +9,7 @@ export const bookWorkStation = async (reservationDetails, isGroupBooking, isColl
   }
 
   let url = isGroupBooking ? "/api/reservations/addGroupReservation" : "/api/reservations/addIndividualReservation";
-   // let data = isColleagueBooking ? { reservationDetails } : reservationDetails;
+
   console.log("URL used: ", url);
   console.log("Data sent to the server: ", JSON.stringify(reservationDetails, null, 2));
 

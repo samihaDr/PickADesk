@@ -5,10 +5,11 @@ const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 // Initialiser l'état global
 const initialState = {
   userConnected: null,
+
   userInfo: null,
   userPreferences: null,
   weeklyRemaining: null,
-  weeklyBookings: 0,
+  weeklyBookings: null,
   reservations: [],
   favorites: [],
   isAuthenticated: !!sessionStorage.getItem(AUTH_TOKEN_KEY),
