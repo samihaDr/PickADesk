@@ -1,10 +1,17 @@
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {GlobalContext} from "../../services/GlobalState";
 import axios from "axios";
 import {AUTH_TOKEN_KEY} from "../../App";
 import "./TeamSettings.scss"
 import {useTeamList} from "../hooks/useTeamList";
 import {endOfWeek, format, startOfWeek,  isValid, parseISO} from "date-fns";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import worker from "../../assets/icons/worker.png";
+import home from "../../assets/icons/home.png";
+import clock from "../../assets/icons/clock.png";
+import morning from "../../assets/icons/morning.png";
+import afternoon from "../../assets/icons/afternoon.png";
 
 export default function TeamSettings() {
 
@@ -12,6 +19,7 @@ export default function TeamSettings() {
     const {teamList, setTeamList, fetchTeamList, isLoading, error} = useTeamList();
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
     const [activeTab, setActiveTab] = useState('daily');  // Gestion de l'onglet actif
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     useEffect(() => {
         if (userInfo && userInfo.teamId) {
@@ -19,10 +27,10 @@ export default function TeamSettings() {
         }
     }, [userInfo]);
 
-    async function updateMembersWithDetails(members) {
+    async function updateMembersWithDetails(members, date) {
         const membersWithDetails = await Promise.all(members.map(async member => {
-            const availability = await checkColleagueAvailability(member.id);
-            const { totalDaysReserved, reservationsDetails } = await employeeWeeklyReservations(member.id);
+            const availability = await checkColleagueAvailability(member.id, date);
+            const { totalDaysReserved, reservationsDetails } = await employeeWeeklyReservations(member.id, date);
             const daysWorked = getDaysPerWeek(member.workSchedule);
 
             console.log(`Member ${member.id} reservations:`, reservationsDetails);
@@ -44,26 +52,34 @@ export default function TeamSettings() {
     }
 
     useEffect(() => {
-        if (teamList.length > 0) {
-            updateMembersWithDetails(teamList);
+        if (teamList.length > 0 && selectedDate ) {
+            updateMembersWithDetails(teamList, selectedDate);
         }
-    }, [teamList]);
+    }, [teamList, selectedDate]);
 
-    async function checkColleagueAvailability(employeeId) {
+    async function checkColleagueAvailability(employeeId, selectedDate) {
+        const formattedDate = format(selectedDate, 'yyyy-MM-dd');
         try {
-            const url = `/api/reservations/employeeHasReservationToday/${employeeId}`;
+            const url = `/api/reservations/employeeHasReservationThisDay/${employeeId}/${formattedDate}`;
             const response = await axios.get(url, {
                 headers: {Authorization: `Bearer ${jwt}`},
             });
-            return response.data.success ? {
-                workStatus: "In Office",
-                period: response.data.data[0]?.morning ? "Morning" : "Afternoon",
-                deskNumber: response.data.data[0]?.workStation.workPlace
-            } : {
-                workStatus: "Homeworking",
-                period: null,
-                deskNumber: null
-            };
+            console.log("Selected Date : ", selectedDate);
+            if (response.data.success) {
+                const morning = response.data.data[0]?.morning;
+                const afternoon = response.data.data[0]?.afternoon;
+                return {
+                    workStatus: "In Office",
+                    period: morning && afternoon ? "Full Day" : morning ? "Morning" : "Afternoon",
+                    deskNumber: response.data.data[0]?.workStation.workPlace
+                };
+            } else {
+                return {
+                    workStatus: "Homeworking",
+                    period: null,
+                    deskNumber: null
+                };
+            }
         } catch (error) {
             console.error("Error checking reservation:", error);
             return {
@@ -74,9 +90,10 @@ export default function TeamSettings() {
         }
     }
 
-    async function employeeWeeklyReservations(employeeId) {
+    async function employeeWeeklyReservations(employeeId, selectedDate) {
+        const formattedDate = format(selectedDate, 'yyyy-MM-dd');
         try {
-            const url = `/api/reservations/getReservationsForWeek/${employeeId}`;
+            const url = `/api/reservations/getReservationsForWeek/${employeeId}/${formattedDate}`;
             const response = await axios.get(url, {
                 headers: {Authorization: `Bearer ${jwt}`},
             });
@@ -135,12 +152,25 @@ export default function TeamSettings() {
     }
 
     const isManager = userInfo?.role === "MANAGER";
-    const currentDate = format(new Date(), 'dd/MM/yyyy'); // Date actuelle formatée
-    const startDate = startOfWeek(new Date(), {weekStartsOn: 1}); // Début de la semaine
-    const endDate = endOfWeek(new Date(), {weekStartsOn: 1}); // Fin de la semaine
+    const currentDate = format(selectedDate, 'dd/MM/yyyy'); // Date actuelle formatée
+    const startDate = startOfWeek(selectedDate, {weekStartsOn: 1}); // Début de la semaine
+    const endDate = endOfWeek(selectedDate, {weekStartsOn: 1}); // Fin de la semaine
     const formattedStartDate = format(startDate, 'dd/MM/yyyy'); // Date formatée du début de la semaine
     const formattedEndDate = format(endDate, 'dd/MM/yyyy'); // Date formatée de la fin de la semaine
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+    function getBackgroundColor(period) {
+        switch (period) {
+            case 'Full Day':
+                return '#44d095'; // Green for a full day
+            case 'Morning':
+                return '#ADD8E6'; // Light blue for morning
+            case 'Afternoon':
+                return '#FFEF4F'; // Yellow for afternoon
+            default:
+                return 'transparent'; // Transparent if no reservation
+        }
+    }
 
     return (
         <div className="main">
@@ -149,12 +179,21 @@ export default function TeamSettings() {
                 <button className={activeTab === 'daily' ? 'active' : ''} onClick={() => setActiveTab('daily')}>Daily Stats</button>
                 <button className={activeTab === 'weekly' ? 'active' : ''} onClick={() => setActiveTab('weekly')}>Weekly Stats</button>
             </div>
+            <div className="date-picker-container">
+                <span className="datepicker-icon">📅</span>
+                <DatePicker
+                    selected={selectedDate}
+                    onChange={(date) => setSelectedDate(date)}
+                    dateFormat="dd/MM/yyyy"
+                />
+            </div>
             {isLoading ? (
                 <p>Loading...</p>
             ) : error ? (
                 <p>{error}</p>
             ) : activeTab === 'daily' ? (
                 <>
+
                     <h2>Daily Team Statistics - <span className="date-span">{currentDate}</span></h2>
                     <div className="result">
                         <table>
@@ -172,9 +211,27 @@ export default function TeamSettings() {
                                 <tr key={index}>
                                     <td>{member.lastname}</td>
                                     <td>{member.firstname}</td>
-                                    <td>{member.workStatus}</td>
-                                    <td>{member.period}</td>
-                                    <td>{member.deskNumber}</td>
+                                    <td className="icon-cell">
+                                        {member.workStatus === 'In Office' ? (
+                                            <img src={worker} alt="In Office" style={{ width: '25px' }} />
+                                        ) : member.workStatus === 'Homeworking' ? (
+                                            <img src={home} alt="Homeworking" style={{ width: '25px' }} />
+                                        ) : (
+                                            <span>{member.workStatus}</span>
+                                        )}
+                                    </td>
+                                    <td style={{ backgroundColor: getBackgroundColor(member.period), textAlign: 'center', verticalAlign: 'middle' }}>
+                                        {member.period === 'Full Day' ? (
+                                            <img src={clock} alt="Full Day" style={{ width: '25px' }} />
+                                        ) : member.period === 'Morning' ? (
+                                            <img src={morning} alt="Morning" style={{ width: '25px' }} />
+                                        ) : member.period === 'Afternoon' ? (
+                                            <img src={afternoon} alt="Afternoon" style={{ width: '25px' }} />
+                                        ) : (
+                                            <span>{member.period}</span>
+                                        )}
+                                    </td>
+                                    <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{member.deskNumber}</td>
                                 </tr>
                             ))}
                             </tbody>
@@ -208,52 +265,64 @@ export default function TeamSettings() {
                         <>
                             <h2>Weekly Team Statistics - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>
 
-                        <div className="stats">
+                            <div className="stats">
 
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Lastname</th>
-                                    <th>Firstname</th>
-                                    <th>Work Plan</th>
-                                    <th>Allowed Homeworking</th>
-                                    <th>Days In Office</th>
-                                    <th>Weekly Balance</th>
-                                    {daysOfWeek.map(day => <th key={day}>{day}</th>)}
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {teamList.map((member, index) => (
-                                    <tr key={index}>
-                                        <td>{member.lastname}</td>
-                                        <td>{member.firstname}</td>
-                                        <td>{getDaysPerWeek(member.workSchedule)} days</td>
-                                        <td>{member.memberQuota} days</td>
-                                        <td>{member.daysInOffice}</td>
-                                        <td>{member.balance}</td>
-                                        {daysOfWeek.map(day => {
-                                            const dayInfo = member.weeklyReservations && member.weeklyReservations.find(d => d.day === day);
-                                            let backgroundColor = '#FFFFFF'; // Default background
-                                            if (dayInfo) {
-                                                switch (dayInfo.type) {
-                                                    case 'fullDay':
-                                                        backgroundColor = '#44d095'; // Full day
-                                                        break;
-                                                    case 'morning':
-                                                        backgroundColor = '#ADD8E6'; // Morning only
-                                                        break;
-                                                    case 'afternoon':
-                                                        backgroundColor = '#FFEF4F'; // Afternoon only
-                                                        break;
-                                                }
-                                            }
-                                            return <td key={day} style={{ backgroundColor }}>{dayInfo ? dayInfo.status : "Homeworking"}</td>;
-                                        })}
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>Lastname</th>
+                                        <th>Firstname</th>
+                                        <th>Work Plan</th>
+                                        <th>Allowed Homeworking</th>
+                                        <th>Days In Office</th>
+                                        <th>Weekly Balance</th>
+                                        {daysOfWeek.map(day => <th key={day}>{day}</th>)}
                                     </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                    {teamList.map((member, index) => (
+                                        <tr key={index}>
+                                            <td>{member.lastname}</td>
+                                            <td>{member.firstname}</td>
+                                            <td>{getDaysPerWeek(member.workSchedule)} days</td>
+                                            <td>{member.memberQuota} days</td>
+                                            <td>{member.daysInOffice}</td>
+                                            <td>{member.balance}</td>
+                                            {daysOfWeek.map(day => {
+                                                const dayInfo = member.weeklyReservations && member.weeklyReservations.find(d => d.day === day);
+                                                let backgroundColor = '#FFFFFF'; // Default background
+                                                let content = null; // Content of the cell
+
+                                                if (dayInfo) {
+                                                    switch (dayInfo.type) {
+                                                        case 'fullDay':
+                                                            backgroundColor = '#44d095'; // Full day
+                                                            content = <img src={clock} alt="Full Day" style={{ width: '25px' }} />;
+                                                            break;
+                                                        case 'morning':
+                                                            backgroundColor = '#ADD8E6'; // Morning only
+                                                            content = <img src={morning} alt="Morning" style={{ width: '25px' }} />;
+                                                            break;
+                                                        case 'afternoon':
+                                                            backgroundColor = '#FFEF4F'; // Afternoon only
+                                                            content = <img src={afternoon} alt="Afternoon" style={{ width: '25px' }} />;
+                                                            break;
+                                                        default:
+                                                            content = dayInfo.status; // Default text or no reservation
+                                                            break;
+                                                    }
+                                                }
+                                                // else {
+                                                //     content = <img src={home} alt="Homeworking" style={{ width: '25px' }} />;
+                                                // }
+
+                                                return <td key={day} style={{ backgroundColor, textAlign: 'center', verticalAlign: 'middle' }}>{content}</td>;
+                                            })}
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </>
                     ) : (
                         <div className="stats">
@@ -272,23 +341,27 @@ export default function TeamSettings() {
                                         {daysOfWeek.map(day => {
                                             const dayInfo = getPersonalStats().weeklyReservations && getPersonalStats().weeklyReservations.find(d => d.day === day);
                                             let backgroundColor = '#FFFFFF'; // Default background
+                                            let content = null; // Content of the cell
                                             if (dayInfo) {
                                                 switch (dayInfo.type) {
                                                     case 'fullDay':
                                                         backgroundColor = '#44d095'; // Full day
+                                                        content = <img src={clock} alt="Full Day" style={{ width: '25px' }} />;
                                                         break;
                                                     case 'morning':
                                                         backgroundColor = '#ADD8E6'; // Morning only
+                                                        content = <img src={morning} alt="Morning" style={{ width: '25px' }} />;
                                                         break;
                                                     case 'afternoon':
                                                         backgroundColor = '#FFEF4F'; // Afternoon only
+                                                        content = <img src={afternoon} alt="Afternoon" style={{ width: '25px' }} />;
                                                         break;
                                                 }
                                             }
-                                            return <td key={day} style={{ backgroundColor }}>{dayInfo ? dayInfo.status : "Homeworking"}</td>;
+                                            return <td key={day} style={{ backgroundColor, textAlign: 'center', verticalAlign: 'middle'  }}>{content}</td>;
                                         })}
-                                        <td>{getPersonalStats().balance}</td>
-                                        <td>{getPersonalStats().daysInOffice}</td>
+                                        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{getPersonalStats().balance}</td>
+                                        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{getPersonalStats().daysInOffice}</td>
                                     </tr>
                                     </tbody>
                                 </table>
