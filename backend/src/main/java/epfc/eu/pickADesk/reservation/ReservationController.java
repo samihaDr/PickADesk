@@ -114,6 +114,20 @@ public class ReservationController {
     }
 
     @SecurityRequirement(name = "bearerAuth")
+    @GetMapping(value = "/employeeHasReservationThisDay/{employeeId}/{reservationDate}")
+    public ApiResponse EmployeeHasReservationThisDay(@PathVariable Long employeeId, @PathVariable LocalDate reservationDate) {
+        try {
+            List<ReservationDTO> results = reservationService.EmployeeHasReservationThisDay(employeeId, reservationDate);
+            if (results.isEmpty()) {
+                return new ApiResponse(false, "No reservations for today", null);
+            }
+
+            return new ApiResponse(true, "You have reservations for today", results);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Error checking reservations", e.getMessage());
+        }
+    }
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping(value = "/employeeHasReservationThisWeek/{employeeId}")
     public ApiResponse EmployeeHasReservationThisWeek(@PathVariable Long employeeId) {
         try {
@@ -128,11 +142,12 @@ public class ReservationController {
         }
     }
 
+
     @SecurityRequirement(name = "bearerAuth")
-    @GetMapping(value = "/getReservationsForWeek/{userId}")
-    public WeekReservationsResponse getReservationsForWeek(@PathVariable Long userId) {
+    @GetMapping(value = "/getReservationsForWeek/{userId}/{requestDate}")
+    public WeekReservationsResponse getReservationsForWeek(@PathVariable Long userId, @PathVariable LocalDate requestDate) {
         try {
-            List<ReservationDTO> results = reservationService.getReservationsForWeek(userId);
+            List<ReservationDTO> results = reservationService.getReservationsForWeek(userId, requestDate);
             if (results.isEmpty()) {
                 return new WeekReservationsResponse(null, 0.0, false, "No reservations for this week");
             }
