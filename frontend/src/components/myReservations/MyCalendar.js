@@ -40,7 +40,9 @@ function MyEvent({ event }) {
   return (
       <div>
         <img src={event.icon} alt={event.alt} style={{ height: 30, width: 30 }} />
-        Seat n°: {event.workStation.workPlace}
+        <br/>
+        <br/>
+        <span>Seat n°: {event.workStation.workPlace}</span>
       </div>
   );
 }

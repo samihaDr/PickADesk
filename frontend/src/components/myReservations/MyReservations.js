@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import MyCalendar from "./MyCalendar";
-import harmoniousIcon from "../../assets/icons/harmoniousIcon.png";
-import userIcon from "../../assets/icons/userIcon.png";
+import manIcon from "../../assets/icons/man.png";
+import programmerIcon from "../../assets/icons/programmer.png";
+import discussionIcon from "../../assets/icons/discussion.png";
+import workplaceIcon from "../../assets/icons/workspaceIcon.png";
 
 function Reservations() {
     const [events, setEvents] = useState([]);
@@ -39,19 +41,19 @@ function Reservations() {
 
             switch (reservation.reservationTypeId) {
                 case 1:
-                    icon = userIcon;
+                    icon = programmerIcon;
                     alt = "individual space";
                     break;
                 case 2:
-                    icon = userIcon;
+                    icon = discussionIcon;
                     alt = "collaborative space";
                     break;
                 case 3:
-                    icon = harmoniousIcon;
+                    icon = manIcon;
                     alt = "team day";
                     break;
                 default:
-                    icon = ""; // ou une icône par défaut
+                    icon = workplaceIcon;
                     alt = "unspecified";
             }
             return {
