@@ -119,7 +119,7 @@ export default function FindColleague() {
                   value={searchTerm}
                   onChange={handleSearchChange}
                   className="form-control"
-                  placeholder="Search by email..."
+                  placeholder="Search by last name or first name ..."
                 />
 
                 <label htmlFor="employeeId" className="form-label">
