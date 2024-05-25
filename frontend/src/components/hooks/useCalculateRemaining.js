@@ -32,13 +32,15 @@ const useCalculateRemaining = () => {
                     totalDaysReserved += 0.5;
                 }
             });
-
-
             const memberQuota = response.data.memberQuota;
-            console.log("MemberQuota : ", memberQuota);
-            const newRemaining = memberQuota - totalDaysReserved;
-            setWeeklyRemaining(newRemaining);
-            setWeeklyBookings(totalDaysReserved);
+            if (memberQuota !== undefined) {
+                const newRemaining = response.data?.memberQuota - totalDaysReserved;
+                setWeeklyRemaining(newRemaining);
+                setWeeklyBookings(totalDaysReserved);
+            } else {
+                console.log("No memberQuota found in response.");
+                // Gérer l'absence de memberQuota ici.
+            }
         } else {
             setWeeklyRemaining(userInfo.memberQuota);
         }
@@ -47,7 +49,7 @@ const useCalculateRemaining = () => {
         console.error("Failed to fetch reservations:", error);
       }
     },
-    [setWeeklyRemaining, setWeeklyBookings, userInfo.memberQuota],
+    [setWeeklyRemaining, setWeeklyBookings],
   );
 };
 
