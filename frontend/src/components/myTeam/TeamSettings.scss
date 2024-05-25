@@ -104,6 +104,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50px;  // Vous pouvez ajuster la hauteur selon vos besoins
+    height: 45px;  // Vous pouvez ajuster la hauteur selon vos besoins
+  }
+  .date-picker-container {
+    margin-bottom: 5px;
+    margin-top: 5px;
   }
 }

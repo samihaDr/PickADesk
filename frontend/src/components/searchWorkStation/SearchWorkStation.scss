@@ -54,12 +54,11 @@
 .datepicker-icon {
   margin-right: 5px;
 }
-
 .date-timePeriod {
   display: flex;
   align-items: center;
   flex-direction: row; /* Permet de ne pas aligner le label de date avec le DatePicker */
-  margin-bottom: 10px ;
+  margin-bottom: 6px ;
 }
 
 .datepicker-container {
@@ -67,7 +66,6 @@
   align-items: center;
   margin-left: 5px;
   margin-top: var(--spacing-small); /* Espacement entre le label et le DatePicker */
-
 }
 
 .checkbox-container {

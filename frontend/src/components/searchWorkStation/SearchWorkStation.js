@@ -480,7 +480,7 @@ export default function SearchWorkStation({onFormSend}) {
                                     {/* Ajout d'une option pour sélectionner une réservation pour un collégue */}
                                     <div className="colleague_booking" >
 
-                                        <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+                                        <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
                                             {/* Conteneur pour le checkbox "Colleague Booking" et son label */}
                                             <div style={{
                                                 flex: '1',
@@ -504,15 +504,15 @@ export default function SearchWorkStation({onFormSend}) {
                                     {/* Ajout d'une option pour sélectionner une réservation de groupe */}
                                     <div className="group_booking">
                                         {isManager ? (
-                                            <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+                                            <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
                                                 {/* Conteneur pour le checkbox "Group Booking" et son label */}
                                                 <div style={{
                                                     flex: '1',
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    gap: '20px'
+                                                    gap: '10px'
                                                 }}>
-                                                    <input style={{width :'30px'}}
+                                                    <input style={{width :'20px'}}
                                                         type="checkbox"
                                                         checked={isGroupBooking}
                                                         onChange={handleGroupBookingChange}
