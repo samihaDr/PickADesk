@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { GlobalContext, GlobalProvider } from "./services/GlobalState";
 import LoginPage from "./components/loginPage/LoginPage.js";
 import AddReservation from "./components/reservation/ReservationDetails";
 import RegisterPage from "./components/registerPage/RegisterPage";
-import Home from "./components/home/Home";
+import HomePage from "./components/homePage/HomePage";
 import Dashboard from "./components/dashboard/Dashboard";
 import Layout from "./Layout";
 import ProfilePage from "./components/profilePage/ProfilePage";
@@ -12,13 +12,6 @@ import ChangePassword from "./components/changePassword/ChangePassword";
 import SearchWorkStation from "./components/searchWorkStation/SearchWorkStation";
 import AvailableWorkStations from "./components/availableWorkStations/AvailableWorkStations";
 import { WorkStationProvider } from "./services/WorkStationContext";
-import "./App.css";
-import "./index.css";
-import "bootstrap/dist/css/bootstrap-grid.min.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import axios from "axios";
 import ReservationDetails from "./components/reservation/ReservationDetails";
 import MyReservations from "./components/myReservations/MyReservations";
 import FindColleague from "./components/findColleague/FindColleague";
@@ -27,19 +20,18 @@ import OfficeMap from "./components/officeMap/OfficeMap";
 import TeamSettings from "./components/myTeam/TeamSettings";
 import EditMemberParameters from "./components/editParameters/EditMemberParameters";
 import EditTeamParameters from "./components/editParameters/EditTeamParameters";
-
+import "./App.css";
+import "./index.css";
+import "bootstrap/dist/css/bootstrap-grid.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import axios from "axios";
 export const AUTH_TOKEN_KEY = "jhi-authenticationToken";
 
 const UserConnected = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated, userInfo } = useContext(GlobalContext);
 
-  useEffect(() => {
-    console.log("UserInfo in App  :", userInfo);
-    if (!isAuthenticated) {
-      navigate("/loginPage");
-    }
-  }, [navigate, isAuthenticated]);
+  const {  userInfo } = useContext(GlobalContext);
 
   // conditioned access to  EditMemberParameters component
   const editMemberParametersRoute = userInfo?.role === 'MANAGER' ? (
@@ -54,7 +46,7 @@ const UserConnected = () => {
       <>
         {userInfo && <Layout userInfo={userInfo} />}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="addReservation" element={<AddReservation />} />
           <Route path="searchWorkStation" element={<SearchWorkStation />} />
           <Route path="dashboard" element={<Dashboard />} />
@@ -71,7 +63,7 @@ const UserConnected = () => {
           <Route path="reservationDetails" element={<ReservationDetails />} />
           {editMemberParametersRoute}
           {editTeamParametersRoute}
-          <Route path="*" element={<LoginPage />} />
+          <Route path="*" element={<HomePage/>} />
         </Routes>
       </>
   );
