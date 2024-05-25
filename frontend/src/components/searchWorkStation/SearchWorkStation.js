@@ -320,6 +320,7 @@ export default function SearchWorkStation({onFormSend}) {
         const isChecked = e.target.checked;
         setIsGroupBooking(isChecked);
         if (isChecked) {
+            setColleagueBooking(false);
             try {
                 const teamMembersAll = await fetchTeamList(userInfo.teamId, jwt);
                 const ids = teamMembersAll.map(member => member.id);
@@ -376,9 +377,9 @@ export default function SearchWorkStation({onFormSend}) {
         const isChecked = e.target.checked;
         setColleagueBooking(isChecked);
         if (isChecked){
+            setIsGroupBooking(false);
             fetchEmployeeList();
         } else {
-            // Réinitialiser les valeurs ou ajuster le formulaire pour un mode de réservation standard
             resetFormToIndividualPreferences();
         }
     };
@@ -409,7 +410,7 @@ export default function SearchWorkStation({onFormSend}) {
             className="form-control"
             value={selectedColleague} // Assurez-vous de passer l'état actuel pour une sélection correcte
             // size="2"
-            style={{height: '25px', overflowY: 'auto'}}
+            style={{height: '45px', overflowY: 'auto'}}
         >
             {userList.map(user => (
                 <option key={user.id} value={user.id}>
@@ -477,17 +478,17 @@ export default function SearchWorkStation({onFormSend}) {
                                         </div>
                                     </div>
                                     {/* Ajout d'une option pour sélectionner une réservation pour un collégue */}
-                                    <div className="colleague_booking">
+                                    <div className="colleague_booking" >
 
                                         <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
-                                            {/* Conteneur pour le checkbox "Group Booking" et son label */}
+                                            {/* Conteneur pour le checkbox "Colleague Booking" et son label */}
                                             <div style={{
                                                 flex: '1',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 gap: '10px'
                                             }}>
-                                                <input
+                                                <input style={{width :'20px'}}
                                                     type="checkbox"
                                                     checked={isColleagueBooking}
                                                     onChange={handleColleagueBookingChange}
@@ -509,9 +510,9 @@ export default function SearchWorkStation({onFormSend}) {
                                                     flex: '1',
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    gap: '10px'
+                                                    gap: '20px'
                                                 }}>
-                                                    <input
+                                                    <input style={{width :'30px'}}
                                                         type="checkbox"
                                                         checked={isGroupBooking}
                                                         onChange={handleGroupBookingChange}
@@ -525,8 +526,8 @@ export default function SearchWorkStation({onFormSend}) {
                                         ) : null}
                                     </div>
 
-                                    <div className="selectDetails">
-                                        <div className="mb-3">
+                                    <div className="selectDetails" >
+                                        <div className="mb-3" >
                                             <label>Reservation Type</label>
                                             <select
                                                 name="reservationTypeId"
