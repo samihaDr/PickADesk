@@ -4,12 +4,14 @@ import {useTeamList} from "../hooks/useTeamList";
 import {AUTH_TOKEN_KEY} from "../../App";
 import axios from "axios";
 import "./EditMemberParameters.scss";
+import useCalculateRemaining from "../hooks/useCalculateRemaining";
 
 export default function EditMemberParameters() {
     const {userInfo, setUserInfo} = useContext(GlobalContext);
     const {teamList, setTeamList, fetchTeamList} = useTeamList();
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
     const [modifiedIds, setModifiedIds] = useState({});
+    const calculateRemaining = useCalculateRemaining();
 
     useEffect(() => {
         if (userInfo && userInfo.teamId) {
@@ -47,6 +49,7 @@ export default function EditMemberParameters() {
                     memberQuota: member.memberQuota // Mise à jour du quota dans UserInfo
                 };
                 setUserInfo(updatedUserInfo);
+                await calculateRemaining(userInfo.id);
             }
 
         } catch (error) {
