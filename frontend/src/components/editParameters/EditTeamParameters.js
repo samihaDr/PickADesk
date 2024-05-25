@@ -99,6 +99,8 @@ export default function EditTeamParameters() {
     };
     const revertChanges = () => {
         loadAllTeams();
+        fetchData();
+
     };
 
     return (
