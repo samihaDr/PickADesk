@@ -1,8 +1,9 @@
 import React from "react";
 import logo from "../../assets/images/logo.png";
-import "./Home.scss";
+import "./HomePage.scss";
+import {Link} from "react-router-dom";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="main">
       <h2> Welcome</h2>
@@ -13,9 +14,7 @@ export default function Home() {
           </div>
           <h3 className="card-text">Book easily. Work efficiently</h3>
           <div className="card-links">
-            <a href="/LoginPage" className="link">
-              Login
-            </a>
+            <Link to="/loginPage" className="link">Login</Link>
             {/*/!* Ajout d'un espace entre les liens *!/*/}
             {/*<span className="link-space">*/}
             {/*  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;*/}
