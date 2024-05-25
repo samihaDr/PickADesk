@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import "./LoginPage.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AUTH_TOKEN_KEY } from "../../App";
 import { EmailValidator } from "../../services/EmailValidator";
@@ -43,13 +43,6 @@ export default function LoginPage() {
     );
     return userPreferencesResponse.data;
   };
-
-  // const getTeamInfo = async (teamId) => {
-  //   const teamInfoResponse = await axios.get(
-  //     `/api/teams/getTeamById/${teamId}`,
-  //   );
-  //   return teamInfoResponse.data;
-  // };
 
   const handleAuthenticationError = (error) => {
     if (error.response) {
@@ -96,9 +89,6 @@ export default function LoginPage() {
 
       const userPreferencesData = await getUserPreferences(userData.id);
       setUserPreferences(userPreferencesData);
-
-      // const teamInfoData = await getTeamInfo(userData.teamId);
-      //  setWeeklyQuota(`${teamInfoData.memberQuota}`);
 
       navigate("/dashboard");
     } catch (error) {
@@ -164,7 +154,8 @@ export default function LoginPage() {
           </div>
           <div>
             <span>Don't have an account? </span>
-            <Link to="/registerPage">Register</Link>
+            <span><strong>Contact HR service</strong></span>
+            {/*<Link to="/HomePage">Contact HR service</Link>*/}
           </div>
         </div>
       </div>
