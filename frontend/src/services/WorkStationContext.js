@@ -20,6 +20,9 @@ export const WorkStationProvider = ({ children }) => {
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [isColleagueBooking, setColleagueBooking] = useState(false);
     const [selectedColleague, setSelectedColleague] = useState(null);
+    const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
+
     return (
         <WorkStationContext.Provider
             value={{
@@ -31,7 +34,8 @@ export const WorkStationProvider = ({ children }) => {
                 selectedMembers, setSelectedMembers,
                 isColleagueBooking, setColleagueBooking,
                 selectedColleague, setSelectedColleague,
-
+                totalPages, setTotalPages,
+                currentPage, setCurrentPage
             }}
         >
             {children}
