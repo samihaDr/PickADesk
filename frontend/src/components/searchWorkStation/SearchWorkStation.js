@@ -25,8 +25,11 @@ export default function SearchWorkStation({onFormSend}) {
         selectedStations, setSelectedStations,
         selectedMembers, setSelectedMembers,
         isColleagueBooking, setColleagueBooking,
-        selectedColleague, setSelectedColleague
+        selectedColleague, setSelectedColleague,
+        totalPages, setTotalPages,
+        currentPage, setCurrentPage
     } = useContext(WorkStationContext);
+
     const [userList, setUserList] = useState([]);
     const [isLoading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
@@ -64,8 +67,6 @@ export default function SearchWorkStation({onFormSend}) {
     const [screen, setScreen] = useState("");
     const [equipment, setEquipment] = useState([]);
     const [furniture, setFurniture] = useState([]);
-    // const [currentPage, setCurrentPage] = useState(0);
-    // const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -88,13 +89,13 @@ export default function SearchWorkStation({onFormSend}) {
     }, []);
 
     useEffect(() => {
-        if (isGroupBooking && selectedMembers){
+        if (isGroupBooking && selectedMembers) {
             console.log("SelectedMembers : ", selectedMembers);
         }
     }, [isGroupBooking, selectedMembers]);
 
     useEffect(() => {
-        if (isColleagueBooking && userList){
+        if (isColleagueBooking && userList) {
             console.log("isColleagueBooking 11111111 : ", isColleagueBooking);
             console.log("UserList 11111111 : ", userList);
         }
@@ -103,6 +104,10 @@ export default function SearchWorkStation({onFormSend}) {
     useEffect(() => {
         resetFormToIndividualPreferences();
     }, [userPreferences, isGroupBooking]);
+
+    useEffect(() => {
+        loadWorkStations();
+    }, [currentPage]);
 
     const resetFormToIndividualPreferences = () => {
         if (userPreferences && !isGroupBooking) {
@@ -162,28 +167,33 @@ export default function SearchWorkStation({onFormSend}) {
         }
         setLoading(true);
 
-        const formData = {
-            date,
-            timePeriod,
-            zone,
-            reservationType,
-            workArea,
-            screen,
-            equipment,
-            furniture,
-            isGroupBooking,
-            isColleagueBooking,
-            teamMembers,
-            selectedStations,
-            selectedColleague
-
-        };
-
         try {
-            const response = await sendFormDataToServer(formData);
-            console.log("Response from Backend : ", response);
-            setWorkStations(response);
-            console.log("Available Work Stations : ", workStations);
+            const formData = {
+                date,
+                timePeriod,
+                zone,
+                reservationType,
+                workArea,
+                screen,
+                equipment,
+                furniture,
+                isGroupBooking,
+                isColleagueBooking,
+                teamMembers,
+                selectedStations,
+                selectedColleague
+
+            };
+
+            const response = await loadWorkStations(formData);
+
+            if (response) {
+                setWorkStations(response.content || []);
+                setTotalPages(response.totalPages || 0);
+                setCurrentPage(response.number || 0);
+            } else {
+                console.error("No response or bad format");
+            }
 
             setSelectedOptions({
                 zone,
@@ -208,71 +218,58 @@ export default function SearchWorkStation({onFormSend}) {
         }
     };
 
-    const sendFormDataToServer = async (formData) => {
-        const {
-            date, // 'yyyy-MM-dd'
-            timePeriod, // { morning: true/false, afternoon: true/false }
-            zone,
-            reservationType,
-            workArea,
-            screen,
-            equipment, // Ce sont des listes d'IDs
-            furniture, // Ce sont des listes d'IDs
-            isGroupBooking,
-            isColleagueBooking,
-            teamMembers,
-            selectedStations,
-            selectedColleague
-        } = formData;
-        console.log("FormData :", formData);
+    const loadWorkStations = async () => {
+        setLoading(true);
         const params = new URLSearchParams({
-            reservationDate: date.toISOString().split("T")[0], // Convertit la date en format ISO (yyyy-MM-dd)
+            reservationDate: date.toISOString().split("T")[0],
             morning: timePeriod.morning,
             afternoon: timePeriod.afternoon,
-            zoneId: zone || "", // Si zone est null ou undefined, cela enverra une chaîne vide
-            reservationType: reservationType || "",
-            workAreaId: workArea || "",
-            screenId: screen || "",
-            equipmentIds: equipment.join(",") || "",
-            furnitureIds: furniture.join(",") || "",
+            zoneId: zone,
+            reservationType: reservationType,
+            workAreaId: workArea,
+            screenId: screen,
+            equipmentIds: equipment.join(","),
+            furnitureIds: furniture.join(","),
             isGroupBooking: isGroupBooking,
             isColleagueBooking: isColleagueBooking,
-            teamMembers: teamMembers || [],
-            selectedStations: selectedStations || [],
-            selectedColleague: selectedColleague || null,
-            page: 0,
-            size: 10,
+            teamMembers: teamMembers.join(","),
+            selectedStations: selectedStations.join(","),
+            selectedColleague: selectedColleague,
+            page: currentPage,
+            size: 10, // Adaptez ceci selon vos besoins
             sortBy: "id",
             order: "asc",
         });
 
         try {
-            const response = await fetch(
-                `/api/workStations/search?${params.toString()}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+            const response = await fetch(`/api/workStations/search?${params.toString()}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
                 },
-            );
-
+            });
             if (!response.ok) {
-                new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
-            return await response.json();
-            // setTotalPages(data.totalPages);
-
+            const data = await response.json();
+            setWorkStations(data.content || []);
+            setTotalPages(data.totalPages || 0);
+            setCurrentPage(data.number || 0);
         } catch (error) {
-            console.error("Error fetching data", error);
-            throw error;
+            console.error("Error fetching work stations", error);
+            setErrorMessage("Failed to load work stations.");
+        } finally {
+            setLoading(false);
         }
     };
-    // const handlePageChange = (newPage) => {
-    //   setCurrentPage(newPage);
-    //   handleSubmit();
-    // };
+
+
+    useEffect(() => {
+        console.log("Updated state - workStations: ", workStations);
+        console.log("Updated state - totalPages: ", totalPages);
+        console.log("Updated state - currentPage: ", currentPage);
+    }, [workStations, totalPages, currentPage]);
+
     const handleTimePeriodCheckboxChange = (e) => {
         setTimePeriod({
             ...timePeriod,
@@ -376,7 +373,7 @@ export default function SearchWorkStation({onFormSend}) {
     const handleColleagueBookingChange = (e) => {
         const isChecked = e.target.checked;
         setColleagueBooking(isChecked);
-        if (isChecked){
+        if (isChecked) {
             setIsGroupBooking(false);
             fetchEmployeeList();
         } else {
@@ -385,7 +382,7 @@ export default function SearchWorkStation({onFormSend}) {
     };
     const handleColleagueChange = (e) => {
         setSelectedColleague(e.target.value);
-        console.log("SelectedColleague : " , selectedColleague);
+        console.log("SelectedColleague : ", selectedColleague);
     };
     const renderTeamMembersDropdown = () => (
         <select
@@ -478,7 +475,7 @@ export default function SearchWorkStation({onFormSend}) {
                                         </div>
                                     </div>
                                     {/* Ajout d'une option pour sélectionner une réservation pour un collégue */}
-                                    <div className="colleague_booking" >
+                                    <div className="colleague_booking">
 
                                         <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
                                             {/* Conteneur pour le checkbox "Colleague Booking" et son label */}
@@ -488,10 +485,10 @@ export default function SearchWorkStation({onFormSend}) {
                                                 alignItems: 'center',
                                                 gap: '10px'
                                             }}>
-                                                <input style={{width :'20px'}}
-                                                    type="checkbox"
-                                                    checked={isColleagueBooking}
-                                                    onChange={handleColleagueBookingChange}
+                                                <input style={{width: '20px'}}
+                                                       type="checkbox"
+                                                       checked={isColleagueBooking}
+                                                       onChange={handleColleagueBookingChange}
                                                 />
                                                 <label>Book for a colleague</label>
                                             </div>
@@ -512,10 +509,10 @@ export default function SearchWorkStation({onFormSend}) {
                                                     alignItems: 'center',
                                                     gap: '10px'
                                                 }}>
-                                                    <input style={{width :'20px'}}
-                                                        type="checkbox"
-                                                        checked={isGroupBooking}
-                                                        onChange={handleGroupBookingChange}
+                                                    <input style={{width: '20px'}}
+                                                           type="checkbox"
+                                                           checked={isGroupBooking}
+                                                           onChange={handleGroupBookingChange}
                                                     />
                                                     <label>Group Booking</label>
                                                 </div>
@@ -526,8 +523,8 @@ export default function SearchWorkStation({onFormSend}) {
                                         ) : null}
                                     </div>
 
-                                    <div className="selectDetails" >
-                                        <div className="mb-3" >
+                                    <div className="selectDetails">
+                                        <div className="mb-3">
                                             <label>Reservation Type</label>
                                             <select
                                                 name="reservationTypeId"
@@ -651,13 +648,6 @@ export default function SearchWorkStation({onFormSend}) {
                                     </div>
                                 )}
                             </form>
-                            <div>
-                                {/*  {Array.from({ length: totalPages }, (_, index) => (*/}
-                                {/*      <button key={index} onClick={() => handlePageChange(index)}>*/}
-                                {/*        {index + 1}*/}
-                                {/*      </button>*/}
-                                {/*  ))}*/}
-                            </div>
                         </div>
                     </div>
                 </div>
