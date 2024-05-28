@@ -58,10 +58,10 @@ public class Reservation {
     private Long createdBy;
 
     @Column(name = "is_group_booking")
-    private boolean isGroupBooking;
+    private boolean isGroupBooking = false;
 
     @Column(name = "is_colleague_booking")
-    private boolean isColleagueBooking;
+    private boolean isColleagueBooking = false;
 
     // Assurez-vous de déclarer correctement colleagueId pour utiliser Optional
     @Transient  // si vous ne souhaitez pas stocker cette valeur dans la DB

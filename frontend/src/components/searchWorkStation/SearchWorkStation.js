@@ -390,8 +390,8 @@ export default function SearchWorkStation({onFormSend}) {
             className="form-control"
             multiple
             value={selectedMembers} // Assurez-vous de passer l'état actuel pour une sélection correcte
-            size="5"
-            style={{height: '60px', overflowY: 'auto'}}
+            //size="5"
+            style={{height: '70px', overflowY: 'auto'}}
         >
             {teamList.map(member => (
                 <option key={member.id} value={member.id}>
@@ -406,7 +406,7 @@ export default function SearchWorkStation({onFormSend}) {
             onChange={handleColleagueChange}
             className="form-control"
             value={selectedColleague} // Assurez-vous de passer l'état actuel pour une sélection correcte
-            // size="2"
+             // size="5"
             style={{height: '45px', overflowY: 'auto'}}
         >
             {userList.map(user => (
