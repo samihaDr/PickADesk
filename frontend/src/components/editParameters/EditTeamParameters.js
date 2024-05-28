@@ -3,15 +3,20 @@ import {GlobalContext} from "../../services/GlobalState";
 import axios from "axios";
 import {AUTH_TOKEN_KEY} from "../../App";
 import {useTeamList} from "../hooks/useTeamList";
+import {format} from "date-fns";
 
 export default function EditTeamParameters() {
-    const { userInfo } = useContext(GlobalContext);
+    const { userInfo, reservations } = useContext(GlobalContext);
+
     const [isLoading, setLoading] = useState(true);
     const { fetchTeamList } = useTeamList();
     const [error, setError] = useState("");
     const [allTeams, setAllTeams] = useState([]);
     const [managerTeamId, setManagerTeamId] = useState(null);
     const jwt = sessionStorage.getItem(AUTH_TOKEN_KEY);
+    const [totalMembers, setTotalMembers] = useState(0);
+    const [totalInOffice, setTotalInOffice] = useState(0);
+    const [totalSeatsAllocated, setTotalSeatsAllocated] = useState(0);
 
     // Cette fonction charge les données initiales des utilisateurs et des stations de travail
     async function fetchData() {
@@ -31,26 +36,74 @@ export default function EditTeamParameters() {
         }
     }
 
+    async function checkColleagueAvailability(employeeId, selectedDate) {
+        const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+        try {
+            const url = `/api/reservations/employeeHasReservationThisDay/${employeeId}/${formattedDate}`;
+            const response = await axios.get(url, {
+                headers: { Authorization: `Bearer ${jwt}` },
+            });
+            if (response.data.success) {
+                const morning = response.data.data[0]?.morning;
+                const afternoon = response.data.data[0]?.afternoon;
+                return {
+                    workStatus: "In Office",
+                    period: morning && afternoon ? "Full Day" : morning ? "Morning" : "Afternoon",
+                    deskNumber: response.data.data[0]?.workStation.workPlace
+                };
+            } else {
+                return {
+                    workStatus: "Homeworking",
+                    period: null,
+                    deskNumber: null
+                };
+            }
+        } catch (error) {
+            console.error("Error checking reservation:", error);
+            return {
+                workStatus: "Error checking status",
+                period: null,
+                deskNumber: null
+            };
+        }
+    }
+
     // Cette fonction charge toutes les équipes avec le calcul des membres et des sièges
     async function loadAllTeams(totalUsers, totalSeats) {
+        const today = new Date();  // Ou une autre date spécifique
         try {
             const response = await axios.get(`/api/teams/getAllTeams`);
-            const sortedData = response.data.sort((a, b) =>
-                a.name.localeCompare(b.name),
-            );
-            const teamsWithDetails = await Promise.all(response.data.map(async team => {
+            const sortedData = response.data.sort((a, b) => a.name.localeCompare(b.name));
+            const teamsWithDetails = await Promise.all(sortedData.map(async team => {
                 const membersResponse = await fetchTeamList(team.id);
                 const totalMembers = membersResponse.length;
                 const percent = (totalMembers * 100) / totalUsers;
                 const seatsAllocated = Math.round((percent / 100) * totalSeats);
-                return { ...team, membersCount: totalMembers, percent, seatsAllocated };
+
+                // Utilisation de checkColleagueAvailability pour chaque membre
+                const membersAvailability = await Promise.all(membersResponse.map(member =>
+                    checkColleagueAvailability(member.id, today)
+                ));
+                const inOfficeCount = membersAvailability.filter(status => status.workStatus === 'In Office').length;
+
+                return { ...team, membersCount: totalMembers, percent, seatsAllocated, inOfficeCount };
             }));
-            setAllTeams(sortedData);
+
+            // calcul des totaux
+            const totalMembersSum = teamsWithDetails.reduce((acc, team) => acc + team.membersCount, 0);
+            const totalInOfficeSum = teamsWithDetails.reduce((acc, team) => acc + team.inOfficeCount, 0);
+            const totalSeatsAllocatedSum = teamsWithDetails.reduce((acc, team) => acc + team.seatsAllocated, 0);
+
+            setTotalMembers(totalMembersSum);
+            setTotalInOffice(totalInOfficeSum);
+            setTotalSeatsAllocated(totalSeatsAllocatedSum);
+
             setAllTeams(teamsWithDetails);
         } catch (error) {
             setError(`Error loading teams: ${error.message}`);
         }
     }
+
 
     // j'utilise useEffect pour déclencher les données initiales une fois
     useEffect(() => {
@@ -58,7 +111,7 @@ export default function EditTeamParameters() {
             fetchData();
             setManagerTeamId(userInfo.teamId);
         }
-    }, [userInfo, jwt]);
+    }, [userInfo, jwt, reservations]);
 
     function handleMinChange(e, teamId) {
         const newMin = e.target.value;
@@ -118,6 +171,7 @@ export default function EditTeamParameters() {
                         <th>Seats</th>
                         <th>Min</th>
                         <th>Max</th>
+                        <th>Presence at the office</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -150,8 +204,18 @@ export default function EditTeamParameters() {
                                     max="15"
                                 />
                             </td>
+                            <td>{team.inOfficeCount}</td>
                         </tr>
                     ))}
+                    <tr>
+                        <th>Total</th>
+                        <th>{totalMembers}</th>
+                        <th>-</th> {/* Vous pourriez vouloir calculer un pourcentage global si pertinent */}
+                        <th>{totalSeatsAllocated}</th>
+                        <th>-</th> {/* Min et Max ne sont pas totalisés ici */}
+                        <th>-</th>
+                        <th>{totalInOffice}</th>
+                    </tr>
                     </tbody>
                 </table>
             </div>
