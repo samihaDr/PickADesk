@@ -360,8 +360,8 @@ export default function TeamSettings() {
                                             }
                                             return <td key={day} style={{ backgroundColor, textAlign: 'center', verticalAlign: 'middle'  }}>{content}</td>;
                                         })}
-                                        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{getPersonalStats().balance}</td>
                                         <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{getPersonalStats().daysInOffice}</td>
+                                        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{getPersonalStats().balance}</td>
                                     </tr>
                                     </tbody>
                                 </table>
