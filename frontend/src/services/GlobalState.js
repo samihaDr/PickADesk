@@ -9,7 +9,7 @@ const initialState = {
   userInfo: null,
   userPreferences: null,
   weeklyRemaining: null,
-  weeklyBookings: null,
+  weeklyBookings: 0,
   reservations: [],
   favorites: [],
   isAuthenticated: !!sessionStorage.getItem(AUTH_TOKEN_KEY),
