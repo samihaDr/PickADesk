@@ -38,7 +38,7 @@ export default function Menu() {
           className="nav-link active"
           aria-current="page"
         >
-          Find colleague
+          Find a colleague
         </Link>
         <br />
         <h5>My team</h5>
