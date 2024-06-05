@@ -8,6 +8,7 @@ import {WorkStationContext} from "../../services/WorkStationContext";
 import {useTeamList} from "../hooks/useTeamList";
 import {AUTH_TOKEN_KEY} from "../../App";
 import axios from "axios";
+import notify from "../../services/toastNotifications";
 
 export default function SearchWorkStation({onFormSend}) {
     const [data, setData] = useState({
@@ -162,7 +163,7 @@ export default function SearchWorkStation({onFormSend}) {
         setErrorMessage("");
         const validationError = validateFormData();
         if (validationError) {
-            setErrorMessage(validationError);
+            notify.error(validationError);
             return;
         }
         setLoading(true);
@@ -211,8 +212,7 @@ export default function SearchWorkStation({onFormSend}) {
 
             onFormSend(); // Déclencher la mise à jour d'état dans le parent
         } catch (error) {
-            console.error("Error submitting form", error);
-            setErrorMessage("An error occurred while submitting the form.");
+            notify.error(error.message || "An error occurred while submitting the form");
         } finally {
             setLoading(false);
         }
@@ -255,9 +255,9 @@ export default function SearchWorkStation({onFormSend}) {
             setWorkStations(data.content || []);
             setTotalPages(data.totalPages || 0);
             setCurrentPage(data.number || 0);
+
         } catch (error) {
-            console.error("Error fetching work stations", error);
-            setErrorMessage("Failed to load work stations.");
+            notify.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -390,7 +390,6 @@ export default function SearchWorkStation({onFormSend}) {
             className="form-control"
             multiple
             value={selectedMembers} // Assurez-vous de passer l'état actuel pour une sélection correcte
-            //size="5"
             style={{height: '70px', overflowY: 'auto'}}
         >
             {teamList.map(member => (

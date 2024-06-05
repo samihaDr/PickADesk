@@ -21,6 +21,9 @@ h1, h2, h3, h4, h5, h6, p, ul, ol, li {
     padding: 0;
 }
 
+.toast-custom-width {
+    width: 500px;
+}
 /* Styles globaux pour les liens */
 a {
     color: #007bff;

@@ -4,6 +4,7 @@ import axios from "axios";
 import {AUTH_TOKEN_KEY} from "../../App";
 import {useTeamList} from "../hooks/useTeamList";
 import {format} from "date-fns";
+import notify from "../../services/toastNotifications";
 
 export default function EditTeamParameters() {
     const { userInfo, reservations } = useContext(GlobalContext);
@@ -21,6 +22,7 @@ export default function EditTeamParameters() {
     // Cette fonction charge les données initiales des utilisateurs et des stations de travail
     async function fetchData() {
         setLoading(true);
+        notify.info("Loading team data...");
         try {
             const usersResponse = await axios.get(`/api/users/allUsers`, { headers: { Authorization: `Bearer ${jwt}` } });
             const seatsResponse = await axios.get(`/api/workStations/all`);
@@ -30,7 +32,7 @@ export default function EditTeamParameters() {
                 loadAllTeams(totalUsers, totalSeats);  // Charge les équipes avec le total d'utilisateurs et de sièges
             }
         } catch (error) {
-            setError(`Error fetching initial data: ${error.message}`);
+            notify.error("Failed to load initial data.");
         } finally {
             setLoading(false);
         }
@@ -136,7 +138,7 @@ export default function EditTeamParameters() {
     const saveQuotas = async (id) => {
         const teamUpdated = allTeams.find(team => team.id === id);
         if (!teamUpdated) {
-            console.error('Team not found');
+            notify.error('Team not found');
             return;
         }
         try {
@@ -144,13 +146,15 @@ export default function EditTeamParameters() {
                 teamQuotaMin: teamUpdated.teamQuotaMin,
                 teamQuotaMax: teamUpdated.teamQuotaMax
             });
-            alert('Quota updated successfully!');
+            notify.success('Quota updated successfully!');
 
         } catch (error) {
             console.error('Failed to update quota', error);
+            notify.error(`Failed to update quota: ${error.response.data.message || error.message}`);
         }
     };
     const revertChanges = () => {
+        notify.info("Resetting changes...");
         loadAllTeams();
         fetchData();
 

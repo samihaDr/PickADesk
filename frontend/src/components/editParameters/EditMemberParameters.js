@@ -5,6 +5,7 @@ import {AUTH_TOKEN_KEY} from "../../App";
 import axios from "axios";
 import "./EditMemberParameters.scss";
 import useCalculateRemaining from "../hooks/useCalculateRemaining";
+import notify from "../../services/toastNotifications";
 
 export default function EditMemberParameters() {
     const {userInfo, setUserInfo} = useContext(GlobalContext);
@@ -27,19 +28,19 @@ export default function EditMemberParameters() {
             ));
             setModifiedIds(prev => ({...prev, [id]: true}));
         } else {
-            console.error('Invalid quota');
+            notify.error('Invalid quota');
         }
     };
 
     const saveQuota = async (id) => {
         const member = teamList.find(member => member.id === id);
         if (!member) {
-            console.error('Member not found');
+            notify.error('Member not found');
             return;
         }
         try {
             await axios.put(`/api/users/updateQuota/${id}`, {memberQuota: member.memberQuota});
-            alert('Quota updated successfully!');
+            notify.success('Quota updated successfully!');
             // Réinitialisation de l'ID modifié après la sauvegarde réussie
             setModifiedIds(prev => ({...prev, [id]: false}));
             // Vérifier si l'ID du membre mis à jour correspond à l'ID de l'utilisateur connecté
@@ -53,12 +54,13 @@ export default function EditMemberParameters() {
             }
 
         } catch (error) {
-            console.error('Failed to update quota', error);
+            notify.error('Failed to update quota', error);
         }
     };
     const revertChanges = () => {
         fetchTeamList(userInfo.teamId, jwt);
         setModifiedIds({});
+        notify.info('Changes reverted');
     };
 
     function getDaysPerWeek(schedule) {

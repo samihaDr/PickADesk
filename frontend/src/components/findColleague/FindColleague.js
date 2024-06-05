@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./FindColleague.scss";
+import notify from "../../services/toastNotifications";
 
 export default function FindColleague() {
   const [employeeList, setEmployeeList] = useState([]);
@@ -43,7 +44,7 @@ export default function FindColleague() {
       setEmployeeList(sortedData);
       setFilteredEmployeeList(sortedData);
     } catch (error) {
-      setError("Unable to load the list of employees.");
+      notify.error("Unable to load the list of employees.");
     } finally {
       setLoading(false);
     }
@@ -51,28 +52,34 @@ export default function FindColleague() {
 
   const fetchEmployeeInfoAndDesk = async () => {
     setLoading(true);
+    setError(""); // Clear error state at the start
     try {
-      const infoResponse = await axios.get(
-        `/api/users/findColleague/${employeeId}`,
-      );
+      const infoResponse = await axios.get(`/api/users/findColleague/${employeeId}`);
       setEmployeeInfo(infoResponse.data);
+
+      let deskResponse;
       if (searchPeriod === "today") {
-        const deskResponse = await axios.get(
-          `/api/reservations/employeeHasReservationToday/${employeeId}`,
-        );
-        setResult(deskResponse.data.data);
+        deskResponse = await axios.get(`/api/reservations/employeeHasReservationToday/${employeeId}`);
       } else {
-        const deskResponse = await axios.get(
-          `/api/reservations/employeeHasReservationThisWeek/${employeeId}`,
-        );
-        setResult(deskResponse.data.data);
+        deskResponse = await axios.get(`/api/reservations/employeeHasReservationThisWeek/${employeeId}`);
+      }
+      setResult(deskResponse.data.data);
+      console.log("RESPONSE 987654: ", deskResponse.data.data);
+
+      if (deskResponse.data.data) {
+        notify.success( "Employee information and bookings loaded successfully!");
+      } else  {
+        notify.info( "No booking found for the selected period!");
       }
     } catch (error) {
-      setError("Unable to load employee information or bookings.");
+      console.error("Fetch Error:", error);
+      // setError("Unable to load employee information or bookings.");
+      notify.error(`Error: ${error.response ? error.response.data.message : "Unable to load employee information or bookings"}`);
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -91,7 +98,7 @@ export default function FindColleague() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!employeeId || employeeId === "") {
-      alert("Please select an employee.");
+      notify.error("Please select an employee.");
       return;
     }
     fetchEmployeeInfoAndDesk();
@@ -206,8 +213,11 @@ export default function FindColleague() {
             </table>
           </div>
         ) : searchInitiated && (!result || result.length === 0) ? (
+
           <div>
-            <strong>No bookings found for the selected period.</strong>
+          <br/>
+          <br/>
+            <strong style={{fontSize: '20px'}}>No bookings found for the selected period.</strong>
           </div>
         ) : null}
       </div>

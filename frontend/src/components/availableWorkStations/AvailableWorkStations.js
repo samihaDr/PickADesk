@@ -10,6 +10,7 @@ import {bookWorkStation} from "../../services/BookWorkStation";
 import {format} from "date-fns";
 import {AUTH_TOKEN_KEY} from "../../App";
 import useCalculateRemaining from "../hooks/useCalculateRemaining";
+import notify from "../../services/toastNotifications";
 
 export default function AvailableWorkStations({formSent}) {
     const {userInfo = {}} = useContext(GlobalContext);
@@ -62,6 +63,7 @@ export default function AvailableWorkStations({formSent}) {
                 setData(bookingPreferencesData);
             } catch (error) {
                 console.error("Error fetching booking preferences:", error);
+                notify.error("Failed to load booking preferences.");
             }
             setLoading(false);
         }
@@ -88,6 +90,7 @@ export default function AvailableWorkStations({formSent}) {
     };
 
     if (!workStations || !selectedOptions) {
+        notify.info("Loading data...");
         return <p>Loading data...</p>;
     }
 
@@ -142,13 +145,14 @@ export default function AvailableWorkStations({formSent}) {
             return response.data;
         } catch (error) {
             console.error("Erreur lors de la vérification de la réservation:", error);
+            notify.error("Failed to check reservation availability.");
             return false; // Retourner false en cas d'erreur de la requête
         }
     };
 
     const handleGroupReservationSubmit = async () => {
         if (selectedStations.length !== selectedMembers.length) {
-            alert(`Please select exactly ${selectedMembers.length} workstations for your group.`);
+            notify.error(`Please select exactly ${selectedMembers.length} workstations for your group.`);
             return;
         }
 
@@ -168,14 +172,12 @@ export default function AvailableWorkStations({formSent}) {
             if (result.success) {
                 setShowModal(true);
                 await calculateRemaining(userInfo.id);
-                console.log("Group reservation successful.");
             } else {
-                alert("Some reservations failed. Please check the details and try again.");
-                console.log("Group booking result: ", result);
+                //alert("Some reservations failed. Please check the details and try again.");
+                notify.error("Some reservations failed. Please check the details and try again.");
             }
         } catch (error) {
-            console.error("Error during group reservation process:", error);
-            alert("An error occurred during the group booking process.");
+            notify.error("An error occurred during the group booking process.");
         }
 
         setLoading(false);
