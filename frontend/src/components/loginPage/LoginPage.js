@@ -5,7 +5,7 @@ import axios from "axios";
 import { AUTH_TOKEN_KEY } from "../../App";
 import { EmailValidator } from "../../services/EmailValidator";
 import { GlobalContext } from "../../services/GlobalState";
-import { Button, Modal } from "react-bootstrap";
+import notify from "../../services/toastNotifications";
 
 export default function LoginPage() {
   const {
@@ -19,7 +19,6 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -33,7 +32,8 @@ export default function LoginPage() {
       });
       return userInfoResponse.data;
     } catch (error) {
-      throw new Error("Error fetching user info");
+     // throw new Error("Error fetching user info");
+      notify.error(error);
     }
   };
 
@@ -45,21 +45,26 @@ export default function LoginPage() {
   };
 
   const handleAuthenticationError = (error) => {
+    let errorMessage = "";
+
     if (error.response) {
-      setError(`Server error: ${error.response.status}`);
+      errorMessage = `Server error: ${error.response.status} - Incorrect login or password, please try again.`;
     } else if (error.request) {
-      setError("Connection problem, please try again");
+      errorMessage = "Connection problem, please try again";
     } else {
-      setError("An unexpected error has occurred, please try again.");
+      errorMessage = "An unexpected error has occurred, please try again.";
     }
-    setShowModal(true); // Affiche le modal en cas d'erreur
+
+    setError(errorMessage);
+    notify.error(errorMessage);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!EmailValidator(formData.email)) {
-      setError("Please provide a valid e-mail address.");
-      setShowModal(true);
+      let errorMessage = "";
+      errorMessage = "Please provide a valid e-mail address.";
+      notify.error(errorMessage);
       return;
     }
 
@@ -97,8 +102,6 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
-
-  const handleCloseModal = () => setShowModal(false);
 
   if (isLoading) {
     return (
@@ -159,17 +162,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Incorrect login</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{error}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            OK
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 }
