@@ -81,7 +81,7 @@ function Reservations() {
             end.setHours(12, 0, 0);
         } else if (reservation.afternoon) {
             start.setHours(13, 0, 0);
-            end.setHours(17, 0, 0);
+            end.setHours(18, 0, 0);
         }
         return {start, end};
     }
