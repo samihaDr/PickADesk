@@ -40,7 +40,10 @@ public class WorkStationService {
                                                                      Boolean morning,
                                                                      Boolean afternoon,
                                                                      Pageable pageable) {
-        Page<WorkStation> page = workStationRepository.findWorkStationsWithOptionalCriteria( workAreaId, screenId, equipmentIds, furnitureIds, reservationDate, morning, afternoon, pageable);
+        Page<WorkStation> page = workStationRepository.findWorkStationsWithOptionalCriteria( workAreaId, screenId,
+                                                                                            equipmentIds, furnitureIds,
+                                                                                            reservationDate, morning,
+                                                                                            afternoon, pageable);
         return page.map(WorkStationDTO::fromEntity);
     }
 

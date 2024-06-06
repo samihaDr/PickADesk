@@ -138,7 +138,9 @@ public class ReservationService {
         LocalDate threeMonthsAgo = LocalDate.now().minusMonths(3);
         LocalDate today = LocalDate.now();
 
-        List<Reservation> pastReservations = reservationRepository.findByUserIdAndReservationDateBetween(userId, threeMonthsAgo, today);
+        List<Reservation> pastReservations = reservationRepository.findByUserIdAndReservationDateBetween(userId,
+                                                                                                        threeMonthsAgo,
+                                                                                                        today);
 
         if (pastReservations.isEmpty()) {
             return (Collections.emptyList());
@@ -154,7 +156,9 @@ public class ReservationService {
         LocalDate onMonth = LocalDate.now().plusMonths(2);
         LocalDate today = LocalDate.now();
 
-        List<Reservation> futureReservations = reservationRepository.findByUserIdAndReservationDateBetween(userId, today, onMonth);
+        List<Reservation> futureReservations = reservationRepository.findByUserIdAndReservationDateBetween(userId,
+                                                                                                            today,
+                                                                                                            onMonth);
 
         if (futureReservations.isEmpty()) {
             return (Collections.emptyList());

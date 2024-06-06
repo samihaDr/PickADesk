@@ -10,9 +10,6 @@ export const WorkStationProvider = ({ children }) => {
         zone: "",
         reservationType: "",
         workArea: "",
-        // screen: "",
-        // equipment: [],
-        // furniture: [],
     });
     const [isGroupBooking, setIsGroupBooking] = useState(false);
     const [teamMembers, setTeamMembers ] = useState([]);
