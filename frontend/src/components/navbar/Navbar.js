@@ -102,15 +102,15 @@ export default function Navbar() {
                             ))}
                         </ul>
                     </li>
-                    <li className="nav-item">
-                        <Link
-                            to="/dashboard"
-                            className="nav-link active"
-                            aria-current="page"
-                        >
-                            Home
-                        </Link>
-                    </li>
+                    {/*<li className="nav-item">*/}
+                    {/*    <Link*/}
+                    {/*        to="/dashboard"*/}
+                    {/*        className="nav-link active"*/}
+                    {/*        aria-current="page"*/}
+                    {/*    >*/}
+                    {/*        Home*/}
+                    {/*    </Link>*/}
+                    {/*</li>*/}
 
                     <li className="nav-item">
                         <Link

@@ -97,8 +97,8 @@ export default function SearchWorkStation({onFormSend}) {
 
     useEffect(() => {
         if (isColleagueBooking && userList) {
-            console.log("isColleagueBooking 11111111 : ", isColleagueBooking);
-            console.log("UserList 11111111 : ", userList);
+            console.log("isColleagueBooking : ", isColleagueBooking);
+            console.log("UserList : ", userList);
         }
     }, [isColleagueBooking, userList]);
 

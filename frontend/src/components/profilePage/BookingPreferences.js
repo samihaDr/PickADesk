@@ -46,7 +46,7 @@ const BookingPreferences = ({
       >
         <div className="accordion-body">
           <div className="mb-3">
-            <label>Reservation type</label>
+            <label>Reservation Type</label>
             {hasUserPrefs ? (
               <input
                 type="text"

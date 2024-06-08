@@ -13,7 +13,6 @@ const LogoutButton = () => {
     setIsAuthenticated,
     setWeeklyRemaining,
     setUserInfo,
-
   } = useContext(GlobalContext);
   useEffect(() => {
     console.log("Je suis dans Logout");
@@ -24,15 +23,12 @@ const LogoutButton = () => {
 
       if (authToken) {
         const headers = { Authorization: `Bearer ${authToken}` };
-
         await axios.post("/api/users/logout", null, { headers });
         setIsAuthenticated(false);
         setUserPreferences([]);
         setUserConnected(null);
         setWeeklyRemaining(null);
         setUserInfo([]);
-
-
         sessionStorage.removeItem(AUTH_TOKEN_KEY);
         sessionStorage.removeItem("userInfo");
         sessionStorage.removeItem("userPreferences");
