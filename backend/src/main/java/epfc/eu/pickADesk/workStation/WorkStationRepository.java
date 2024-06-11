@@ -21,8 +21,11 @@ public interface WorkStationRepository extends JpaRepository<WorkStation, Long> 
     @Query("SELECT DISTINCT ws FROM WorkStation ws WHERE ws.active = true " +
             "AND (:workAreaId IS NULL OR ws.workArea.id = :workAreaId) " +
             "AND (:screenId IS NULL OR ws.screen.id = :screenId) " +
-            "AND EXISTS (SELECT 1 FROM Equipment e WHERE e.id IN :equipmentIds AND e MEMBER OF ws.equipments) " +
-            "AND EXISTS (SELECT 1 FROM Furniture f WHERE f.id IN :furnitureIds AND f MEMBER OF ws.furnitures) " +
+            "AND (EXISTS (SELECT 1 FROM Equipment e WHERE e.id IN :equipmentIds AND e MEMBER OF ws.equipments) " +
+            "OR NOT EXISTS (SELECT 1 FROM Equipment e WHERE e.id IN :equipmentIds AND e MEMBER OF ws.equipments)) " +
+
+            "AND (EXISTS (SELECT 1 FROM Furniture f WHERE f.id IN :furnitureIds AND f MEMBER OF ws.furnitures) " +
+            "OR NOT EXISTS (SELECT 1 FROM Furniture f WHERE f.id IN :furnitureIds AND f MEMBER OF ws.furnitures)) " +
             "AND NOT EXISTS (SELECT r FROM Reservation r WHERE r.workStation = ws AND r.reservationDate = :reservationDate " +
             "AND ((:morning = true AND r.morning = true) OR (:afternoon = true AND r.afternoon = true)))")
     Page<WorkStation> findWorkStationsWithOptionalCriteria(
