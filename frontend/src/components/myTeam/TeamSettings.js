@@ -261,8 +261,8 @@ export default function TeamSettings() {
                 </>
             ) : (
                 <>
-                    {isManager ? (
-                        <>
+                    {/*{isManager ? (*/}
+                    {/*    <>*/}
                             <h2>Weekly Team Statistics - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>
 
                             <div className="stats">
@@ -323,53 +323,53 @@ export default function TeamSettings() {
                                     </tbody>
                                 </table>
                             </div>
-                        </>
-                    ) : (
-                        <div className="stats">
-                            <h2>My Personal Statistics - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>
-                            {getPersonalStats() ? (
-                                <table>
-                                    <thead>
-                                    <tr>
-                                        {daysOfWeek.map(day => <th key={day}>{day}</th>)}
-                                        <th>Days In Office</th>
-                                        <th>Weekly Balance</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        {daysOfWeek.map(day => {
-                                            const dayInfo = getPersonalStats().weeklyReservations && getPersonalStats().weeklyReservations.find(d => d.day === day);
-                                            let backgroundColor = '#FFFFFF'; // Default background
-                                            let content = null; // Content of the cell
-                                            if (dayInfo) {
-                                                switch (dayInfo.type) {
-                                                    case 'fullDay':
-                                                        backgroundColor = '#44d095'; // Full day
-                                                        content = <img src={clock} alt="Full Day" style={{ width: '25px' }} />;
-                                                        break;
-                                                    case 'morning':
-                                                        backgroundColor = '#ADD8E6'; // Morning only
-                                                        content = <img src={morning} alt="Morning" style={{ width: '25px' }} />;
-                                                        break;
-                                                    case 'afternoon':
-                                                        backgroundColor = '#FFEF4F'; // Afternoon only
-                                                        content = <img src={afternoon} alt="Afternoon" style={{ width: '25px' }} />;
-                                                        break;
-                                                }
-                                            }
-                                            return <td key={day} style={{ backgroundColor, textAlign: 'center', verticalAlign: 'middle'  }}>{content}</td>;
-                                        })}
-                                        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{getPersonalStats().daysInOffice}</td>
-                                        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{getPersonalStats().balance}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            ) : (
-                                <p>No personal statistics available.</p>
-                            )}
-                        </div>
-                    )}
+                    {/*    </>*/}
+                    {/*) : (*/}
+                    {/*    <div className="stats">*/}
+                    {/*        <h2>My Personal Statistics - <span className="date-span">{formattedStartDate} to {formattedEndDate}</span></h2>*/}
+                    {/*        {getPersonalStats() ? (*/}
+                    {/*            <table>*/}
+                    {/*                <thead>*/}
+                    {/*                <tr>*/}
+                    {/*                    {daysOfWeek.map(day => <th key={day}>{day}</th>)}*/}
+                    {/*                    <th>Days In Office</th>*/}
+                    {/*                    <th>Weekly Balance</th>*/}
+                    {/*                </tr>*/}
+                    {/*                </thead>*/}
+                    {/*                <tbody>*/}
+                    {/*                <tr>*/}
+                    {/*                    {daysOfWeek.map(day => {*/}
+                    {/*                        const dayInfo = getPersonalStats().weeklyReservations && getPersonalStats().weeklyReservations.find(d => d.day === day);*/}
+                    {/*                        let backgroundColor = '#FFFFFF'; // Default background*/}
+                    {/*                        let content = null; // Content of the cell*/}
+                    {/*                        if (dayInfo) {*/}
+                    {/*                            switch (dayInfo.type) {*/}
+                    {/*                                case 'fullDay':*/}
+                    {/*                                    backgroundColor = '#44d095'; // Full day*/}
+                    {/*                                    content = <img src={clock} alt="Full Day" style={{ width: '25px' }} />;*/}
+                    {/*                                    break;*/}
+                    {/*                                case 'morning':*/}
+                    {/*                                    backgroundColor = '#ADD8E6'; // Morning only*/}
+                    {/*                                    content = <img src={morning} alt="Morning" style={{ width: '25px' }} />;*/}
+                    {/*                                    break;*/}
+                    {/*                                case 'afternoon':*/}
+                    {/*                                    backgroundColor = '#FFEF4F'; // Afternoon only*/}
+                    {/*                                    content = <img src={afternoon} alt="Afternoon" style={{ width: '25px' }} />;*/}
+                    {/*                                    break;*/}
+                    {/*                            }*/}
+                    {/*                        }*/}
+                    {/*                        return <td key={day} style={{ backgroundColor, textAlign: 'center', verticalAlign: 'middle'  }}>{content}</td>;*/}
+                    {/*                    })}*/}
+                    {/*                    <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{getPersonalStats().daysInOffice}</td>*/}
+                    {/*                    <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>{getPersonalStats().balance}</td>*/}
+                    {/*                </tr>*/}
+                    {/*                </tbody>*/}
+                    {/*            </table>*/}
+                    {/*        ) : (*/}
+                    {/*            <p>No personal statistics available.</p>*/}
+                    {/*        )}*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
                 </>
             )}
         </div>
