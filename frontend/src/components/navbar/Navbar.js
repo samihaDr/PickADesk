@@ -75,8 +75,8 @@ export default function Navbar() {
                     </div>
                     <div className="iconContainer">
                         <img src={scaleIcon} alt="Balance" />
-                        <div className={weeklyRemaining < 0 ? "negative" : ""}>{weeklyRemaining}</div>
-                        <span className="tooltipText">Weekly balance</span>
+                        <div>{weeklyRemaining}</div>
+                        <span className="tooltipText">Weekly balance (Required office booking days)</span>
                     </div>
                 </div>
 
@@ -102,16 +102,6 @@ export default function Navbar() {
                             ))}
                         </ul>
                     </li>
-                    {/*<li className="nav-item">*/}
-                    {/*    <Link*/}
-                    {/*        to="/dashboard"*/}
-                    {/*        className="nav-link active"*/}
-                    {/*        aria-current="page"*/}
-                    {/*    >*/}
-                    {/*        Home*/}
-                    {/*    </Link>*/}
-                    {/*</li>*/}
-
                     <li className="nav-item">
                         <Link
                             to="/profilePage"
@@ -131,10 +121,6 @@ export default function Navbar() {
                         />
                     </li>
                 </ul>
-                {/*<form className="d-flex" role="search">*/}
-                {/*    <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>*/}
-                {/*        <button className="btn btn-outline-success" type="submit">Search</button>*/}
-                {/*</form>*/}
             </div>
         </nav>
     );
