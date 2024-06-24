@@ -41,7 +41,7 @@ export default function TeamSettings() {
                 daysWorked,
                 teleworkingDays: daysWorked - totalDaysReserved,
                 daysInOffice: totalDaysReserved,
-                balance: member.memberQuota - totalDaysReserved
+                balance:  daysWorked - member.memberQuota - totalDaysReserved
             };
         }));
         console.log("Updated members with details:", membersWithDetails);
@@ -147,11 +147,6 @@ export default function TeamSettings() {
         return scheduleDays[schedule] || 0;
     }
 
-    function getPersonalStats() {
-        return teamList.find(member => member.id === userInfo.id);
-    }
-
-    const isManager = userInfo?.role === "MANAGER";
     const currentDate = format(selectedDate, 'dd/MM/yyyy'); // Date actuelle formatée
     const startDate = startOfWeek(selectedDate, {weekStartsOn: 1}); // Début de la semaine
     const endDate = endOfWeek(selectedDate, {weekStartsOn: 1}); // Fin de la semaine
@@ -287,7 +282,7 @@ export default function TeamSettings() {
                                             <td>{getDaysPerWeek(member.workSchedule)} days</td>
                                             <td>{member.memberQuota} days</td>
                                             <td>{member.daysInOffice}</td>
-                                            <td>{member.balance}</td>
+                                            <td className={member.balance > 0 ? "info" : ""}>{member.balance}</td>
                                             {daysOfWeek.map(day => {
                                                 const dayInfo = member.weeklyReservations && member.weeklyReservations.find(d => d.day === day);
                                                 let backgroundColor = '#FFFFFF'; // Default background
