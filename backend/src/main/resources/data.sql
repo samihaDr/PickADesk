@@ -96,35 +96,6 @@ INSERT INTO user (firstname, lastname, email, password, role, team_id, work_sche
 INSERT INTO user (firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Émilie', 'Robert', 'emilie@myCompany.com', '$2y$12$1234567890ABCDEFGHIJKLMNOPQRSTUVW', 'USER', 9, 'HALF_TIME', 1, FALSE, TRUE);
 INSERT INTO user (firstname, lastname, email, password, role, team_id, work_schedule, member_quota, locked, enabled) VALUES ('Nathalie', 'Blanc', 'nathalie@myCompany.com', '$2y$13$XYZ1234567890ABCDEFGHIJKLMNOPQRSTUV', 'MANAGER', 10, 'HALF_TIME', 1, FALSE, TRUE);
 
--- Insert into reservation table
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27',true ,true, 1, 1, 1, false, false,1);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28',true, true, 2, 2, 1, false, false,2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, true, 3, 2, 3, false, false, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28',true, true, 1, 3, 2, false, false, 6);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-29',true, true, 7, 4, 2, false, true, 1);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27',true, true, 2, 1, 20, false, false, 1);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-29', true, false, 3, 3, 2, false, false, 3);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 4, 5, 2, false, false,5);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28', true, true, 5, 4, 1, false, false,4);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-31', true, false, 6, 13, 3, false, false, 13);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, true, 7, 3, 2, false,  false, 7);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-23', true, true, 8, 6, 1, false,  false,9);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, false, 9, 8, 3, false, false, 8);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-29', true, false, 10, 10, 2, false, false,10);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-24', true, true, 2, 8, 2, true, false, 13);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28', true, true, 3, 5, 3, false, false, 5);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-16', true, true, 5, 4, 3, true, false, 4);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-15', true, true, 12, 6, 3, true, false, 6);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, true, 11, 5, 3, true, false, 4);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 9, 8, 3, true, false, 8);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-22', true, true, 5, 2, 1, false, true, 6);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28', true, false, 10, 1, 2, false, true, 4);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, true, 8, 4, 1, false, true, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-30', true, true, 8, 7, 1, true, false, 4);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-31', false, true, 3, 1, 1, false, true, 1);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 14, 9, 3, true, false, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 12, 3, 3, true, false, 2);
-INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 16, 2, 3, true, false, 2);
 
 --Insert into country table
 INSERT INTO country (name) VALUES ('Belgium');
@@ -137,8 +108,8 @@ INSERT INTO city (name, country_id) VALUES ('Antwerp', 1);
 INSERT INTO city (name, country_id) VALUES ('Paris', 2);
 INSERT INTO city (name, country_id) VALUES ('Bordeaux', 2);
 INSERT INTO city (name, country_id) VALUES ('Lyon', 2);
-INSERT INTO city (name, country_id) VALUES ('Berlin', 4);
-INSERT INTO city (name, country_id) VALUES ('Dusseldorf', 4);
+INSERT INTO city (name, country_id) VALUES ('Berlin', 3);
+INSERT INTO city (name, country_id) VALUES ('Dusseldorf', 3);
 
 -- Insert into office table
 INSERT INTO office (name, city_id) VALUES ('Bd Adolph Max n° 130 1000 Bruxelles', 1);
@@ -195,31 +166,31 @@ INSERT INTO work_area (name) VALUES ('Quiet space');
 INSERT INTO work_area (name) VALUES ('Working space');
 INSERT INTO work_area (name) VALUES ('Meeting space');
 
---Insert into equipment
+--Insert into equipment table
 INSERT INTO equipment (name) VALUES ('Hp Thunderbolt docking');
 INSERT INTO equipment (name) VALUES ('Hp Ultra slim docking');
 INSERT INTO equipment (name) VALUES ('Keyboard');
 INSERT INTO equipment (name) VALUES ('Mouse');
 --
---Insert into screen
+--Insert into screen table
 INSERT INTO screen (name) VALUES ('No screen');
 INSERT INTO screen (name) VALUES ('Standard screen');
 INSERT INTO screen (name) VALUES ('Large screen');
 INSERT INTO screen (name) VALUES ('Double standard screen');
 INSERT INTO screen (name) VALUES ('Double large screen');
 
---Insert into furniture
+--Insert into furniture table
 INSERT INTO furniture (name) VALUES ('Normal desk');
 INSERT INTO furniture (name) VALUES ('Adjustable desk');
 INSERT INTO furniture (name) VALUES ('Normal chair');
 INSERT INTO furniture (name) VALUES ('Adjustable chair');
 
 -- Insert into userPreference table
-INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 3, 7, 8, 1, 1, 1,4);
-INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (2, 1, 2, 2, 1, 1, 1,3);
+INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (1, 3, 7, 8, 1, 1, 1, 4);
+INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (2, 1, 2, 2, 1, 1, 1, 3);
 INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (3, 1, 2, 2, 1, 1, 1, 1);
 INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (4, 1, 2, 2, 2, 2, 2, 5);
-INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (5, 1, 2, 2, 1, 1, 1,2);
+INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (5, 1, 2, 2, 1, 1, 1, 2);
 INSERT INTO user_preference (user_id, country_id, city_id, office_id, zone_id, reservation_type_id, work_area_id, screen_id ) VALUES (13, 1, 2, 2, 1, 2,2, 4);
 
 --Insert into userPreferenceEquipmentIds
@@ -229,13 +200,13 @@ INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VAL
 INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (4, 3);
 INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (5, 1);
 INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (6, 1);
-INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (10, 2);
-INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (13, 1);
-INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (13, 3);
+-- INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (, 2);
+-- INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (13, 1);
+-- INSERT INTO user_preference_equipment_ids (user_preference_id, equipment_id) VALUES (13, 3);
 
 --Insert into userPreferenceFurnitureIds
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (1, 4);
-INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (11, 3);
+-- INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (11, 3);
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (5, 4);
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (2, 2);
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (2, 4);
@@ -243,57 +214,57 @@ INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VAL
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (3, 3);
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (4, 1);
 INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (4, 3);
-INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (13, 2);
-INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (13, 4);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (6, 2);
+INSERT INTO user_preference_furniture_ids (user_preference_id, furniture_id) VALUES (6, 4);
 
 -- Insert into WorkStation table
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.01',1, 2, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.02', 1, 2, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.03',1, 1, 1, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.01', 2, 2, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.02', 2, 1, 1, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.03', 2, 1, 4, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.04', 2, 2, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.01', 1, 1, 1, false);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.02', 1, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.04', 1, 1, 4, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.05', 1, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.04', 3, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.05', 1, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.06', 2, 1, 1, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.05', 3, 2, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.06',1, 1, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.07', 1, 1, 1,true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.08',1, 2, 1, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.12', 3, 2, 1, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.13',1, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.23',1, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.08', 1, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.09', 1, 1, 4, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.10', 1, 3, 2, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.07', 2, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.08', 2, 2, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.09', 2, 1, 4, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.10', 2, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.06', 3, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.07', 3, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.09', 3, 2, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.10', 3, 1, 4, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.11', 1, 1, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.11', 2, 1, 4, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.11', 3, 2, 1, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.12', 1, 2, 1, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.01',1, 2, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.02', 1, 2, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.03',1, 1, 1, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.01', 2, 2, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.02', 2, 1, 1, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.03', 2, 1, 4, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.04', 2, 2, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.01', 1, 1, 1, false);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.02', 1, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.04', 1, 1, 4, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.05', 1, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.04', 3, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.05', 1, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.06', 2, 1, 1, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.05', 3, 2, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.06',1, 1, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.07', 1, 1, 1,true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.08',1, 2, 1, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.12', 3, 2, 1, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.13',1, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.23',1, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.08', 1, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.09', 1, 1, 4, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.10', 1, 3, 2, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.07', 2, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.08', 2, 2, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.09', 2, 1, 4, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.10', 2, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.06', 3, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.07', 3, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.09', 3, 2, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.10', 3, 1, 4, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.11', 1, 1, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('2.11', 2, 1, 4, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('3.11', 3, 2, 1, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('1.12', 1, 2, 1, true);
 
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('4.01', 4, 1, 2, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('4.02', 4, 1, 3, false);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('4.03', 4, 2, 1, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('5.01', 5, 1, 4, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('5.02', 5, 2, 5, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('5.03', 5, 1, 4, false);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('6.01', 6, 1, 2, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('6.02', 6, 1, 3, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('6.03', 6, 1, 4, true);
-INSERT INTO Work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('7.01', 7, 1, 1, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('4.01', 4, 1, 2, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('4.02', 4, 1, 3, false);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('4.03', 4, 2, 1, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('5.01', 5, 1, 4, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('5.02', 5, 2, 5, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('5.03', 5, 1, 4, false);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('6.01', 6, 1, 2, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('6.02', 6, 1, 3, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('6.03', 6, 1, 4, true);
+INSERT INTO work_station ( work_place, zone_id, work_area_id, screen_id, active) VALUES ('7.01', 7, 1, 1, true);
 
 
 --Insert into workStationEquipmentIds
@@ -339,7 +310,7 @@ INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (3
 INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (21,2);
 INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (22,2);
 INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (41,3);
-INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (47,1);
+INSERT INTO work_station_equipment_ids (work_station_id, equipment_id) VALUES (46,1);
 
 --Insert into userPreferenceFurnitureIds
 INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (1, 1);
@@ -395,5 +366,35 @@ INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (3
 INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (40, 4);
 INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (42, 4);
 INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (45, 4);
-INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (47, 1);
-INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (47, 3);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (46, 1);
+INSERT INTO work_station_furniture_ids (work_station_id, furniture_id) VALUES (46, 3);
+
+-- Insert into reservation table
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27',true ,true, 1, 1, 1, false, false,1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28',true, true, 2, 2, 1, false, false,2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, true, 3, 2, 3, false, false, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28',true, true, 1, 3, 2, false, false, 6);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-29',true, true, 7, 4, 2, false, true, 1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27',true, true, 2, 1, 20, false, false, 1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-29', true, false, 3, 3, 2, false, false, 3);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 4, 5, 2, false, false,5);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28', true, true, 5, 4, 1, false, false,4);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-31', true, false, 6, 13, 3, false, false, 13);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, true, 7, 3, 2, false, false, 7);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-23', true, true, 8, 6, 1, false, false,9);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, false, 9, 8, 3, false, false, 8);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-29', true, false, 10, 10, 2, false, false,10);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-24', true, true, 2, 8, 2, true, false, 13);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28', true, true, 3, 5, 3, false, false, 5);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-16', true, true, 5, 4, 3, true, false, 4);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-15', true, true, 12, 6, 3, true, false, 6);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, true, 11, 5, 3, true, false, 4);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 9, 8, 3, true, false, 8);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-22', true, true, 5, 2, 1, false, true, 6);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-28', true, false, 10, 1, 2, false, true, 4);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', true, true, 8, 4, 1, false, true, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-30', true, true, 8, 7, 1, true, false, 4);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-31', false, true, 3, 1, 1, false, true, 1);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 14, 9, 3, true, false, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 12, 3, 3, true, false, 2);
+INSERT INTO reservation (reservation_date, morning, afternoon, work_station_id, user_id, reservation_type_id, is_group_booking, is_colleague_booking, created_by) VALUES ('2024-05-27', false, true, 16, 2, 3, true, false, 2);
