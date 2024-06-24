@@ -146,7 +146,7 @@ export default function SearchWorkStation({onFormSend}) {
             selectedDate.getTime() === currentDate.getTime() &&
             new Date().getHours() >= 13
         ) {
-            return "It is impossible to make a booking after 1pm on the same day.";
+            return "Booking not possible after 1pm on the same day.";
         }
 
         // Vérifier que soit morning, soit afternoon, soit les deux sont cochés
@@ -431,7 +431,7 @@ export default function SearchWorkStation({onFormSend}) {
     return (
         <div>
             <div className="main">
-                <h2>Make your choices</h2>
+                <h2>Make your reservation</h2>
                 <div className="add-reservation-container">
                     <div>
                         <div className="form-container">
