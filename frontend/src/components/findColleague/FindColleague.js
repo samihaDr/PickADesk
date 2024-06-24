@@ -73,13 +73,11 @@ export default function FindColleague() {
       }
     } catch (error) {
       console.error("Fetch Error:", error);
-      // setError("Unable to load employee information or bookings.");
       notify.error(`Error: ${error.response ? error.response.data.message : "Unable to load employee information or bookings"}`);
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
